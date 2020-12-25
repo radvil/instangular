@@ -83,9 +83,9 @@ export class PostController implements Controller {
   private getPostById = async (req: Req, res: Res, next: Next) => {
     const requestedId = req.params.id;
     const foundPost = await this._postModel
-    .findById(requestedId)
-    .select('-__v')
-    .populate('author', '-password -__v');
+      .findById(requestedId)
+      .select('-__v')
+      .populate('author', '-password -__v');
 
     if (!foundPost) {
       next(new NOT_FOUND_EXCEPTION(requestedId));
@@ -158,19 +158,24 @@ export class PostController implements Controller {
 
   private deletePost = async (req: Req, res: Res, next: Next) => {
     const requestedId = req.params.id;
-    const deletedPost = await this._postModel.findByIdAndDelete(requestedId);
 
-    if (!deletedPost) {
-      next(new NOT_FOUND_EXCEPTION(requestedId));
+    try {
+      const deletedPost = await this._postModel.findByIdAndDelete(requestedId);
+
+      if (!deletedPost) {
+        next(new NOT_FOUND_EXCEPTION(requestedId));
+      }
+
+      const jsonResponse: JsonHttpResponse<any> = {
+        status: 200,
+        message: `Delete post succeded!`,
+        data: { deletedPostId: requestedId }
+      }
+
+      res.json(jsonResponse);
+    } catch (error) {
+      next(new BAD_REQUEST_EXCEPTION('Failed to delete post'));
     }
-
-    const jsonResponse: JsonHttpResponse<any> = {
-      status: 200,
-      message: `Delete post succeded!`,
-      data: { deletedPostId: requestedId }
-    }
-
-    res.json(jsonResponse);
   }
 
   private deleteMultiplePosts = async (req: Req, res: Res, next: Next) => {
