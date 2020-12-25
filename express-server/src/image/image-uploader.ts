@@ -2,7 +2,7 @@ import { mkdirSync } from 'fs-extra';
 import sharp from 'sharp';
 import { ImageOutput, TransformOptions, SizeConfig, UploadImageDto, ImageFile, UploadImagesArrayDto } from './image';
 
-export class ImageService {
+export class ImageUploader {
   private _baseUploadImagePath: string;
   private _baseImageUrl: string;
   private _resultPerImage: ImageOutput[] = [];
@@ -33,12 +33,18 @@ export class ImageService {
     this._baseImageUrl = urlInString;
   }
 
-  get resultPerImage(): ImageOutput[] {
-    return this._resultPerImage;
-  }
+  // get resultPerImage(): ImageOutput[] {
+  //   return this._resultPerImage;
+  // }
 
-  get resultImagesArray(): ImageOutput[][] {
-    return this._resultImagesArray;
+  // get resultImagesArray(): ImageOutput[][] {
+  //   return this._resultImagesArray;
+  // }
+
+  public getUploadResult(uploadType: 'single' | 'array'): Array<any> {
+    if (uploadType == 'single') return this._resultPerImage;
+    if (uploadType == 'array') return this._resultImagesArray;
+    else return null;
   }
 
   /**

@@ -6,8 +6,8 @@ const postSchema = new Schema({
     ref: 'User',
     type: Schema.Types.ObjectId,
   },
-  title: String,
-  content: String,
+  description: String,
+  tags: [String],
   thumbnail: String,
   image: String,
   createdAt: {

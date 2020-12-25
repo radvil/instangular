@@ -5,7 +5,7 @@ import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION } from '../exception';
 import { Controller, JsonHttpResponse } from '../interface';
 import { Req, Res, Next } from '../var';
 import { ImageOutput, SizeLabel, SizeConfig, UploadImageDto, UploadImagesArrayDto } from './image';
-import { ImageService } from './image.service';
+import { ImageUploader } from './image-uploader';
 
 const storage = multer.memoryStorage();
 
@@ -14,7 +14,7 @@ export class ImageController implements Controller {
   public router = Router();
   public upload = multer({ storage });
 
-  public imageService: ImageService;
+  public imageUploader: ImageUploader;
   public baseUploadPath = '/public/uploads/images';
   public sizesConfig: SizeConfig[] = [
     {
@@ -40,7 +40,7 @@ export class ImageController implements Controller {
   }
 
   private initImageService(): void {
-    this.imageService = new ImageService(this.baseUploadPath, this.sizesConfig);
+    this.imageUploader = new ImageUploader(this.baseUploadPath, this.sizesConfig);
   }
 
   private initializeRoutes(): void {
@@ -55,13 +55,13 @@ export class ImageController implements Controller {
     }
 
     try {
-      this.imageService.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
-      await this.imageService.uploadImage({ file: req.file } as UploadImageDto);
+      this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
+      await this.imageUploader.uploadImage({ file: req.file } as UploadImageDto);
 
       const jsonResponse: JsonHttpResponse<ImageOutput[]> = {
         status: 200,
         message: 'Uploaded successfully!',
-        data: this.imageService.resultPerImage,
+        data: this.imageUploader.getUploadResult('single'),
       }
 
       res.json(jsonResponse);
@@ -77,13 +77,13 @@ export class ImageController implements Controller {
     }
 
     try {
-      this.imageService.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
-      await this.imageService.uploadImagesArray({ files: req.files } as UploadImagesArrayDto);
+      this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
+      await this.imageUploader.uploadImagesArray({ files: req.files } as UploadImagesArrayDto);
 
       const jsonResponse: JsonHttpResponse<ImageOutput[][]> = {
         status: 200,
         message: 'Uploaded successfully!',
-        data: this.imageService.resultImagesArray,
+        data: this.imageUploader.getUploadResult('array'),
       }
 
       res.json(jsonResponse);

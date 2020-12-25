@@ -17,7 +17,7 @@ class App {
 
     this.connectToDatabase();
     this.initMiddlewares();
-    this.initControllers(controllers);
+    this.initMainRoutes(controllers);
     this.initErrorHandling();
   }
 
@@ -33,14 +33,14 @@ class App {
 
   private initMiddlewares(): void {
     this._app.use(morgan('dev'));
-    // this._app.use(cors({ origin: '*', credentials: true }));
-    this._app.use(cors());
+    this._app.use(cors({ origin: '*', credentials: true }));
+    // this._app.use(cors());
+    this._app.use(cookieParser());
     this._app.use(express.json());
     this._app.use(express.urlencoded({ extended: true }));
-    this._app.use(cookieParser());
   }
 
-  private initControllers(controllers: Controller[]): void {
+  private initMainRoutes(controllers: Controller[]): void {
     controllers.forEach(controller => {
       this._app.use('/', controller.router);
     })
