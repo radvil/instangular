@@ -9,6 +9,7 @@ import { postModel } from './post.model';
 import { CreatePostDto } from './post.dto';
 import { Post } from './post.interface';
 import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader } from '../image';
+import { Querify } from '../util/Querify';
 
 const storage = multer.memoryStorage();
 
@@ -65,10 +66,13 @@ export class PostController implements Controller {
   }
 
   private getAllPosts = async (req: Req, res: Res): Promise<void> => {
+    const querify = new Querify(req.query);
     const foundPosts = await this._postModel
-      .find()
-      .select('-__v')
-      .populate('author', '-password -__v');
+      .find(querify.search || {})
+      .select(querify.select)
+      .populate('author', '-password -__v')
+      .limit(querify.limit || 5)
+      .skip(querify.skip)
 
     const jsonResponse: JsonHttpResponse<Post[]> = {
       status: 200,

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { HomeComponent } from './home.component';
 import { PostItemModule } from '../posts/post-item/post-item.module';
 import { StoryComponent } from './story/story.component';
+import { PostStoreModule } from '../posts';
 
 
 const routes: Routes = [
@@ -32,6 +33,7 @@ export class HomeRoutingModule { }
     HttpClientModule,
     HomeRoutingModule,
     PostItemModule,
+    PostStoreModule,
 
     MatButtonModule,
     MatIconModule,

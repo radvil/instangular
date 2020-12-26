@@ -3,6 +3,11 @@ import { Post } from '../posts';
 import { User } from '../users';
 import { authUser } from '../auth'
 import { StoryWithUser, StoryUser } from './story/story.component';
+import { Store } from '@ngrx/store';
+import { PostState } from '../posts/store/post.state';
+import { GetPosts } from '../posts/store/post.actions';
+import { Observable } from 'rxjs';
+import { $_posts } from '../posts/store/post.selectors';
 
 @Component({
   selector: 'app-home',
@@ -23,10 +28,11 @@ export class HomeComponent implements OnInit {
 
   public authUser: User;
   public stories: StoryWithUser[];
-  public posts: Post[];
+  public posts: Observable<Post[]>;
 
-  constructor() {
-  }
+  constructor(
+    private store: Store<PostState>
+  ) { }
 
   ngOnInit(): void {
     this.getCurrentUser();
@@ -79,30 +85,32 @@ export class HomeComponent implements OnInit {
   }
 
   private getFeeds(): void {
-    this.posts = [
-      {
-        _id: '1234',
-        description: 'This is a new post test',
-        author: {
-          _id: "authorId122",
-          username: "author122",
-          profilePicture: "assets/images/portrait.jpg"
-        },
-        image: "assets/images/post.jpeg",
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '2345',
-        description: 'Pandora Live Concert ❤ thank you for watching!',
-        author: {
-          _id: "userId1234",
-          username: "dualipa",
-          profilePicture: "assets/images/portrait.jpg"
-        },
-        image: "assets/images/post.jpeg",
-        createdAt: new Date().toISOString()
-      },
-    ]
+    this.store.dispatch(GetPosts());
+    this.posts = this.store.select($_posts);
+    // this.posts = [
+    //   {
+    //     _id: '1234',
+    //     description: 'This is a new post test',
+    //     author: {
+    //       _id: "authorId122",
+    //       username: "author122",
+    //       profilePicture: "assets/images/portrait.jpg"
+    //     },
+    //     image: "assets/images/post.jpeg",
+    //     createdAt: new Date().toISOString()
+    //   },
+    //   {
+    //     _id: '2345',
+    //     description: 'Pandora Live Concert ❤ thank you for watching!',
+    //     author: {
+    //       _id: "userId1234",
+    //       username: "dualipa",
+    //       profilePicture: "assets/images/portrait.jpg"
+    //     },
+    //     image: "assets/images/post.jpeg",
+    //     createdAt: new Date().toISOString()
+    //   },
+    // ]
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { authUser, User } from './users';
+import { authUser } from './auth';
+import { User } from './users';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { authUser, User } from './users';
 export class AppComponent implements OnInit {
   public authUser: User;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.authUser = authUser;
