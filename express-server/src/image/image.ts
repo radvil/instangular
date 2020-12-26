@@ -7,6 +7,8 @@ export interface ImageFile {
 }
 
 export interface TransformOptions extends ResizeOptions {
+  subDir?: string;
+  prefix?: string;
   label?: string;
 }
 
@@ -37,16 +39,10 @@ export enum SizeLabel {
 
 export class UploadImageDto {
   file: ImageFile;
-  options? = <TransformOptions>{
-    fit: "contain",
-    background: { r: 255, g: 255, b: 255 },
-  };
+  options: TransformOptions;
 }
 
 export class UploadImagesArrayDto {
   files: ImageFile[] = [];
-  options? = <TransformOptions>{
-    fit: "contain",
-    background: { r: 255, g: 255, b: 255 },
-  };
+  options: TransformOptions;
 }

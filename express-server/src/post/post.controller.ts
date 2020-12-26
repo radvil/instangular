@@ -10,6 +10,7 @@ import { CreatePostDto } from './post.dto';
 import { Querify } from '../util/Querify';
 import { postModel } from './post.model';
 import { Post } from './post.interface';
+import { TransformOptions } from '../image';
 
 export class PostController implements Controller {
   public path = '/posts';
@@ -17,7 +18,7 @@ export class PostController implements Controller {
   public upload = multer({ storage: memoryStorage() });
   public imageService: ImageUploader;
   public baseUploadPath = '/public/uploads/images';
-  public sizesConfig: SizeConfig[] = [
+  public sizesConfigs: SizeConfig[] = [
     {
       label: SizeLabel.THUMB,
       height: 20,
@@ -25,8 +26,8 @@ export class PostController implements Controller {
     },
     {
       label: SizeLabel.SMALL,
-      height: 300,
-      width: 300,
+      height: 360,
+      width: 360,
     },
     {
       label: SizeLabel.MEDIUM,
@@ -48,7 +49,7 @@ export class PostController implements Controller {
   }
 
   private initImageService(): void {
-    this.imageService = new ImageUploader(this.baseUploadPath, this.sizesConfig);
+    this.imageService = new ImageUploader(this.baseUploadPath, this.sizesConfigs);
   }
 
   private initializeRoutes(): void {
@@ -137,16 +138,23 @@ export class PostController implements Controller {
       }
       res.json(response);
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      next(new INTERNAL_SERVER_EXCEPTION(error));
     }
   }
 
   private deletePost = async (req: Req, res: Res, next: Next) => {
     const requestedId = req.params.id;
     try {
-      const deletedPost = await this._postModel.findByIdAndDelete(requestedId);
-      if (!deletedPost) {
-        next(new NOT_FOUND_EXCEPTION(requestedId));
+      const foundPost = await this._postModel.findById(requestedId);
+      if (!foundPost) {
+        next(new NOT_FOUND_EXCEPTION());
+      }
+      const deleted = await Promise.all([
+        await this.imageService.removeAssociatedImages(foundPost.image, this.sizesConfigs),
+        await foundPost.remove()
+      ]);
+      if (!deleted) {
+        next(new INTERNAL_SERVER_EXCEPTION('Failed to remove post with images'));
       }
       const jsonResponse: JsonHttpResponse<any> = {
         status: 200,
@@ -155,13 +163,14 @@ export class PostController implements Controller {
       }
       res.json(jsonResponse);
     } catch (error) {
-      next(new BAD_REQUEST_EXCEPTION('Failed to delete post'));
+      next(new INTERNAL_SERVER_EXCEPTION(error));
     }
   }
 
   private deleteMultiplePosts = async (req: Req, res: Res, next: Next) => {
     const requestedIds: string[] = req.body.ids;
     try {
+      // TODO: FindMany Query
       const deletedPosts = await this._postModel.deleteMany({ _id: requestedIds });
       if (!deletedPosts) {
         next(new NOT_FOUND_EXCEPTION(requestedIds.toString()));
@@ -185,7 +194,11 @@ export class PostController implements Controller {
    * #### example usage: uploadPostImage(req.file, 'key');
    */
   private async uploadPostImage(file: any, key?: string): Promise<string[]> {
-    const images = await this.imageService.uploadImage({ file } as UploadImageDto);
+    const options: TransformOptions = {
+      // fit: "contain",
+      // background: { r: 255, g: 255, b: 255 },
+    }
+    const images = await this.imageService.uploadImage({ file, options } as UploadImageDto);
     const thumbPath = images.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
     const imagePath = images.find(img => img.sizeLabel === SizeLabel.MEDIUM)[key || 'name'];
     return [thumbPath, imagePath];
