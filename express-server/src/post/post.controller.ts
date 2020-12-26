@@ -134,8 +134,7 @@ export class PostController implements Controller {
     try {
       
       const authorId = req.user._id;
-      const images = await this.requestUploadImage(req);
-      const [thumbPath, imagePath] = this.getUploadedImageResult(images, 'url');
+      const [thumbPath, imagePath] = await this.uploadPostImage(req.file, 'url');
       const newPost = new this._postModel({
         ...req.body as CreatePostDto,
         thumbnail: thumbPath,
@@ -205,18 +204,14 @@ export class PostController implements Controller {
     }
   }
 
-  private async requestUploadImage(req: Req): Promise<ImageOutput[]> {
-    this.imageService.baseImageUrl = process.env.PUBLIC_IMAGE_PATH;
-    return await this.imageService.uploadImage({ file: req.file } as UploadImageDto);
-  }
-
   /**
    * 
    * @param key property key from ImageOutput. Default to "name"
    * @desc get value from a image output that return string provided by given key.
-   * #### example usage: getUploadedImageResult('key');
+   * #### example usage: uploadPostImage(req.file, 'key');
    */
-  private getUploadedImageResult(images: ImageOutput[], key?: string): string[] {
+  private async uploadPostImage(file: any, key?: string): Promise<string[]> {
+    const images = await this.imageService.uploadImage({ file } as UploadImageDto);
     const thumbPath = images.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
     const imagePath = images.find(img => img.sizeLabel === SizeLabel.MEDIUM)[key || 'name'];
 

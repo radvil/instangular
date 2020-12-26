@@ -4,15 +4,12 @@ import { ImageOutput, TransformOptions, SizeConfig, UploadImageDto, ImageFile, U
 
 export class ImageUploader {
   private _baseUploadImagePath: string;
-  private _baseImageUrl: string;
-  private _resultPerImage: ImageOutput[] = [];
-  private _resultImagesArray: ImageOutput[][] = [];
   private _timestamps: Date;
   private _year: number;
   private _month: string;
 
   constructor(
-    public baseUploadPath: string = '/public/uploads',
+    public baseUploadPath: string = '/public/uploads/images',
     public sizesConfig: SizeConfig[] = []
   ) {
     this._timestamps = new Date();
@@ -29,20 +26,6 @@ export class ImageUploader {
     return this._baseUploadImagePath;
   }
 
-  get baseImageUrl(): string {
-    return this._baseImageUrl;
-  }
-
-  set baseImageUrl(urlInString: string) {
-    this._baseImageUrl = urlInString;
-  }
-
-  public getUploadResult(uploadType: 'single' | 'array'): Array<any> {
-    if (uploadType == 'single') return this._resultPerImage;
-    if (uploadType == 'array') return this._resultImagesArray;
-    else return null;
-  }
-
   /**
    * 
    * @param uploadImagesArrayDto = {file, options}
@@ -55,7 +38,6 @@ export class ImageUploader {
     return await Promise.all(
       files.map(async (file: ImageFile) => {
         return await this.uploadImage(<UploadImageDto>{ file, options });
-        // this._resultImagesArray.push(this._resultPerImage)
       })
     );
   }
@@ -68,7 +50,6 @@ export class ImageUploader {
    */
   public async uploadImage(uploadImageDto: UploadImageDto) {
     const { options, file } = uploadImageDto;
-    // const result: ImageOutput[] = [];
 
     return await Promise.all(
       this.sizesConfig.map((config: SizeConfig) => this.uploadImagePerSize(file, config, options))
@@ -85,8 +66,6 @@ export class ImageUploader {
 
     const resultPerSize = await this.transformImage(file, transformOptions);
     return resultPerSize;
-    // console.log(resultPerSize);
-    // this._resultPerImage.push(resultPerSize);
   }
 
   public async transformImage(file: ImageFile, options: TransformOptions): Promise<ImageOutput> {
@@ -102,9 +81,6 @@ export class ImageUploader {
     try {
       const result = await transformAction.toFile(outputPath);
       const imageUrl = `${this._year}/${this._month}/${imageName}`;
-      // const imageUrl = this._baseImageUrl
-      //   ? `${this._baseImageUrl}/${this._year}/${this._month}/${imageName}`
-      //   : null;
 
       return <ImageOutput>{
         name: imageName,

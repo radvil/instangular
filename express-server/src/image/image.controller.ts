@@ -44,52 +44,52 @@ export class ImageController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.post(`${this.path}/upload/single`, this.upload.single('image'), this.uploadImage);
-    this.router.post(`${this.path}/upload/array`, this.upload.array('images'), this.uploadImagesArray);
+    // this.router.post(`${this.path}/upload/single`, this.upload.single('image'), this.uploadImage);
+    // this.router.post(`${this.path}/upload/array`, this.upload.array('images'), this.uploadImagesArray);
   }
 
-  private uploadImage = async (req: Req, res: Res, next: Next): Promise<void> => {
+  // private uploadImage = async (req: Req, res: Res, next: Next): Promise<void> => {
 
-    if (!req.file) {
-      next(new BAD_REQUEST_EXCEPTION('Please provide an image!'));
-    }
+  //   if (!req.file) {
+  //     next(new BAD_REQUEST_EXCEPTION('Please provide an image!'));
+  //   }
 
-    try {
-      this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
-      await this.imageUploader.uploadImage({ file: req.file } as UploadImageDto);
+  //   try {
+  //     this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
+  //     await this.imageUploader.uploadImage({ file: req.file } as UploadImageDto);
 
-      const jsonResponse: JsonHttpResponse<ImageOutput[]> = {
-        status: 200,
-        message: 'Uploaded successfully!',
-        data: this.imageUploader.getUploadResult('single'),
-      }
+  //     const jsonResponse: JsonHttpResponse<ImageOutput[]> = {
+  //       status: 200,
+  //       message: 'Uploaded successfully!',
+  //       data: this.imageUploader.getUploadResult('single'),
+  //     }
 
-      res.json(jsonResponse);
-    } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION(error.message));
-    }
-  }
+  //     res.json(jsonResponse);
+  //   } catch (error) {
+  //     next(new INTERNAL_SERVER_EXCEPTION(error.message));
+  //   }
+  // }
 
-  private uploadImagesArray = async (req: Req, res: Res, next: Next): Promise<void> => {
+  // private uploadImagesArray = async (req: Req, res: Res, next: Next): Promise<void> => {
 
-    if (!req.files) {
-      next(new BAD_REQUEST_EXCEPTION('Please provide images!'));
-    }
+  //   if (!req.files) {
+  //     next(new BAD_REQUEST_EXCEPTION('Please provide images!'));
+  //   }
 
-    try {
-      this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
-      await this.imageUploader.uploadImagesArray({ files: req.files } as UploadImagesArrayDto);
+  //   try {
+  //     this.imageUploader.baseImageUrl = `${req.protocol}://${req.get("host")}${this.baseUploadPath}/`;
+  //     await this.imageUploader.uploadImagesArray({ files: req.files } as UploadImagesArrayDto);
 
-      const jsonResponse: JsonHttpResponse<ImageOutput[][]> = {
-        status: 200,
-        message: 'Uploaded successfully!',
-        data: this.imageUploader.getUploadResult('array'),
-      }
+  //     const jsonResponse: JsonHttpResponse<ImageOutput[][]> = {
+  //       status: 200,
+  //       message: 'Uploaded successfully!',
+  //       data: this.imageUploader.getUploadResult('array'),
+  //     }
 
-      res.json(jsonResponse);
-    } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION(error.message));
-    }
-  }
+  //     res.json(jsonResponse);
+  //   } catch (error) {
+  //     next(new INTERNAL_SERVER_EXCEPTION(error.message));
+  //   }
+  // }
 
 }
