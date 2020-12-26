@@ -12,6 +12,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { TruncatePipe } from '../utils';
 import { PostStoreModule } from '../post';
+import { UserStoreModule } from './store/user-store.module';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { PostStoreModule } from '../post';
     MatIconModule,
     // local modules
     UserRoutingModule,
+    UserStoreModule,
     PostStoreModule,
   ],
   providers: [TruncatePipe],

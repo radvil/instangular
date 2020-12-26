@@ -10,7 +10,7 @@ export class UserService {
 
   private userUrl = 'http://localhost:3000/users';
 
-  public getUserUsername(username: string): Observable<User> {
+  public getUserByUsername(username: string): Observable<User> {
     const request$ = this._http.get<{ data: User }>(`${this.userUrl}/${username}?includePosts=true`);
     return request$.pipe(map(res => res.data))
   }

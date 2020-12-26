@@ -79,6 +79,11 @@
   </section>
 </div>
 
-<div *ngIf="!(user$ | async)" class="notFound">
-  <h1>Not Found 😅</h1>
+<div *ngIf="isLoading$ | async" class="placeholder">
+  <h2>🎶 🎶 🎶</h2>
+</div>
+
+<div *ngIf="httpError$ | async as httpError" class="placeholder">
+  <h1>{{ httpError?.status }}</h1>
+  <h2>😅 {{ httpError?.statusText }} 😅</h2>
 </div>

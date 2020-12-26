@@ -10,11 +10,20 @@
   background-color: #fff;
   padding: 1rem;
 }
-.notFound {
+.placeholder {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 88%;
+  h1 {
+    margin: 0;
+    font-size: 5rem;
+    color: #8b1c1c;
+  }
+  h2 {
+    text-transform: uppercase;
+  }
 }
 .header--text,
 .header--icon-right {

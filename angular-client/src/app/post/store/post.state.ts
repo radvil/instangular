@@ -17,7 +17,7 @@ export interface PostState extends EntityState<Post> {
   error?: Error;
 }
 
-export const selectPostState = createFeatureSelector<PostState>('posts');
+export const $_postState = createFeatureSelector<PostState>('posts');
 
 export const initialPostState: PostState = postAdapter.getInitialState({
   loaded: false,
