@@ -15,7 +15,12 @@
   </div>
   <div class="post--item-image">
     <!-- <div *ngIf="true" class="placeholder"></div> -->
-    <img [src]="post?.image" [alt]="post?._id" />
+    <img 
+      [defaultImage]="post?.thumb"
+      [lazyLoad]="post?.image"
+      [errorImage]="errorImagePath"
+      alt="post alt text"
+    />
   </div>
   <div class="post--item-buttons">
     <button mat-icon-button class="active">

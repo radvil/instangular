@@ -9,6 +9,7 @@ import { Post } from '../post.interface';
 })
 export class PostItemComponent {
 
+  public errorImagePath = "assets/images/portrait.jpg";
   @Input() post = {} as Post;
 
 }
