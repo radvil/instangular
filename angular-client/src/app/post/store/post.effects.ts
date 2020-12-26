@@ -11,20 +11,20 @@ import { $_postCurrNext } from "./post.selectors";
 @Injectable()
 export class PostEffects {
 
-  initGetPosts$ = createEffect(() => this._actions$.pipe(
-    ofType(postActions.GetPosts),
+  getApiPost$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.ApiGetPosts),
     switchMap(() => this._postService.getIncrementalPosts().pipe(
-      map(posts => postActions.GetPostsSuccess({ posts })),
-      catchError(error => of(postActions.GetPostsFailure({ error })))
+      map(posts => postActions.ApiGetPostsSuccess({ posts })),
+      catchError(error => of(postActions.ApiGetPostsFailure({ error })))
     ))
   ));
 
-  getNextPosts$ = createEffect(() => this._actions$.pipe(
-    ofType(postActions.GetNextPosts),
+  getApiNextPosts$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.ApiGetNextPosts),
     withLatestFrom(this._store.select($_postCurrNext)),
     switchMap(([action, currNext]) => this._postService.getIncrementalPosts(currNext).pipe(
-      map(posts => postActions.GetNextPostsSuccess({ posts })),
-      catchError((error) => of(postActions.GetNextPostsFailure({ error })))
+      map(posts => postActions.ApiGetNextPostsSuccess({ posts })),
+      catchError((error) => of(postActions.ApiGetNextPostsFailure({ error })))
     ))
   ))
 

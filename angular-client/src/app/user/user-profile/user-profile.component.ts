@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, share, switchMap } from 'rxjs/operators';
-
+import { map, share, switchMap, tap } from 'rxjs/operators';
 // 3rd parties
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faGithub, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
-
-import { User } from '../user.interface';
+// locals
 import { UserService } from '../user.service';
+import { User } from '../user.interface';
+import { Post } from 'src/app/post';
+import { Store } from '@ngrx/store';
+import { PushManyPosts } from 'src/app/post/store/post.actions';
+import { $_posts } from 'src/app/post/store/post.selectors';
 
 @Component({
   selector: 'app-user-profile',
@@ -18,23 +21,34 @@ import { UserService } from '../user.service';
 export class UserProfileComponent implements OnInit {
 
   public user$: Observable<User>;
+  public posts$: Observable<Post[]>;
   public errorImagePath = "assets/images/portrait.jpg";
+
+  private _usernameFromParam: string;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _userService: UserService,
+    private _store: Store<Post>,
     public faIconLibrary: FaIconLibrary,
   ) {
     faIconLibrary.addIcons(
-			faGithub,
-			faFacebook,
-			faTwitter,
-		);
+      faGithub,
+      faFacebook,
+      faTwitter,
+    );
   }
 
   ngOnInit(): void {
     this.getUserProfile();
+    this.setInitialPosts();
+  }
+
+  private setInitialPosts(): void {
+    this.posts$ = this._store.select($_posts).pipe(
+      map(posts => posts.filter(post => post.postedBy.username == this._usernameFromParam))
+    );
   }
 
   public editProfile(username: string) {
@@ -44,7 +58,10 @@ export class UserProfileComponent implements OnInit {
   private getUserProfile(): void {
     this.user$ = this._route.paramMap.pipe(
       map(param => param.get('username')),
-      switchMap(username => this._userService.getUserUsername(username)),
+      tap(param => this._usernameFromParam = param),
+      switchMap(username => this._userService.getUserUsername(username).pipe(
+        tap(({ posts }) => this._store.dispatch(PushManyPosts({ posts })))
+      )),
       share()
     );
   }

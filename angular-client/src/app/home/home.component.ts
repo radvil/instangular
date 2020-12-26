@@ -5,7 +5,7 @@ import { authUser } from '../auth'
 import { StoryWithUser, StoryUser } from './story/story.component';
 import { Store } from '@ngrx/store';
 import { PostState } from '../post/store/post.state';
-import { GetPosts } from '../post/store/post.actions';
+import { ApiGetPosts } from '../post/store/post.actions';
 import { Observable } from 'rxjs';
 import { $_posts } from '../post/store/post.selectors';
 
@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
   }
 
   private getFeeds(): void {
-    this.store.dispatch(GetPosts());
+    this.store.dispatch(ApiGetPosts());
     this.posts$ = this.store.select($_posts);
   }
 

@@ -6,7 +6,6 @@
       <mat-icon>settings</mat-icon>
     </button>
   </div>
-
   <!-- user-profile intro -->
   <section class="intro">
     <div class="intro--header">
@@ -57,7 +56,25 @@
       </div>
     </div>
     <div class="intro--footer">
-      <button (click)="editProfile(user._id)" mat-stroked-button>Edit Profile</button>
+      <button (click)="editProfile(user._id)" mat-stroked-button>
+        Edit Profile
+      </button>
+    </div>
+  </section>
+  <!-- user-profile posts container -->
+  <section class="posts">
+    <div *ngIf="posts$ | async as posts" class="user-posts__list">
+      <div *ngFor="let post of posts" class="user-posts__list--item">
+        <div class="backdrop"></div>
+        <img
+          [lazyLoad]="post.image"
+          [defaultImage]="post.thumbnail"
+          [errorImage]="errorImagePath"
+          [alt]="post.postedBy?.username"
+          height="720"
+          width="720"
+        />
+      </div>
     </div>
   </section>
 </div>

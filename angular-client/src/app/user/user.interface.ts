@@ -1,3 +1,5 @@
+import { Post } from "../post";
+
 export enum Role {
   USER = "user",
   ADMIN = "admin"
@@ -22,6 +24,7 @@ export interface User {
   createdAt?: string;
   updatedAt?: string;
   lastLoggedInAt?: string;
+  posts?: Post[];
 }
 
 export interface UserDetail extends User {

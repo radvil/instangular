@@ -5,38 +5,41 @@ import * as PostActions from './post.actions';
 export const postReducer = createReducer(
   initialPostState,
 
-  on(PostActions.GetPosts, (state: PostState) => ({
+  on(PostActions.ApiGetPosts, (state: PostState) => ({
     ...state,
     loaded: false,
     loading: true
   })),
-  on(PostActions.GetPostsFailure, (state: PostState, { error }) => ({
+  on(PostActions.ApiGetPostsFailure, (state: PostState, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error
   })),
-  on(PostActions.GetPostsSuccess, (state: PostState, { posts }) => (
+  on(PostActions.ApiGetPostsSuccess, (state: PostState, { posts }) => (
     postAdapter.setAll(posts, { ...state, loaded: true, loading: false })
   )),
 
-  on(PostActions.GetNextPosts, (state: PostState) => ({
+  on(PostActions.ApiGetNextPosts, (state: PostState) => ({
     ...state,
     loaded: false,
     loading: true
   })),
-  on(PostActions.GetNextPostsFailure, (state: PostState, { error }) => ({
+  on(PostActions.ApiGetNextPostsFailure, (state: PostState, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error
   })),
-  on(PostActions.GetNextPostsSuccess, (state: PostState, { posts }) => (
+  on(PostActions.ApiGetNextPostsSuccess, (state: PostState, { posts }) => (
     postAdapter.addMany([...posts], {
       ...state,
       loaded: true,
       loading: false,
       currNext: posts.length > 0 ? ++state.currNext : state.currNext,
     })
+  )),
+  on(PostActions.PushManyPosts, (state: PostState, { posts }) => (
+    postAdapter.addMany([...posts], { ...state })
   )),
 )
