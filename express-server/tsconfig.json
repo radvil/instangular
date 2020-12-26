@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "removeComments": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    // "paths": {},
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // "skipLibCheck": true,
+    // "forceConsistentCasingInFileNames": true,
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

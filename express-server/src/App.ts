@@ -1,0 +1,72 @@
+import express, { Application } from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import morgan from 'morgan';
+import { connect } from 'mongoose';
+
+import { Controller } from './interface';
+import { Logger } from './util/logger';
+import { errorMiddleware } from './middleware';
+
+class App {
+  private _app: Application;
+  private _logger = new Logger('App');
+
+  constructor(controllers: Controller[]) {
+    this._app = express();
+
+    this.connectToDatabase();
+    this.initMiddlewares();
+    this.initControllers(controllers);
+    this.initErrorHandling();
+  }
+
+  get app(): Application {
+    return this._app;
+  }
+
+  public listen(): void {
+    this._app.listen(process.env.PORT, () => {
+      this._logger.info(`App started on port ${process.env.PORT}`);
+    })
+  }
+
+  private initMiddlewares(): void {
+    this._app.use(morgan('dev'));
+    // this._app.use(cors({ origin: '*', credentials: true }));
+    this._app.use(cors());
+    this._app.use(express.json());
+    this._app.use(express.urlencoded({ extended: true }));
+    this._app.use(cookieParser());
+  }
+
+  private initControllers(controllers: Controller[]): void {
+    controllers.forEach(controller => {
+      this._app.use('/', controller.router);
+    })
+  }
+
+  private initErrorHandling(): void {
+    this._app.use(errorMiddleware);
+  }
+
+  private connectToDatabase(): void {
+    const { MONGO_URI, MONGO_DBNAME } = process.env;
+    const connectionPath = `${MONGO_URI}/${MONGO_DBNAME}`;
+    const connectionOpts = {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false
+    };
+
+    connect(connectionPath, connectionOpts, (err: Error) => {
+      if (err) {
+        this._logger.error(`Failed to connect to database`, err.stack);
+      }
+      return this._logger.info(`Database connected to ${connectionPath}`)
+    });
+  }
+}
+
+export default App;
