@@ -8,6 +8,9 @@ export interface User extends Document {
   fullName?: string;
   email: string;
   password: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastLoggedInAt?: string;
   address?: {
     street: string;
     city: string;

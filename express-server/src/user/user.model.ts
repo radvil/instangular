@@ -9,12 +9,21 @@ const addressSchema = new Schema({
 });
 
 const userSchema = new Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true,
+  },
   firstName: String,
   lastName: String,
   email: String,
   password: String,
   address: addressSchema,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: Date,
+  lastLoggedInAt: Date
 }, { toJSON: { virtuals: true, getters: true } });
 
 userSchema

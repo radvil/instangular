@@ -1,7 +1,9 @@
 <div class="post--item">
   <div class="post--item-header">
     <img
-      [src]="post?.author?.profilePicture"
+      [lazyLoad]="post?.author?.profilePicture"
+      [defaultImage]="defaultPortrait"
+      [errorImage]="errorImagePath"
       class="pointer"
       [alt]="post?.author?.username"
       height="40"
@@ -16,9 +18,10 @@
   <div class="post--item-image">
     <!-- <div *ngIf="true" class="placeholder"></div> -->
     <img 
-      [defaultImage]="post?.thumb"
+      [defaultImage]="post?.thumbnail"
       [lazyLoad]="post?.image"
       [errorImage]="errorImagePath"
+      class="blur"
       alt="post alt text"
     />
   </div>
@@ -43,10 +46,12 @@
   <p class="view-comments">View all 1,343 comments</p>
   <div class="add-comment">
     <img
-      [src]="post?.author?.profilePicture"
+      [lazyLoad]="post?.author?.profilePicture"
+      [defaultImage]="defaultPortrait"
+      [errorImage]="errorImagePath"
+      [alt]="post?.author?.username"
       height="40"
       width="40"
-      [alt]="post?.author?.username"
     />
     <p>Add a comment...</p>
   </div>

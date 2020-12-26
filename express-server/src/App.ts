@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import { connect } from 'mongoose';
 
 import { Controller } from './interface';
@@ -33,12 +34,13 @@ class App {
   }
 
   private initMiddlewares(): void {
-    this._app.use(morgan('dev'));
+    this._app.use(express.json());
+    this._app.use(express.urlencoded({ extended: true }));
     this._app.use(cors({ origin: '*', credentials: true }));
     this._app.use('/public', express.static(path.join(__dirname, '../public')));
     this._app.use(cookieParser());
-    this._app.use(express.json());
-    this._app.use(express.urlencoded({ extended: true }));
+    this._app.use(helmet());
+    this._app.use(morgan('dev'));
   }
 
   private initMainRoutes(controllers: Controller[]): void {

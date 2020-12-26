@@ -8,7 +8,7 @@ import { Req, Res, Next } from '../var/types';
 import { postModel } from './post.model';
 import { CreatePostDto } from './post.dto';
 import { Post } from './post.interface';
-import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, ImageOutput } from '../image';
+import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader } from '../image';
 import { Querify } from '../util/Querify';
 
 const storage = multer.memoryStorage();
@@ -28,13 +28,13 @@ export class PostController implements Controller {
     },
     {
       label: SizeLabel.SMALL,
-      height: 200,
-      width: 200,
+      height: 300,
+      width: 300,
     },
     {
       label: SizeLabel.MEDIUM,
-      height: 600,
-      width: 600,
+      height: 720,
+      width: 720,
     },
     {
       label: SizeLabel.ORIGINAL,
@@ -144,7 +144,7 @@ export class PostController implements Controller {
       const savedPost = await newPost.save();
 
       await savedPost
-        .populate({ path: 'author', select: '-password -__v' })
+        .populate({ path: 'author', select: '-password -__v -email' })
         .execPopulate();
 
       const response: JsonHttpResponse<Post> = {
