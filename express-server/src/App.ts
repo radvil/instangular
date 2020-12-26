@@ -7,6 +7,7 @@ import { connect } from 'mongoose';
 import { Controller } from './interface';
 import { Logger } from './util/logger';
 import { errorMiddleware } from './middleware';
+import path from 'path';
 
 class App {
   private _app: Application;
@@ -34,7 +35,7 @@ class App {
   private initMiddlewares(): void {
     this._app.use(morgan('dev'));
     this._app.use(cors({ origin: '*', credentials: true }));
-    // this._app.use(cors());
+    this._app.use('/public', express.static(path.join(__dirname, '../public')));
     this._app.use(cookieParser());
     this._app.use(express.json());
     this._app.use(express.urlencoded({ extended: true }));

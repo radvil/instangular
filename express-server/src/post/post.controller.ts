@@ -8,7 +8,7 @@ import { Req, Res, Next } from '../var/types';
 import { postModel } from './post.model';
 import { CreatePostDto } from './post.dto';
 import { Post } from './post.interface';
-import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader } from '../image';
+import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, ImageOutput } from '../image';
 import { Querify } from '../util/Querify';
 
 const storage = multer.memoryStorage();
@@ -132,14 +132,14 @@ export class PostController implements Controller {
     }
 
     try {
-      await this.requestUploadImage(req);
-
+      
       const authorId = req.user._id;
-      const [thumbName, imageName] = this.getUploadedImageResult();
+      const images = await this.requestUploadImage(req);
+      const [thumbPath, imagePath] = this.getUploadedImageResult(images, 'url');
       const newPost = new this._postModel({
         ...req.body as CreatePostDto,
-        thumbnail: thumbName,
-        image: imageName,
+        thumbnail: thumbPath,
+        image: imagePath,
         author: authorId
       });
       const savedPost = await newPost.save();
@@ -151,7 +151,7 @@ export class PostController implements Controller {
       const response: JsonHttpResponse<Post> = {
         status: 200,
         message: 'Post has been created!',
-        data: this.formatPostData(savedPost)
+        data: this.formatPostData(savedPost),
       }
 
       res.json(response);
@@ -205,22 +205,26 @@ export class PostController implements Controller {
     }
   }
 
-  private async requestUploadImage(req: Req): Promise<void> {
+  private async requestUploadImage(req: Req): Promise<ImageOutput[]> {
     this.imageService.baseImageUrl = process.env.PUBLIC_IMAGE_PATH;
-    await this.imageService.uploadImage({ file: req.file } as UploadImageDto);
+    return await this.imageService.uploadImage({ file: req.file } as UploadImageDto);
   }
 
-  private getUploadedImageResult(key?: string): string[] {
-    const uploadResult = this.imageService.getUploadResult('single');
+  /**
+   * 
+   * @param key property key from ImageOutput. Default to "name"
+   * @desc get value from a image output that return string provided by given key.
+   * #### example usage: getUploadedImageResult('key');
+   */
+  private getUploadedImageResult(images: ImageOutput[], key?: string): string[] {
+    const thumbPath = images.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
+    const imagePath = images.find(img => img.sizeLabel === SizeLabel.MEDIUM)[key || 'name'];
 
-    const thumbName = uploadResult.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
-    const imageName = uploadResult.find(img => img.sizeLabel === SizeLabel.MEDIUM)[key || 'name'];
-
-    return [thumbName, imageName];
+    return [thumbPath, imagePath];
   }
 
   private formatPostData(post: Post): Post {
-    post.thumbnail = process.env.PUBLIC_IMAGE_PATH + '/' + post.thumbnail;;
+    post.thumbnail = process.env.PUBLIC_IMAGE_PATH + '/' + post.thumbnail;
     post.image = process.env.PUBLIC_IMAGE_PATH + '/' + post.image;
     delete post.__v;
 

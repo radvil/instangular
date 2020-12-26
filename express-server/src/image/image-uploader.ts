@@ -8,12 +8,16 @@ export class ImageUploader {
   private _resultPerImage: ImageOutput[] = [];
   private _resultImagesArray: ImageOutput[][] = [];
   private _timestamps: Date;
+  private _year: number;
+  private _month: string;
 
   constructor(
     public baseUploadPath: string = '/public/uploads',
     public sizesConfig: SizeConfig[] = []
   ) {
     this._timestamps = new Date();
+    this._year = this._timestamps.getFullYear();
+    this._month = `${this._timestamps.getMonth() + 1}`.padStart(2, "0")
     this.makeAndSyncUploadDir();
   }
 
@@ -33,14 +37,6 @@ export class ImageUploader {
     this._baseImageUrl = urlInString;
   }
 
-  // get resultPerImage(): ImageOutput[] {
-  //   return this._resultPerImage;
-  // }
-
-  // get resultImagesArray(): ImageOutput[][] {
-  //   return this._resultImagesArray;
-  // }
-
   public getUploadResult(uploadType: 'single' | 'array'): Array<any> {
     if (uploadType == 'single') return this._resultPerImage;
     if (uploadType == 'array') return this._resultImagesArray;
@@ -57,9 +53,9 @@ export class ImageUploader {
     const { options, files } = uploadImagesArrayDto;
 
     return await Promise.all(
-      files.map(async(file: ImageFile) => {
-        await this.uploadImage(<UploadImageDto>{ file, options });
-        this._resultImagesArray.push(this._resultPerImage)
+      files.map(async (file: ImageFile) => {
+        return await this.uploadImage(<UploadImageDto>{ file, options });
+        // this._resultImagesArray.push(this._resultPerImage)
       })
     );
   }
@@ -70,8 +66,9 @@ export class ImageUploader {
    * @param file = req.file
    * @param options = {}
    */
-  public async uploadImage(uploadImageDto: UploadImageDto): Promise<void[]> {
+  public async uploadImage(uploadImageDto: UploadImageDto) {
     const { options, file } = uploadImageDto;
+    // const result: ImageOutput[] = [];
 
     return await Promise.all(
       this.sizesConfig.map((config: SizeConfig) => this.uploadImagePerSize(file, config, options))
@@ -87,7 +84,9 @@ export class ImageUploader {
     }
 
     const resultPerSize = await this.transformImage(file, transformOptions);
-    this._resultPerImage.push(resultPerSize);
+    return resultPerSize;
+    // console.log(resultPerSize);
+    // this._resultPerImage.push(resultPerSize);
   }
 
   public async transformImage(file: ImageFile, options: TransformOptions): Promise<ImageOutput> {
@@ -102,7 +101,10 @@ export class ImageUploader {
 
     try {
       const result = await transformAction.toFile(outputPath);
-      const imageUrl = this._baseImageUrl ? this._baseImageUrl + imageName : null;
+      const imageUrl = `${this._year}/${this._month}/${imageName}`;
+      // const imageUrl = this._baseImageUrl
+      //   ? `${this._baseImageUrl}/${this._year}/${this._month}/${imageName}`
+      //   : null;
 
       return <ImageOutput>{
         name: imageName,
@@ -118,10 +120,7 @@ export class ImageUploader {
   }
 
   private makeAndSyncUploadDir(): void {
-    const year = this._timestamps.getFullYear();
-    const month = `${this._timestamps.getMonth() + 1}`.padStart(2, "0");
-
-    this._baseUploadImagePath = process.cwd() + `${this.baseUploadPath}/${year}/${month}/`;
+    this._baseUploadImagePath = process.cwd() + `${this.baseUploadPath}/${this._year}/${this._month}/`;
 
     try {
       mkdirSync(this._baseUploadImagePath, { recursive: true });
