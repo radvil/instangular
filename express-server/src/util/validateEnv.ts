@@ -6,6 +6,7 @@ function validateEnv() {
     MONGO_URI: str(),
     MONGO_DBNAME: str(),
     JWT_SECRET: str(),
+    PUBLIC_IMAGE_PATH: str(),
   });
 }
 

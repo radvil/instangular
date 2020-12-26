@@ -25,9 +25,9 @@ class App {
     return this._app;
   }
 
-  public listen(): void {
-    this._app.listen(process.env.PORT, () => {
-      this._logger.info(`App started on port ${process.env.PORT}`);
+  public listen(port: number): void {
+    this._app.listen(port, () => {
+      this._logger.info(`App started on port ${port}`);
     })
   }
 

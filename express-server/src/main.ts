@@ -9,6 +9,7 @@ import { UserController } from './user';
 
 validateEnv();
 
+const port = parseInt(process.env.PORT);
 const app = new App(
   [
     new ImageController(),
@@ -18,4 +19,4 @@ const app = new App(
   ]
 );
 
-app.listen();
+app.listen(port);
