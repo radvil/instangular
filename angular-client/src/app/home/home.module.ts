@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { Routes, RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 import { HomeComponent } from './home.component';
-import { Routes, RouterModule } from '@angular/router';
 import { PostItemModule } from '../posts/post-item/post-item.module';
 import { StoryComponent } from './story/story.component';
 
@@ -28,6 +29,7 @@ export class HomeRoutingModule { }
   declarations: [HomeComponent, StoryComponent],
   imports: [
     CommonModule,
+    HttpClientModule,
     HomeRoutingModule,
     PostItemModule,
 

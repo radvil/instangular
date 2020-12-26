@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../posts';
-import { authUser, User } from '../users';
+import { User } from '../users';
+import { authUser } from '../auth'
 import { StoryWithUser, StoryUser } from './story/story.component';
 
 @Component({
