@@ -1,6 +1,6 @@
 import { IsIP, IsOptional, IsString } from 'class-validator';
 
-export class LogInDto {
+export class AuthDto {
   @IsString()
   public username: string;
 
@@ -10,4 +10,9 @@ export class LogInDto {
   @IsOptional()
   @IsIP()
   public ipAddress?: string;
+}
+
+export interface AuthResponse {
+  accessToken: Buffer;
+  refreshToken: Buffer;
 }

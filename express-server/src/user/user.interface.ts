@@ -7,7 +7,7 @@ export interface User extends Document {
   lastName: string;
   fullName?: string;
   email: string;
-  password: string;
+  password?: string;
   createdAt?: string;
   updatedAt?: string;
   lastLoggedInAt?: string;
@@ -16,5 +16,6 @@ export interface User extends Document {
     city: string;
     country: string;
     postalCode: number;
-  }
+  },
+  validatePassword: (plainPassword: string) => Promise<boolean>,
 }

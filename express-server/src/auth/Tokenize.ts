@@ -1,23 +1,30 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { User } from '../user';
-import { RefreshToken } from './refresh-token.model';
+import { TokenObj } from '../interface';
+import { RefreshToken, TokenOwner } from './refresh-token.model';
 
-export function generateAccessToken(user: User): Promise<string> {
-  const secret = process.env.JWT_SECRET;
-  const payload = {
-    _id: user._id,
-    username: user.username,
-  };
+export function generateAccessToken(user: TokenOwner): Promise<TokenObj> {
+  const secret = process.env.JWT_SECRET as jwt.Secret;
+  const payload = { _id: user._id, username: user.username };
+  const expiresIn = '1d';
 
   return new Promise((resolve, reject) => {
-    return jwt.sign(payload, secret, { expiresIn: '1d' }, (err, token) => {
-      err ? reject(err) : resolve(token);
+    return jwt.sign(payload, secret, { expiresIn }, (err, token) => {
+      if (err) {
+        reject(err);
+      } else {
+        const tokenObj = {
+          user: payload,
+          token,
+          expiresIn,
+        } as TokenObj;
+        resolve(tokenObj);
+      }
     });
   });
 }
 
-export function generateRefreshToken(user: User, ipAddress: string): Promise<RefreshToken> {
+export function generateRefreshToken(user: TokenOwner, ipAddress: string): Promise<TokenObj> {
   const newDoc = new RefreshToken({
     user: user._id,
     token: createRandomCryptoString(),
@@ -28,7 +35,19 @@ export function generateRefreshToken(user: User, ipAddress: string): Promise<Ref
   });
 
   return new Promise((resolve, reject) => {
-    newDoc.save((err, token) => (err ? reject(err) : resolve(token)));
+    newDoc.save((err, refToken) => {
+      if (err) {
+        reject(err);
+      } else {
+        const tokenObj = {
+          user: { _id: refToken.user._id },
+          token: refToken.token,
+          expiresIn: refToken.expires,
+          created: { ip: refToken.created.ip },
+        } as TokenObj;
+        resolve(tokenObj);
+      }
+    });
   });
 }
 

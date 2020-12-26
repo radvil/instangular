@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+import { compare as bcryptCompare, hash as bcryptHash } from 'bcrypt';
 import { User } from './user.interface';
 
 const addressSchema = new Schema({
@@ -8,7 +9,7 @@ const addressSchema = new Schema({
   postalCode: Number,
 });
 
-const userSchema = new Schema({
+const userSchema = new Schema<User>({
   username: {
     type: String,
     unique: true,
@@ -31,6 +32,41 @@ userSchema
   .get(function () {
     return `${this.firstName} ${this.lastName}`;
   });
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  try {
+    this['password'] = await bcryptHash(this['password'], 10);
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+userSchema.methods.validatePassword = function (plainPassword: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    return bcryptCompare(plainPassword, this.password, (err, matched) => {
+      if (err) return reject(err);
+      return resolve(matched)
+    })
+  })
+};
+
+userSchema.set('toJSON', {
+  virtuals: true,
+  getters: true,
+  versionKey: false,
+  transform: function (doc: Document, ret: User) {
+    // remove these props when object is serialized
+    delete ret.__v;
+    delete ret.id;
+    delete ret.firstName;
+    delete ret.lastName;
+    delete ret.password;
+  }
+});
 
 userSchema.virtual('posts', {
   ref: 'Post',
