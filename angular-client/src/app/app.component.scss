@@ -54,7 +54,7 @@
 .sidebar__header__user {
   width: 100%;
   display: flex;
-  align-items: center;
+  // align-items: center;
   img {
     object-fit: cover;
     border-radius: 50%;
@@ -71,6 +71,20 @@
       font-size: 0.9rem;
       color: #a9a9a9;
     }
+  }
+}
+.sidebar__menu-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  button {
+    display: flex; // idk why
+    align-items: center;
+    height: 80px;
+    width: 100%;
+    border-radius: 0;
+    font-weight: bold;
+    font-size: 1.5rem;
   }
 }
 
@@ -186,6 +200,18 @@ li.story--list-item {
   }
 }
 .post--item-image {
+  width: 100%;
+  height: 720px;
+  position: relative;
+  .placeholder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000027;
+    backdrop-filter: blur(10px);
+  }
   img {
     width: 100%;
     height: 100%;
@@ -233,4 +259,15 @@ p.view-comments {
     margin-left: 1rem;
     color: #a9a9a9;
   }
+}
+.post--item-time {
+  margin: 0 1rem;
+  font-size: 1rem;
+  color: #a9a9a9;
+}
+.content_more {
+  display: flex;
+  margin: 1rem;
+  align-items: center;
+  justify-content: center;
 }

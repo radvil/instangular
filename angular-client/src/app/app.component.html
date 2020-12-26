@@ -14,6 +14,23 @@
           <mat-icon>more_vert</mat-icon>
         </button>
       </div>
+      <div class="sidebar__menu-list">
+        <button mat-button>
+          Home
+        </button>
+        <button mat-button>
+          Search
+        </button>
+        <button mat-button>
+          Add Post
+        </button>
+        <button mat-button>
+          Message
+        </button>
+        <button mat-button>
+          Notifications
+        </button>
+      </div>
     </div>
 
     <!-- content -->
@@ -27,7 +44,7 @@
       </div>
 
       <!-- content story -->
-      <!-- <ul class="content__stories">
+      <ul class="content__stories">
         <li class="story--list-item">
           <img src="assets/images/portrait.jpg" alt="story_user" />
           <mat-icon class="pointer">add</mat-icon>
@@ -61,7 +78,7 @@
           <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
           <div class="title">Another</div>
         </li>
-      </ul> -->
+      </ul>
 
       <!-- post list -->
       <div class="content__posts">
@@ -75,6 +92,7 @@
             </button>
           </div>
           <div class="post--item-image">
+            <div *ngIf="false" class="placeholder"></div>
             <img src="assets/images/post.jpeg" height="720" width="720" alt="post" />
           </div>
           <div class="post--item-buttons">
@@ -98,7 +116,15 @@
             <img src="assets/images/portrait.jpg" height="40" width="40" alt="username" />
             <p>Add a comment...</p>
           </div>
+          <div class="post--item-time">a minute ago</div>
         </div>
+      </div>
+
+      <!-- load more -->
+      <div class="content_more">
+        <button mat-icon-button>
+          <mat-icon>more</mat-icon>
+        </button>
       </div>
 
     </div>
