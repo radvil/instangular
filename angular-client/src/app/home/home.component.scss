@@ -1,0 +1,147 @@
+ul.stories--list {
+  margin: 0;
+  width: calc(2 / 3 * 70vw - 4rem);
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+li.story--list-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1rem;
+  img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid orangered;
+  }
+  .title {
+    text-align: center;
+    margin: 0.5rem 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  &:nth-child(1) {
+    img {
+      border: 5px solid white;
+    }
+    mat-icon {
+      position: absolute;
+      top: 66px;
+      right: 3px;
+      background-color: #3797f1;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+    }
+  }
+}
+
+/** post section **/
+.fx-spacer {
+  flex: auto;
+}
+.post--item {
+  margin-top: 1rem;
+}
+.post--item-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  img {
+    object-fit: cover;
+    margin-right: 1rem;
+    border-radius: 50%;
+    border: 3px solid red;
+  }
+}
+.post--item-image {
+  width: 100%;
+  height: 720px;
+  position: relative;
+  .placeholder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000027;
+    backdrop-filter: blur(10px);
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.post--item-buttons {
+  display: flex;
+  margin: 1rem;
+  button {
+    margin-right: 1rem;
+    &:nth-last-child(1) {
+      margin-right: 0;
+    }
+    &.active mat-icon {
+      color: #f00;
+    }
+  }
+}
+.post--item-likes,
+.post--item-description {
+  margin: 0 1rem;
+  b,
+  .mention {
+    cursor: pointer;
+  }
+}
+.post--item-description {
+  span.mention {
+    color: #3797f1;
+  }
+}
+p.view-comments {
+  cursor: pointer;
+  margin: 0 1rem;
+  color: #a9a9a9;
+}
+.add-comment {
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  img {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  p {
+    cursor: pointer;
+    margin-left: 1rem;
+    color: #a9a9a9;
+  }
+}
+.post--item-time {
+  margin: 0 1rem;
+  font-size: 1rem;
+  color: #a9a9a9;
+}
+.load--more {
+  display: flex;
+  margin: 1rem;
+  align-items: center;
+  justify-content: center;
+}
