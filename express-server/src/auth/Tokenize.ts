@@ -1,13 +1,22 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { TokenObj } from '../interface';
-import { RefreshToken, TokenOwner } from './refresh-token.model';
+import { TokenPayload } from '../interface';
+import { RefreshToken, AuthUser } from './refresh-token.model';
 
-export function generateAccessToken(user: TokenOwner): Promise<TokenObj> {
+export interface GeneratedToken {
+  user: AuthUser;
+  token: Buffer | string;
+  expiresIn: number | string;
+  created?: {
+    ip: string;
+    date?: string;
+  }
+}
+
+export function generateAccessToken(user: AuthUser): Promise<GeneratedToken> {
   const secret = process.env.JWT_SECRET as jwt.Secret;
-  const payload = { _id: user._id, username: user.username };
+  const payload: TokenPayload = { _id: user._id, username: user.username, role: user.role };
   const expiresIn = '1d';
-
   return new Promise((resolve, reject) => {
     return jwt.sign(payload, secret, { expiresIn }, (err, token) => {
       if (err) {
@@ -17,23 +26,22 @@ export function generateAccessToken(user: TokenOwner): Promise<TokenObj> {
           user: payload,
           token,
           expiresIn,
-        } as TokenObj;
+        } as GeneratedToken;
         resolve(tokenObj);
       }
     });
   });
 }
 
-export function generateRefreshToken(user: TokenOwner, ipAddress: string): Promise<TokenObj> {
+export function generateRefreshToken(user: AuthUser, ipAddress: string): Promise<GeneratedToken> {
   const newDoc = new RefreshToken({
     user: user._id,
     token: createRandomCryptoString(),
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expiresIn: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     created: {
       ip: ipAddress
     }
   });
-
   return new Promise((resolve, reject) => {
     newDoc.save((err, refToken) => {
       if (err) {
@@ -42,9 +50,9 @@ export function generateRefreshToken(user: TokenOwner, ipAddress: string): Promi
         const tokenObj = {
           user: { _id: refToken.user._id },
           token: refToken.token,
-          expiresIn: refToken.expires,
+          expiresIn: refToken.expiresIn,
           created: { ip: refToken.created.ip },
-        } as TokenObj;
+        } as GeneratedToken;
         resolve(tokenObj);
       }
     });

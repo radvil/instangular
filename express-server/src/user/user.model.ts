@@ -14,9 +14,14 @@ const userSchema = new Schema<User>({
     type: String,
     unique: true,
   },
+  email: String,
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user'
+  },
   firstName: String,
   lastName: String,
-  email: String,
   password: String,
   address: addressSchema,
   createdAt: {

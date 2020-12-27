@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { TokenOwner } from '../auth';
+import { AuthUser } from '../auth';
 
 export interface RequestUser extends Request {
-  user: TokenOwner;
+  user: AuthUser;
 }

@@ -1,8 +1,7 @@
 import { Router } from 'express';
-
 import { INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
-import { authMiddleware } from '../middleware';
+import { authorizeAccess } from '../middleware';
 import { Req, Res, Next } from '../var/types';
 import { Post, postModel } from '../post';
 import { User, userModel } from './index';
@@ -18,8 +17,8 @@ export class UserController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.get(`${this.path}/:id`, authMiddleware, this.getUserById);
-    this.router.get(`${this.path}/:id/posts`, authMiddleware, this.getPostsByAuthor);
+    this.router.get(`${this.path}/:id`, authorizeAccess(), this.getUserById);
+    this.router.get(`${this.path}/:id/posts`, authorizeAccess(), this.getPostsByAuthor);
   }
 
   private getUserById = async (req: Req, res: Res, next: Next) => {
@@ -73,5 +72,4 @@ export class UserController implements Controller {
       next(new INTERNAL_SERVER_EXCEPTION());
     }
   }
-
 }

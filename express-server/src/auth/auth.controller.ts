@@ -2,7 +2,7 @@ import { CookieOptions, Router } from 'express';
 
 import { AUTH_TOKEN_MISSING_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
-import { authMiddleware, validationMiddleware } from '../middleware';
+import { authorizeAccess, validationMiddleware } from '../middleware';
 import { CreateUserDto, User } from '../user';
 import { Req, Res, Next } from '../var/types';
 import { AuthService } from './auth.service';
@@ -22,16 +22,15 @@ export class AuthController implements Controller {
     this.router.post(`${this.path}/register`, validationMiddleware<CreateUserDto>(CreateUserDto), this.register);
     this.router.post(`${this.path}/login`, validationMiddleware<AuthDto>(AuthDto), this.login);
     this.router.get(`${this.path}/refresh-token`, this.refreshToken);
-    this.router.post(`${this.path}/revoke-token`, authMiddleware, this.revokeToken);
-    this.router.post(`${this.path}/revoke-all-tokens`, authMiddleware, this.revokeAllTokens);
-    this.router.get(`${this.path}/request-auth-user`, authMiddleware, this.requestAuthUser);
-    this.router.post(`${this.path}/request-new-password`, authMiddleware, this.updateUserPassword);
-    this.router.get(`${this.path}/:userId/user-refresh-tokens`, authMiddleware, this.getAllUserRefreshTokens);
+    this.router.post(`${this.path}/revoke-token`, authorizeAccess(), this.revokeToken);
+    this.router.post(`${this.path}/revoke-all-tokens`, authorizeAccess(), this.revokeAllTokens);
+    this.router.get(`${this.path}/request-auth-user`, authorizeAccess(), this.requestAuthUser);
+    this.router.post(`${this.path}/request-new-password`, authorizeAccess(), this.updateUserPassword);
+    this.router.get(`${this.path}/:userId/user-refresh-tokens`, authorizeAccess(), this.getAllUserRefreshTokens);
   }
 
   register = async (req: Req, res: Res, next: Next): Promise<void> => {
     const body: CreateUserDto = req.body;
-
     try {
       const { user } = await this._authSrv.register(body);
       const jsonResponse: JsonHttpResponse<User> = {
@@ -47,11 +46,9 @@ export class AuthController implements Controller {
 
   login = async (req: Req, res: Res, next: Next): Promise<void> => {
     const body: AuthDto = { ...req.body, ipAddress: req.ip };
-
     try {
       const { accessToken, refreshToken } = await this._authSrv.login(body);
       this.setRefreshTokenCookie(res, refreshToken);
-
       const jsonResponse: JsonHttpResponse<AuthResponse> = {
         status: 200,
         message: "Authentication succeed",
@@ -66,7 +63,6 @@ export class AuthController implements Controller {
   refreshToken = async (req: Req, res: Res, next: Next): Promise<void> => {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-
     try {
       const { accessToken, refreshToken } = await this._authSrv.refreshToken({ token, ipAddress });
       this.setRefreshTokenCookie(res, refreshToken);
@@ -83,19 +79,15 @@ export class AuthController implements Controller {
   revokeToken = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-
     if (!token) {
       next(new AUTH_TOKEN_MISSING_EXCEPTION());
     }
-
     if (!req.user.ownsToken(token)) {
       next(new UNAUTHORIZED_EXCEPTION());
     }
-
     try {
       await this._authSrv.expireRefreshToken({ token, ipAddress });
       this.setRefreshTokenCookie(res, null);
-
       res.json(<JsonHttpResponse<any>>{
         status: 200,
         message: 'Token has been revoked'
@@ -103,20 +95,16 @@ export class AuthController implements Controller {
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION(error));
     }
-
   }
 
   revokeAllTokens = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const refreshToken = req.cookies.refreshToken;
-
     if (!req.user.ownsToken(refreshToken)) {
       next(new AUTH_TOKEN_MISSING_EXCEPTION())
     }
-
     try {
       await this._authSrv.expireAllRefreshTokens(req.user._id);
       this.setRefreshTokenCookie(res, null);
-
       res.json(<JsonHttpResponse<any>>{
         status: 200,
         message: 'All tokens revoked'
@@ -160,10 +148,8 @@ export class AuthController implements Controller {
     if (req.params.userId !== req.user._id) {
       next(new UNAUTHORIZED_EXCEPTION())
     }
-
     try {
       const refreshTokens = await this._authSrv.getUserRefreshTokenList(req.params.id);
-
       res.json(<JsonHttpResponse<RefreshToken[]>>{
         status: 200,
         message: 'Get all refresh tokens succeed!',

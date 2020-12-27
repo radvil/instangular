@@ -1,25 +1,25 @@
 import { Schema, model, Document } from 'mongoose';
+import { Role } from '../user';
 
-export interface TokenOwner {
+export interface AuthUser {
   _id: string;
   username: string;
-  ownsToken?: Function
+  role?: Role;
+  ownsToken?: (token: string) => boolean;
 }
-
 export interface RefreshToken extends Document {
-  user: TokenOwner;
+  user: AuthUser;
   token: Buffer | string;
-  expires: string;
-  created: { date: number; ip: string };
-  revoked: { date: number; ip: string };
-  replacementToken: Buffer | string;
+  expiresIn: string;
+  created?: { date: number; ip: string };
+  revoked?: { date: number; ip: string };
+  replacementToken?: Buffer | string;
   isActive?: boolean;
 }
-
-const schema = new Schema({
+const schema = new Schema<RefreshToken>({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   token: String,
-  expires: Date,
+  expiresIn: Date,
   created: {
     date: { type: Date, default: Date.now },
     ip: String
@@ -30,15 +30,12 @@ const schema = new Schema({
   },
   replaceToken: String
 });
-
 schema.virtual('isExpired').get(function () {
-  return Date.now() >= this.expires;
+  return Date.now() >= this.expiresIn;
 });
-
 schema.virtual('isActive').get(function () {
   return !this.revoked.date && !this.isExpired;
 });
-
 schema.set('toJSON', {
   virtuals: true,
   getters: true,
@@ -50,5 +47,4 @@ schema.set('toJSON', {
     delete ret.user;
   }
 });
-
 export const RefreshToken = model<RefreshToken>('RefreshToken', schema);
