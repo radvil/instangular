@@ -11,11 +11,12 @@ export interface TokenResponse {
 export function createAccessToken(authUser: AuthUser): Promise<TokenResponse> {
   const secret = process.env.JWT_SECRET as jwt.Secret;
   const payload: AuthUser = { _id: authUser._id, role: authUser.role };
-  const oneDay = Date.now() + 24 * 60 * 60 * 1000;
+  // const oneDay = Date.now() + 24 * 60 * 60 * 1000;
+  const oneMinuteTest = Date.now() + 60 * 1000;
   return new Promise((resolve, reject) => {
-    return jwt.sign(payload, secret, { expiresIn: oneDay }, (err, token: string) => {
+    return jwt.sign(payload, secret, { expiresIn: oneMinuteTest }, (err, token: string) => {
       if (err) reject(err);
-      else resolve(<TokenResponse>{ payload, token, expiresIn: new Date(oneDay) });
+      else resolve(<TokenResponse>{ payload, token, expiresIn: new Date(oneMinuteTest) });
     });
   });
 }

@@ -29,17 +29,16 @@ function verifyToken() {
     }
     try {
       const userFromVerifiedToken = jwtVerify(authHeader, secret) as AuthUser;
-      const user = userFromVerifiedToken || await User.findById(userFromVerifiedToken._id);
+      const user = await User.findById(userFromVerifiedToken._id);
       if (!user) {
-        next(new UNAUTHORIZED_EXCEPTION());
+        next(new UNAUTHORIZED_EXCEPTION('request user not found', 403));
       }
       req.user = user;
       next();
     } catch (error) {
       const errorMessage = (error instanceof JsonWebTokenError)
-        ? 'Token has been expired'
-        : error.message;
-      next(new UNAUTHORIZED_EXCEPTION(errorMessage));
+        ? new TokenExpiredError('Token has been expired', null).message : error.message;
+      next(new UNAUTHORIZED_EXCEPTION(errorMessage, 401));
     }
   }
 
