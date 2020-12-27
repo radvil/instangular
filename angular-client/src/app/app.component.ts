@@ -65,7 +65,9 @@ export class AppComponent implements OnInit {
   }
 
   private setAuthUser(): void {
-    this.authUser$ = this._store.select($_authUser);
+    this.authUser$ = this._store.select($_authUser).pipe(
+      filter(user => user !== null)
+    );
     this.isAuth$ = this._store.select($_isAuth);
     this._store.dispatch(GetAuthUser());
   }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 export interface StoryUser {
   username: string;
@@ -13,13 +13,15 @@ export interface StoryWithUser {
 @Component({
   selector: 'app-story',
   templateUrl: './story.component.html',
-  styleUrls: ['./story.component.scss']
+  styleUrls: ['./story.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StoryComponent {
 
   @Input() user: StoryUser;
-  @Input() storyIds: number[] = [];
-  @Input() enableAddIcon: boolean = false;
+  @Input() storyIds: number[];
+  @Input() enableIcon: boolean;
+  @Input() enableBorder: boolean;
 
   constructor() {
   }

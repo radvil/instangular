@@ -2,10 +2,13 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { of } from "rxjs";
-import { catchError, map, switchMap, tap } from "rxjs/operators";
+import { catchError, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 import { LocalStorageService } from "../../services/local-storage.service";
 import * as AuthActions from './auth.actions';
 import { AuthService } from "../auth.service";
+import { Store } from "@ngrx/store";
+import { AuthState } from "./auth.model";
+import { $_isAuth } from "./auth.selectors";
 
 @Injectable()
 export class AuthEffects {
@@ -20,9 +23,13 @@ export class AuthEffects {
 
   afterLoggedIn$ = createEffect(() => this._actions$.pipe(
     ofType(AuthActions.LoginSuccess),
-    tap(({ accessToken }) => {
-      this._localStorageService.setItem('accessToken', accessToken);
-      this._router.navigateByUrl('/home');
+    withLatestFrom(this._store.select($_isAuth)),
+    tap(([{ accessToken }, isAuth]) => {
+      if (isAuth) {
+        this._store.dispatch(AuthActions.GetAuthUser());
+        this._localStorageService.setItem('accessToken', accessToken);
+        this._router.navigateByUrl('/home');
+      }
     })
   ), { dispatch: false });
 
@@ -53,5 +60,6 @@ export class AuthEffects {
     private _authService: AuthService,
     private _localStorageService: LocalStorageService,
     private _router: Router,
+    private _store: Store<AuthState>,
   ) { }
 }
