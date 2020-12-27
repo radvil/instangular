@@ -1,5 +1,16 @@
-import { Schema, model } from 'mongoose';
-import { Post } from './post.interface';
+import { Schema, model, Document } from 'mongoose';
+
+export interface Post extends Document {
+  author: any;
+  description: string;
+  tags?: string[];
+  thumbnail?: string;
+  image?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  totaLikes?: number;
+  totalComments?: number;
+}
 
 const postSchema = new Schema({
   author: {
@@ -17,4 +28,24 @@ const postSchema = new Schema({
   updatedAt: Date,
 });
 
-export const postModel = model<Post>('Post', postSchema);
+postSchema.set('toJSON', {
+  virtuals: true,
+  getters: true,
+  versionKey: false,
+  transform: function (doc: Document, ret: Post) {
+    // set value
+    ret.thumbnail = process.env.PUBLIC_IMAGE_PATH + '/' + ret.thumbnail;
+    ret.image = process.env.PUBLIC_IMAGE_PATH + '/' + ret.image;
+    // remove these props when object is serialized
+    delete ret.__v;
+    delete ret.id;
+  }
+});
+
+postSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'post',
+  localField: '_id',
+});
+
+export const Post = model<Post>('Post', postSchema);

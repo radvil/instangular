@@ -1,6 +1,6 @@
 import fs, { mkdirSync } from 'fs-extra';
 import sharp from 'sharp';
-import { ImageOutput, TransformOptions, SizeConfig, UploadImageDto, ImageFile, UploadImagesArrayDto } from './image';
+import { ImageOutput, TransformOptions, SizeConfig, UploadImageDto, ImageFile, UploadImagesArrayDto, SizeLabel } from './image';
 
 export class ImageUploader {
   private _baseUploadImagePath: string;
@@ -64,7 +64,13 @@ export class ImageUploader {
   }
 
   public async transformImage(file: ImageFile, options: TransformOptions): Promise<ImageOutput> {
-    const transformAction = options ? sharp(file.buffer).resize(options) : sharp(file.buffer);
+    let transformAction = sharp(file.buffer);
+    if (options) {
+      transformAction = sharp(file.buffer).resize(options);
+    }
+    if (options.label === SizeLabel.BLUR) {
+      transformAction = sharp(file.buffer).blur(6.66).resize(options);
+    }
     const { prefix, label, subDir } = options;
     const uniqueName = this.makeUniqueFilename(prefix, file.originalname, label);
     const pathLikeName = subDir + uniqueName;

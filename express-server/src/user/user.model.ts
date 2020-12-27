@@ -1,6 +1,31 @@
 import { Schema, model, Document } from 'mongoose';
 import { compare as bcryptCompare, hash as bcryptHash } from 'bcrypt';
-import { User } from './user.interface';
+
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
+export interface User extends Document {
+  _id: string;
+  username: string;
+  email: string;
+  role?: Role;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
+  password?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastLoggedInAt?: string;
+  address?: {
+    street: string;
+    city: string;
+    country: string;
+    postalCode: number;
+  },
+  validatePassword: (plainPassword: string) => Promise<boolean>,
+}
 
 const addressSchema = new Schema({
   street: String,
@@ -31,12 +56,6 @@ const userSchema = new Schema<User>({
   updatedAt: Date,
   lastLoggedInAt: Date
 }, { toJSON: { virtuals: true, getters: true } });
-
-userSchema
-  .virtual('fullName')
-  .get(function () {
-    return `${this.firstName} ${this.lastName}`;
-  });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -79,4 +98,5 @@ userSchema.virtual('posts', {
   foreignField: 'author',
 });
 
-export const userModel = model<User>('User', userSchema);
+
+export const User = model<User>('User', userSchema);

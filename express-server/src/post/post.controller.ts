@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { QueryPopulateOptions } from 'mongoose';
 import multer, { memoryStorage } from 'multer';
 
 import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
@@ -8,26 +9,27 @@ import { authorizeAccess, validationMiddleware } from '../middleware';
 import { Req, Res, Next } from '../var/types';
 import { CreatePostDto } from './post.dto';
 import { Querify } from '../util/Querify';
-import { postModel } from './post.model';
-import { Post } from './post.interface';
+import { Post } from './post.model';
 import { TransformOptions } from '../image';
 
 export class PostController implements Controller {
   public path = '/posts';
   public router = Router();
-  public upload = multer({ storage: memoryStorage() });
-  public imageService: ImageUploader;
-  public baseUploadPath = '/public/uploads/images';
-  public sizesConfigs: SizeConfig[] = [
+
+  private _postModel = Post;
+  private upload = multer({ storage: memoryStorage() });
+  private imageService: ImageUploader;
+  private baseUploadPath = '/public/uploads/images';
+  private sizesConfigs: SizeConfig[] = [
     {
-      label: SizeLabel.THUMB,
+      label: SizeLabel.BLUR,
       height: 20,
       width: 20,
     },
     {
-      label: SizeLabel.SMALL,
-      height: 360,
-      width: 360,
+      label: SizeLabel.THUMB,
+      height: 50,
+      width: 50,
     },
     {
       label: SizeLabel.MEDIUM,
@@ -40,8 +42,6 @@ export class PostController implements Controller {
       height: null
     },
   ];
-
-  private _postModel = postModel;
 
   constructor() {
     this.initImageService();
@@ -69,13 +69,22 @@ export class PostController implements Controller {
       .find(querify.search || {})
       .select(querify.select)
       .populate('author', '-password -__v')
+      .populate(<QueryPopulateOptions>{
+        path: 'comments',
+        populate: {
+          path: 'author',
+          select: 'username photo',
+        },
+        options: { limit: 1, sort: '-createdAt' }
+      })
       .limit(querify.limit || 5)
       .skip(querify.skip)
+    console.log(foundPosts);
     const jsonResponse: JsonHttpResponse<Post[]> = {
       status: 200,
       message: 'Get all posts succeded!',
       total: foundPosts.length,
-      data: foundPosts.map(this.formatPostData),
+      data: foundPosts,
     }
     res.json(jsonResponse);
   }
@@ -85,14 +94,22 @@ export class PostController implements Controller {
     const foundPost = await this._postModel
       .findById(requestedId)
       .select('-__v')
-      .populate('author', '-password -__v');
+      .populate('author', '-password -__v')
+      .populate(<QueryPopulateOptions>{
+        path: 'comments',
+        populate: {
+          path: 'author',
+          select: 'username photo',
+        },
+        options: { limit: 5, sort: '-createdAt' }
+      });
     if (!foundPost) {
       next(new NOT_FOUND_EXCEPTION(requestedId));
     }
     const jsonResponse: JsonHttpResponse<Post> = {
       status: 200,
       message: 'Get by id succeded!',
-      data: this.formatPostData(foundPost),
+      data: foundPost,
     }
     res.json(jsonResponse);
   }
@@ -109,7 +126,7 @@ export class PostController implements Controller {
     const jsonResponse: JsonHttpResponse<Post> = {
       status: 200,
       message: 'Update post succeded!',
-      data: this.formatPostData(updatedPost),
+      data: updatedPost,
     }
     res.json(jsonResponse);
   }
@@ -134,7 +151,7 @@ export class PostController implements Controller {
       const response: JsonHttpResponse<Post> = {
         status: 200,
         message: 'Post has been created!',
-        data: this.formatPostData(savedPost),
+        data: savedPost,
       }
       res.json(response);
     } catch (error) {
@@ -193,7 +210,7 @@ export class PostController implements Controller {
    * @desc get value from a image output that return string provided by given key.
    * #### example usage: uploadPostImage(req.file, 'key');
    */
-  private async uploadPostImage(file: any, key?: string): Promise<string[]> {
+  protected async uploadPostImage(file: any, key?: string): Promise<string[]> {
     const options: TransformOptions = {
       // fit: "contain",
       // background: { r: 255, g: 255, b: 255 },
@@ -202,12 +219,5 @@ export class PostController implements Controller {
     const thumbPath = images.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
     const imagePath = images.find(img => img.sizeLabel === SizeLabel.MEDIUM)[key || 'name'];
     return [thumbPath, imagePath];
-  }
-
-  private formatPostData(post: Post): Post {
-    post.thumbnail = process.env.PUBLIC_IMAGE_PATH + '/' + post.thumbnail;
-    post.image = process.env.PUBLIC_IMAGE_PATH + '/' + post.image;
-    delete post.__v;
-    return post;
   }
 }

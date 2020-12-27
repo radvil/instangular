@@ -1,11 +1,11 @@
 import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
-import { CreateUserDto, User, userModel } from '../user';
+import { CreateUserDto, User } from '../user';
 import { AuthDto, AuthResponse } from './auth.model';
 import { RefreshToken } from './refresh-token.model';
 import { generateAccessToken, generateRefreshToken } from './Tokenize';
 
 export class AuthService {
-  private _userModel = userModel;
+  private _userModel = User;
   private _refTokenModel = RefreshToken;
 
   public async register(body: CreateUserDto): Promise<{ user: User }> {
@@ -13,7 +13,7 @@ export class AuthService {
     if (userWithUsernameFound) {
       throw new DUPLICATE_EXCEPTION(body.username);
     }
-    const newUser = new userModel({ ...body });
+    const newUser = new User({ ...body });
     const savedUser = await newUser.save();
     if (!savedUser) {
       throw new INTERNAL_SERVER_EXCEPTION('Failed to save user!');

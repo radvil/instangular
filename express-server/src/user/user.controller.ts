@@ -3,14 +3,14 @@ import { INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION 
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
 import { authorizeAccess } from '../middleware';
 import { Req, Res, Next } from '../var/types';
-import { Post, postModel } from '../post';
-import { User, userModel } from './index';
+import { Post } from '../post';
+import { User } from './user.model';
 
 export class UserController implements Controller {
   public path: '/users';
   public router = Router();
-  private _postModel = postModel;
-  private _userModel = userModel;
+  private _postModel = Post;
+  private _userModel = User;
 
   constructor() {
     this.initializeRoutes();

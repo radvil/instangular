@@ -3,7 +3,7 @@ import { JsonWebTokenError, TokenExpiredError, verify as jwtVerify } from 'jsonw
 import { AUTH_TOKEN_MISSING_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { TokenPayload, RequestUser } from '../interface';
 import { Res, Next } from '../var/types';
-import { Role, userModel } from '../user';
+import { Role, User } from '../user';
 import { RefreshToken } from '../auth';
 
 /**
@@ -28,7 +28,7 @@ function verifyToken() {
     }
     try {
       const userFromVerifiedToken = jwtVerify(authHeader, secret) as TokenPayload;
-      const user = userFromVerifiedToken || await userModel.findById(userFromVerifiedToken._id);
+      const user = userFromVerifiedToken || await User.findById(userFromVerifiedToken._id);
       if (!user) {
         next(new UNAUTHORIZED_EXCEPTION());
       }

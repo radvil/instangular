@@ -30,6 +30,7 @@ export interface ImageOutput {
 }
 
 export enum SizeLabel {
+  BLUR = 'blur',
   THUMB = 'thumb',
   SMALL = 'small',
   MEDIUM = 'medium',
