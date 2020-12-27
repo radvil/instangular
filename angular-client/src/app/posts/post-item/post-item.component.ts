@@ -11,6 +11,6 @@ export class PostItemComponent {
 
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";
-  @Input() post = {} as Post;
+  @Input() post: Post;
 
 }

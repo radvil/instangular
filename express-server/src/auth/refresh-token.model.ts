@@ -1,50 +1,51 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, SchemaOptions } from 'mongoose';
 import { Role } from '../user';
 
 export interface AuthUser {
   _id: string;
-  username: string;
   role?: Role;
   ownsToken?: (token: string) => boolean;
 }
 export interface RefreshToken extends Document {
-  user: AuthUser;
+  ownedBy: AuthUser;
   token: Buffer | string;
-  expiresIn: string;
-  created?: { date: number; ip: string };
-  revoked?: { date: number; ip: string };
-  replacementToken?: Buffer | string;
+  expiresIn: Date;
+  createdAt: Date;
+  createdByIp: string;
+  updatedAt: Date;
+  updatedByIp: string;
+  oldToken?: Buffer | string;
   isActive?: boolean;
+  isExpired?: boolean;
+}
+const schemaOptions: SchemaOptions = {
+  timestamps: true,
+  toObject: { virtuals: true, versionKey: false },
+  toJSON: {
+    virtuals: true,
+    getters: true,
+    versionKey: false,
+    transform: function (doc: Document, ret: RefreshToken) {
+      delete ret._id;
+      delete ret.ownedBy;
+    }
+  }
 }
 const schema = new Schema<RefreshToken>({
-  user: { type: Schema.Types.ObjectId, ref: 'User' },
-  token: String,
+  ownedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  token: { type: String, required: true, unique: true },
   expiresIn: Date,
-  created: {
-    date: { type: Date, default: Date.now },
-    ip: String
-  },
-  revoked: {
-    date: Date,
-    ip: String
-  },
-  replaceToken: String
-});
+  createdByIp: String,
+  updatedByIp: String,
+  oldToken: String,
+}, schemaOptions);
 schema.virtual('isExpired').get(function () {
-  return Date.now() >= this.expiresIn;
+  // return Date.now() >= this.expiresIn;
+  const hasExpired = Date.now() >= new Date(this.expiresIn).getTime();
+  console.log(hasExpired);
+  return hasExpired;
 });
 schema.virtual('isActive').get(function () {
-  return !this.revoked.date && !this.isExpired;
-});
-schema.set('toJSON', {
-  virtuals: true,
-  getters: true,
-  versionKey: false,
-  transform: function (doc: Document, ret: RefreshToken) {
-    // remove these props when object is serialized
-    delete ret._id;
-    delete ret.id;
-    delete ret.user;
-  }
+  return !this.updatedAt && !this.isExpired;
 });
 export const RefreshToken = model<RefreshToken>('RefreshToken', schema);

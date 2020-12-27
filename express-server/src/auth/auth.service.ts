@@ -1,93 +1,103 @@
-import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
+import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
 import { CreateUserDto, User } from '../user';
 import { AuthDto, AuthResponse } from './auth.model';
 import { RefreshToken } from './refresh-token.model';
-import { generateAccessToken, generateRefreshToken } from './Tokenize';
+import { createAccessToken, createRefreshToken, renewRefreshToken } from './Tokenize';
 
 export class AuthService {
   private _userModel = User;
   private _refTokenModel = RefreshToken;
 
-  public async register(body: CreateUserDto): Promise<{ user: User }> {
-    const userWithUsernameFound = await this._userModel.findOne({ username: body.username });
+  public async register(body: CreateUserDto): Promise<User> {
+    const userWithUsernameFound = await this._userModel.findOne({ username: body.username });;
     if (userWithUsernameFound) {
-      throw new DUPLICATE_EXCEPTION(body.username);
+      throw new DUPLICATE_EXCEPTION('username is not available')
     }
     const newUser = new User({ ...body });
     const savedUser = await newUser.save();
     if (!savedUser) {
       throw new INTERNAL_SERVER_EXCEPTION('Failed to save user!');
     }
-    return { user: savedUser };
+    return savedUser;
   }
 
-  public async login(body: AuthDto): Promise<AuthResponse> {
-    const foundUser = await this._userModel.findOne({ username: body.username }) as User;
-    const passwordsMatched: boolean = await foundUser.validatePassword(body.password);
-    if (!foundUser || !passwordsMatched) {
+  public async login(authDto: AuthDto): Promise<AuthResponse> {
+    const { username, password, ipAddress } = authDto;
+    const foundUser = await this._userModel.findOne({ username }) as User;
+    if (!foundUser) {
       throw new WRONG_CREDENTIALS_EXCEPTION();
     }
+    const passwordsMatched = await foundUser.validatePassword(password);
+    if (!passwordsMatched) {
+      throw new WRONG_CREDENTIALS_EXCEPTION();
+    }
+    const createdAccessToken = await createAccessToken(foundUser);
+    if (!createdAccessToken) {
+      throw 'Failed to generate access token';
+    }
+    const createdRefreshToken = await createRefreshToken(foundUser, ipAddress);
+    if (!createdRefreshToken) {
+      throw 'Failed to generate refresh token';
+    }
     try {
-      const accessTokenObj = await generateAccessToken(foundUser);
-      const refreshTokenObj = await generateRefreshToken(foundUser, body.ipAddress);
-      if (!accessTokenObj || !refreshTokenObj) {
-        throw 'Failed to generate tokens';
-      }
       foundUser.set({ lastLoggedInAt: new Date().toISOString() });
       await foundUser.save();
       return {
-        accessToken: accessTokenObj.token,
-        refreshToken: refreshTokenObj.token,
+        accessToken: createdAccessToken.token,
+        refreshToken: createdRefreshToken.token,
       } as AuthResponse;
     } catch (error) {
-      throw error;
+      throw new INTERNAL_SERVER_EXCEPTION(error);
     }
   }
 
-  public async refreshToken({ token, ipAddress }: { token: Buffer | string, ipAddress: string }) {
+  public async refreshToken({ tokenStr, ipAddress }) {
     try {
-      const refreshToken = await this.getRefreshToken(token);
-      const newRefreshToken = await generateRefreshToken(refreshToken.user, ipAddress);
-      if (!newRefreshToken) {
-        throw 'Failed to generate new refresh token';
-      }
-      refreshToken.revoked.date = Date.now();
-      refreshToken.revoked.ip = ipAddress;
-      refreshToken.replacementToken = refreshToken.token;
-      await refreshToken.save();
-      const accessToken = await generateAccessToken(refreshToken.user);
+      const { token: refreshToken, payload } = await renewRefreshToken(tokenStr, ipAddress);
+      const { token: accessToken } = await createAccessToken(payload);
       if (!accessToken) {
         throw 'Failed to generate access token';
       }
-      return <AuthResponse>{
-        accessToken: accessToken.token,
-        refreshToken: refreshToken.token,
-      };
+      return <AuthResponse>{ refreshToken, accessToken };
     } catch (error) {
-      throw error;
+      throw new INTERNAL_SERVER_EXCEPTION(error);
     }
   }
 
   public async expireRefreshToken({ token, ipAddress }) {
     try {
-      const refreshToken = await this.getRefreshToken(token);
-      refreshToken.revoked.date = Date.now();
-      refreshToken.revoked.ip = ipAddress;
+      const refreshToken = await this._refTokenModel.findOne({ token });
+      refreshToken.updatedByIp = ipAddress;
       await refreshToken.save();
     } catch (error) {
-      throw (error);
+      throw new INTERNAL_SERVER_EXCEPTION(error);
     }
   }
 
   public async expireAllRefreshTokens(userId: string) {
+    const foundUser = await this.getUserById(userId);
+    if (!foundUser) {
+      throw new NOT_FOUND_EXCEPTION('User not found');
+    }
     try {
-      const foundUser = await this.getUserById(userId);
-      if (!foundUser) {
-        throw 'User not found';
-      }
       await this._refTokenModel.deleteMany({ user: userId });
     } catch (error) {
-      throw error;
+      throw new INTERNAL_SERVER_EXCEPTION(error);
+    }
+  }
+
+  public async getUserRefreshTokenList(userId: string) {
+    const foundUser = await this.getUserById(userId);
+    if (!foundUser) {
+      throw new NOT_FOUND_EXCEPTION('User not found');
+    }
+    try {
+      const refreshTokens = await this._refTokenModel
+        .find({ user: foundUser._id } as any)
+        .sort('created.ip');
+      return refreshTokens;
+    } catch (error) {
+      throw new INTERNAL_SERVER_EXCEPTION(error);
     }
   }
 
@@ -96,43 +106,20 @@ export class AuthService {
   }
 
   public async updateUserPassword({ userId, oldPassword, newPassword }) {
+    const foundUser = await this._userModel.findById(userId);
+    if (!foundUser) {
+      throw new NOT_FOUND_EXCEPTION('User not found');
+    }
+    const passwordsMatched = await foundUser.validatePassword(oldPassword);
+    if (!passwordsMatched) {
+      throw new WRONG_CREDENTIALS_EXCEPTION('Invalid credentials');
+    }
     try {
-      const foundUser = await this._userModel.findById(userId);
-      if (!foundUser) {
-        throw 'User not found!';
-      }
-      const passwordsMatched = await foundUser.validatePassword(oldPassword);
-      if (!passwordsMatched) {
-        throw 'Invalid password';
-      }
       foundUser.password = newPassword;
       foundUser.updatedAt = new Date().toISOString();
       return await foundUser.save();
     } catch (error) {
-      throw error;
+      throw new INTERNAL_SERVER_EXCEPTION(error);
     }
-  }
-
-  public async getUserRefreshTokenList(userId: string) {
-    try {
-      const foundUser = await this.getUserById(userId);
-      if (!foundUser) {
-        throw 'User not found!'
-      }
-      const refreshTokens = await this._refTokenModel
-        .find({ user: foundUser._id } as any)
-        .sort('created.ip');
-      return refreshTokens;
-    } catch (error) {
-      throw (error)
-    }
-  }
-
-  protected async getRefreshToken(token: Buffer | string) {
-    const refreshTokenObj = await this._refTokenModel.findOne({ token }).populate('user');
-    if (!refreshTokenObj && refreshTokenObj.isActive) {
-      throw 'Invalid refresh token';
-    }
-    return refreshTokenObj;
   }
 }

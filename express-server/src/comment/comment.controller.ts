@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
+import { INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
+import { Req, Res, Next, COMMENTED_BY } from '../var';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next } from '../var/types';
 import { CreateCommentDto, Comment } from './comment.model';
 import { Querify } from '../util/Querify';
 
@@ -13,24 +13,59 @@ export class CommentController implements Controller {
 
   private initializeRoutes(): void {
     this.router.post(this.path, authorizeAccess(), validationMiddleware(CreateCommentDto, true), this.createNewComment);
+    this.router.get(`${this.path}`, this.getCommentsByPostId);
+    this.router.delete(`${this.path}/:commentId`, authorizeAccess(), this.deleteComment);
   }
 
   private createNewComment = async (req: RequestUser, res: Res, next: Next) => {
-    const newComment = new this._commentModel({
-      ...req.body as CreateCommentDto,
-      author: req.user._id,
-      post: req.body.postId
-     });
     try {
+      const newComment = new this._commentModel(<CreateCommentDto>{
+        ...req.body,
+        commentedBy: req.user._id,
+      });
       const savedComment = await newComment.save();
-      await savedComment.populate({
-        path: 'author',
-        select: 'username photo lastLogin'
-      }).execPopulate();
+      await savedComment.populate(COMMENTED_BY).execPopulate();
       res.json(<JsonHttpResponse<Comment>>{
         status: 200,
         message: 'Create new comment succeed',
         data: savedComment
+      })
+    } catch (error) {
+      next(new INTERNAL_SERVER_EXCEPTION());
+    }
+  }
+
+  private getCommentsByPostId = async (req: Req, res: Res): Promise<void> => {
+    const querify = new Querify(req.query);
+    const foundComments = await this._commentModel
+      .find({ postId: req.query.postId.toString() })
+      .limit(querify.limit || 5)
+      .skip(querify.skip)
+      .select(querify.select)
+      .sort(querify.sort)
+      .populate(COMMENTED_BY)
+    const jsonResponse: JsonHttpResponse<Comment[]> = {
+      status: 200,
+      message: 'Get comments by postId succeded!',
+      total: foundComments.length,
+      data: foundComments,
+    }
+    res.json(jsonResponse);
+  }
+
+  private deleteComment = async (req: RequestUser, res: Res, next: Next) => {
+    const foundComment = await this._commentModel.findById(req.params.commentId);
+    if (!foundComment) {
+      next(new NOT_FOUND_EXCEPTION());
+    }
+    if (<any>foundComment.commentedBy != req.user._id) {
+      next(new UNAUTHORIZED_EXCEPTION())
+    }
+    try {
+      await foundComment.remove();
+      res.json(<JsonHttpResponse<any>>{
+        status: 200,
+        message: "Comment deleted!",
       })
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION());

@@ -1,15 +1,14 @@
 <div class="post--item">
   <div class="post--item-header">
-    <img
-      [lazyLoad]="post?.author?.profilePicture"
-      [defaultImage]="defaultPortrait"
-      [errorImage]="errorImagePath"
-      class="pointer"
-      [alt]="post?.author?.username"
-      height="40"
-      width="40"
-    />
-    <a href="#">{{ post?.author?.username }}</a>
+    <div class="photo--container active">
+      <img
+        [lazyLoad]="post?.postedBy?.photoThumb"
+        [defaultImage]="defaultPortrait"
+        [errorImage]="errorImagePath"
+        [alt]="post?.postedBy?.username"
+      />
+    </div>
+    <a href="#">{{ post?.postedBy?.username }}</a>
     <div class="fx-spacer"></div>
     <button mat-icon-button>
       <mat-icon>more_vert</mat-icon>
@@ -17,7 +16,7 @@
   </div>
   <div class="post--item-image">
     <!-- <div *ngIf="true" class="placeholder"></div> -->
-    <img 
+    <img
       [defaultImage]="post?.thumbnail"
       [lazyLoad]="post?.image"
       [errorImage]="errorImagePath"
@@ -39,17 +38,26 @@
   </div>
   <div class="post--item-description">
     <p>
-      <b>dualipa</b>&nbsp; {{ post?.description }}, Bts
-      shot by <span class="mention">@nixielevinson</span>
+      <b>{{ post.postedBy?.username }}</b
+      >&nbsp;{{ post?.description }} Taken by
+      <span class="mention">@traxex</span>
     </p>
   </div>
-  <p class="view-comments">View all 1,343 comments</p>
+  <p *ngIf="post.commentsCount" class="view-comments">
+    View all {{ post.commentsCount }} comments
+  </p>
+  <div *ngIf="post.comments?.length" class="post--item-description">
+    <p *ngFor="let comment of post.comments">
+      <b>{{ comment.commentedBy.username }}</b
+      >&nbsp;{{ comment.text }}
+    </p>
+  </div>
   <div class="add-comment">
     <img
-      [lazyLoad]="post?.author?.profilePicture"
+      [lazyLoad]="post?.postedBy?.photoThumb"
       [defaultImage]="defaultPortrait"
       [errorImage]="errorImagePath"
-      [alt]="post?.author?.username"
+      [alt]="post?.postedBy?.username"
       height="40"
       width="40"
     />

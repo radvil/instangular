@@ -17,56 +17,58 @@ export class UserController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.get(`${this.path}/:id`, authorizeAccess(), this.getUserById);
-    this.router.get(`${this.path}/:id/posts`, authorizeAccess(), this.getPostsByAuthor);
+    this.router.get(`${this.path}/:userId`, authorizeAccess(), this.getUserById);
+    this.router.get(`${this.path}/:userId/posts`, authorizeAccess(), this.getPostsByAuthor);
   }
 
+  /**
+   * 
+   * @param req.params.userId requested userId
+   * @param req.query.includePosts: string = 'true' | 'false'. To populate posts
+   * @desc public route
+   */
   private getUserById = async (req: Req, res: Res, next: Next) => {
-    const requestedUserId = req.params.id;
-
+    const requestedUserId = req.params.userId;
     try {
-      const originalQuery = this._userModel.findById(requestedUserId);
+      const findQuery = this._userModel.findById(requestedUserId);
       const includePostsOptionExists = !!(req.query.includePosts === 'true');
-
       if (includePostsOptionExists) {
-        originalQuery.populate('posts').exec();
+        findQuery.populate('posts').exec();
       }
-
-      const foundUser = await originalQuery;
-
+      const foundUser = await findQuery;
       if (!foundUser) {
         next(new NOT_FOUND_EXCEPTION());
       }
-
       const jsonResponse: JsonHttpResponse<User> = {
         status: 304,
         message: 'Get user by id succeeded',
         data: foundUser
       }
-
       res.json(jsonResponse);
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION());
     }
   }
 
+  /**
+   * 
+   * @param req request user
+   * @desc this only for private route
+   */
   private getPostsByAuthor = async (req: RequestUser, res: Res, next: Next) => {
-    const requestedUserId = req.params.id;
+    const requestedUserId = req.params.userId;
     const hasSameAuthor = !!(requestedUserId === req.user._id.toString());
-
     if (!hasSameAuthor) {
       next(new UNAUTHORIZED_EXCEPTION());
     }
-
     try {
-      const posts = await this._postModel.find({ author: requestedUserId });
-
+      const query = { postedBy: requestedUserId };
+      const posts = await this._postModel.find(query);
       const jsonResponse: JsonHttpResponse<Post[]> = {
         status: 304,
         message: 'Get all posts by user succeded',
-        data: posts
+        data: posts,
       }
-
       res.json(jsonResponse);
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION());

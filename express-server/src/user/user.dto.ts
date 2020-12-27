@@ -1,18 +1,12 @@
-import { IsEmail, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
-import { CreateAddressDto } from './address.dto';
+import { IsString, MinLength, IsEmail, IsOptional } from "class-validator";
 
 export class CreateUserDto {
   @IsString()
   @MinLength(3)
   public username: string;
 
-  // @IsOptional()
   @IsString()
-  public firstName: string;
-
-  // @IsOptional()
-  @IsString()
-  public lastName: string;
+  public name: string;
 
   @IsString()
   @IsEmail()
@@ -23,6 +17,5 @@ export class CreateUserDto {
   public password: string;
 
   @IsOptional()
-  @ValidateNested()
-  public address?: CreateAddressDto;
+  public image?: string;
 }

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 export interface StoryUser {
   username: string;
-  profilePicture: string;
+  photo: string;
 }
 
 export interface StoryWithUser {

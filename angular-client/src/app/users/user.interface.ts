@@ -1,5 +1,6 @@
-export interface UserDetail extends User {
-  address?: UserAddress;
+export enum Role {
+  USER = "user",
+  ADMIN = "admin"
 }
 
 export interface UserAddress {
@@ -12,10 +13,17 @@ export interface UserAddress {
 export interface User {
   _id: string;
   username: string;
-  profilePicture?: string;
-  firstName?: string;
-  lastName?: string;
-  fullName?: string;
+  email: string;
+  name: string;
+  photo?: string;
+  photoThumb?: string;
+  role?: Role;
   password?: string;
-  email?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastLoggedInAt?: string;
+}
+
+export interface UserDetail extends User {
+  address?: UserAddress;
 }

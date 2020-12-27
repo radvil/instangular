@@ -3,16 +3,23 @@ li.story--list-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 1rem;
-  .borderedImage {
-    border: 5px solid orangered;
+  margin-right: 1.5rem;
+  .activeStory {
+    border: 4px solid orangered;
+    width: 90px !important;
+    height: 90px !important;
+  }
+  .story--list--image-container {
+    width: 100px;
+    height: 100px;
+    padding: 4px;
+    border-radius: 50%;
   }
   img {
-    width: 90px;
-    height: 90px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 5px solid white;
   }
   .title {
     text-align: center;

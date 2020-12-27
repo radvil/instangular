@@ -1,7 +1,8 @@
 import { JsonWebTokenError, TokenExpiredError, verify as jwtVerify } from 'jsonwebtoken';
 
 import { AUTH_TOKEN_MISSING_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
-import { TokenPayload, RequestUser } from '../interface';
+import { RequestUser } from '../interface';
+import { AuthUser } from '../auth';
 import { Res, Next } from '../var/types';
 import { Role, User } from '../user';
 import { RefreshToken } from '../auth';
@@ -27,7 +28,7 @@ function verifyToken() {
       next(new AUTH_TOKEN_MISSING_EXCEPTION());
     }
     try {
-      const userFromVerifiedToken = jwtVerify(authHeader, secret) as TokenPayload;
+      const userFromVerifiedToken = jwtVerify(authHeader, secret) as AuthUser;
       const user = userFromVerifiedToken || await User.findById(userFromVerifiedToken._id);
       if (!user) {
         next(new UNAUTHORIZED_EXCEPTION());
@@ -36,8 +37,8 @@ function verifyToken() {
       next();
     } catch (error) {
       const errorMessage = (error instanceof JsonWebTokenError)
-          ? 'Token has been expired'
-          : error.message;
+        ? 'Token has been expired'
+        : error.message;
       next(new UNAUTHORIZED_EXCEPTION(errorMessage));
     }
   }
@@ -51,9 +52,7 @@ function verifyRole(roles: Role | Role[]) {
       next(new UNAUTHORIZED_EXCEPTION());
     }
     try {
-      const refreshTokens = await RefreshToken.find(<any>{
-        user: req.user._id
-      });
+      const refreshTokens = await RefreshToken.find({ ownedBy: req.user._id } as any);
       if (!refreshTokens) {
         next(new UNAUTHORIZED_EXCEPTION());
       }

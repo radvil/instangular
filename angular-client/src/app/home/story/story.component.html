@@ -1,10 +1,10 @@
 <li class="story--list-item">
-  <img
-    [src]="user?.profilePicture"
-    [class.borderedImage]="storyIds.length > 0"
-    [alt]="user?.username"
-    class="pointer"
-  />
+  <div
+    class="story--list--image-container"
+    [class.activeStory]="storyIds.length > 0"
+  >
+    <img [src]="user?.photo" [alt]="user?.username" class="pointer" />
+  </div>
   <ng-container *ngIf="enableAddIcon">
     <mat-icon class="pointer">add</mat-icon>
   </ng-container>

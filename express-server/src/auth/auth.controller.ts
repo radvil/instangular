@@ -1,6 +1,6 @@
 import { CookieOptions, Router } from 'express';
 
-import { AUTH_TOKEN_MISSING_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
+import { AUTH_TOKEN_MISSING_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
 import { CreateUserDto, User } from '../user';
@@ -30,22 +30,21 @@ export class AuthController implements Controller {
   }
 
   register = async (req: Req, res: Res, next: Next): Promise<void> => {
-    const body: CreateUserDto = req.body;
     try {
-      const { user } = await this._authSrv.register(body);
+      const registeredUser = await this._authSrv.register(<CreateUserDto>req.body);
       const jsonResponse: JsonHttpResponse<User> = {
         status: 200,
         message: "Registration succeed",
-        data: user
+        data: registeredUser
       }
       res.send(jsonResponse);
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      next(error);
     }
   }
 
   login = async (req: Req, res: Res, next: Next): Promise<void> => {
-    const body: AuthDto = { ...req.body, ipAddress: req.ip };
+    const body = <AuthDto>{ ...req.body, ipAddress: req.ip };
     try {
       const { accessToken, refreshToken } = await this._authSrv.login(body);
       this.setRefreshTokenCookie(res, refreshToken);
@@ -56,15 +55,15 @@ export class AuthController implements Controller {
       }
       res.json(jsonResponse);
     } catch (error) {
-      next(new WRONG_CREDENTIALS_EXCEPTION());
+      next(error);
     }
   }
 
   refreshToken = async (req: Req, res: Res, next: Next): Promise<void> => {
-    const token = req.cookies.refreshToken;
+    const tokenStr = req.cookies.refreshToken;
     const ipAddress = req.ip;
     try {
-      const { accessToken, refreshToken } = await this._authSrv.refreshToken({ token, ipAddress });
+      const { accessToken, refreshToken } = await this._authSrv.refreshToken({ tokenStr, ipAddress });
       this.setRefreshTokenCookie(res, refreshToken);
       res.json(<JsonHttpResponse<AuthResponse>>{
         status: 200,
@@ -72,7 +71,7 @@ export class AuthController implements Controller {
         data: { accessToken, refreshToken }
       });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      next(error);
     }
   }
 
@@ -93,7 +92,7 @@ export class AuthController implements Controller {
         message: 'Token has been revoked'
       });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION(error));
+      next(error);
     }
   }
 
@@ -105,12 +104,12 @@ export class AuthController implements Controller {
     try {
       await this._authSrv.expireAllRefreshTokens(req.user._id);
       this.setRefreshTokenCookie(res, null);
-      res.json(<JsonHttpResponse<any>>{
+      res.json(<JsonHttpResponse<string>>{
         status: 200,
         message: 'All tokens revoked'
       });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION())
+      next(error)
     }
   }
 
@@ -123,7 +122,7 @@ export class AuthController implements Controller {
         data: requestedUser
       });
     } catch (error) {
-      next(new NOT_FOUND_EXCEPTION());
+      next(error);
     }
   }
 
@@ -134,13 +133,13 @@ export class AuthController implements Controller {
         oldPassword: req.body.oldPassword,
         newPassword: req.body.newPassword
       });
-      res.json(<JsonHttpResponse<User>> {
+      res.json(<JsonHttpResponse<User>>{
         status: 200,
         message: "Update user's password succeed",
         data: updatedUser
       })
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      next(error);
     }
   }
 
@@ -156,7 +155,7 @@ export class AuthController implements Controller {
         data: refreshTokens
       })
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION())
+      next(error)
     }
   }
 
@@ -165,6 +164,6 @@ export class AuthController implements Controller {
       httpOnly: true,
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     };
-    res.cookie('refreshToken', refreshToken, options);
+    return res.cookie('refreshToken', refreshToken, options);
   }
 }

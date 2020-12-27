@@ -1,20 +1,26 @@
+import { User } from "../users";
+
 export interface Post {
   _id: string;
+  postedBy: User;
   description: string;
-  image: string;
-  author: Author;
-  thumbnail?: string;
   tags?: string[];
-  totalLikes?: number;
-  likedBy?: string[];
-  totalComments?: number;
-  commentedBy?: string[];
-  createdAt: string;
-  updatedAt?: string;
+  thumbnail?: string;
+  image?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  likes?: any[];
+  likesCount?: number;
+  comments?: Comment[];
+  commentsCount?: number;
 }
 
-export interface Author {
+export interface Comment {
   _id: string;
-  username: string;
-  profilePicture?: string;
+  postId: string;
+  commentedBy: User;
+  text: string;
+  createdAt: string;
+  likes?: any[];
+  likesCount?: number;
 }

@@ -5,14 +5,14 @@
       <div class="sidebar__header">
         <div class="sidebar__header__user">
           <img
-            [src]="authUser?.profilePicture"
+            [src]="authUser?.photoThumb"
             width="40"
             height="40"
             alt="avatar"
           />
           <div class="meta">
             <h4>{{ authUser?.username }}</h4>
-            <p>{{ authUser?.fullName }}</p>
+            <p>{{ authUser?.name }}</p>
           </div>
         </div>
         <button mat-icon-button class="sidebar__header_options">

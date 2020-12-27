@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, SchemaOptions } from 'mongoose';
 import { compare as bcryptCompare, hash as bcryptHash } from 'bcrypt';
 
 export enum Role {
@@ -10,66 +10,61 @@ export interface User extends Document {
   _id: string;
   username: string;
   email: string;
+  name: string;
+  photo?: string;
+  photoThumb?: string;
   role?: Role;
-  firstName: string;
-  lastName: string;
-  fullName?: string;
   password?: string;
   createdAt?: string;
   updatedAt?: string;
   lastLoggedInAt?: string;
-  address?: {
-    street: string;
-    city: string;
-    country: string;
-    postalCode: number;
-  },
   validatePassword: (plainPassword: string) => Promise<boolean>,
 }
 
-const addressSchema = new Schema({
-  street: String,
-  city: String,
-  country: String,
-  postalCode: Number,
-});
+const schemaOptions: SchemaOptions = {
+  timestamps: true,
+  toObject: { virtuals: true, versionKey: false },
+  toJSON: {
+    virtuals: true,
+    getters: true,
+    versionKey: false,
+    transform: function (doc: Document, ret: User) {
+      if (ret.photo) {
+        ret.photo = process.env.PUBLIC_IMAGE_PATH + '/' + ret.photo;
+      }
+      if (ret.photoThumb) {
+        ret.photoThumb = process.env.PUBLIC_IMAGE_PATH + '/' + ret.photoThumb;
+      }
+      delete ret.__v;
+      delete ret.id;
+      delete ret.password;
+      delete ret.email;
+    }
+  }
+}
 
-const userSchema = new Schema<User>({
-  username: {
-    type: String,
-    unique: true,
-  },
-  email: String,
-  role: {
-    type: String,
-    enum: ['admin', 'user'],
-    default: 'user'
-  },
-  firstName: String,
-  lastName: String,
+const schema = new Schema<User>({
+  username: { type: String, unique: true, required: true },
+  email: { type: String, unique: true, required: true },
+  name: { type: String, maxlength: 100, required: true },
+  role: { type: String, enum: ['admin', 'user'], default: 'user', required: true },
+  photo: { type: String, maxlength: 1000 },
+  photoThumb: { type: String, maxlength: 1000 },
   password: String,
-  address: addressSchema,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: Date,
-  lastLoggedInAt: Date
-}, { toJSON: { virtuals: true, getters: true } });
+  lastLoggedInAt: Date,
+}, schemaOptions);
 
-userSchema.pre('save', async function (next) {
+schema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-
   try {
     this['password'] = await bcryptHash(this['password'], 10);
-
     return next();
   } catch (error) {
     return next(error);
   }
 });
 
-userSchema.methods.validatePassword = function (plainPassword: string): Promise<boolean> {
+schema.methods.validatePassword = function (plainPassword: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     return bcryptCompare(plainPassword, this.password, (err, matched) => {
       if (err) return reject(err);
@@ -78,25 +73,10 @@ userSchema.methods.validatePassword = function (plainPassword: string): Promise<
   })
 };
 
-userSchema.set('toJSON', {
-  virtuals: true,
-  getters: true,
-  versionKey: false,
-  transform: function (doc: Document, ret: User) {
-    // remove these props when object is serialized
-    delete ret.__v;
-    delete ret.id;
-    delete ret.firstName;
-    delete ret.lastName;
-    delete ret.password;
-  }
-});
-
-userSchema.virtual('posts', {
+schema.virtual('posts', {
   ref: 'Post',
+  foreignField: 'postedBy',
   localField: '_id',
-  foreignField: 'author',
 });
 
-
-export const User = model<User>('User', userSchema);
+export const User = model<User>('User', schema);

@@ -1,16 +1,13 @@
 import { Router } from 'express';
-import { QueryPopulateOptions } from 'mongoose';
 import multer, { memoryStorage } from 'multer';
 
 import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
-import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader } from '../image';
+import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, TransformOptions } from '../image';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next } from '../var/types';
-import { CreatePostDto } from './post.dto';
+import { Req, Res, Next, COMMENTS, POSTED_BY } from '../var';
 import { Querify } from '../util/Querify';
-import { Post } from './post.model';
-import { TransformOptions } from '../image';
+import { CreatePostDto, Post } from './index';
 
 export class PostController implements Controller {
   public path = '/posts';
@@ -67,22 +64,16 @@ export class PostController implements Controller {
     const querify = new Querify(req.query);
     const foundPosts = await this._postModel
       .find(querify.search || {})
-      .select(querify.select)
-      .populate('author', '-password -__v')
-      .populate(<QueryPopulateOptions>{
-        path: 'comments',
-        populate: {
-          path: 'author',
-          select: 'username photo',
-        },
-        options: { limit: 1, sort: '-createdAt' }
-      })
-      .populate('commentsCount')
       .limit(querify.limit || 5)
       .skip(querify.skip)
+      .select(querify.select)
+      .sort(querify.sort)
+      .populate(POSTED_BY)
+      .populate({ ...COMMENTS, options: { limit: 1, sort: [[...querify.sort]] } })
+      .populate('commentsCount')
     const jsonResponse: JsonHttpResponse<Post[]> = {
       status: 200,
-      message: 'Get all posts succeded!',
+      message: 'Get posts succeded!',
       total: foundPosts.length,
       data: foundPosts,
     }
@@ -93,19 +84,11 @@ export class PostController implements Controller {
     const requestedId = req.params.id;
     const foundPost = await this._postModel
       .findById(requestedId)
-      .select('-__v')
-      .populate('author', '-password -__v')
       .populate('commentsCount')
-      .populate(<QueryPopulateOptions>{
-        path: 'comments',
-        populate: {
-          path: 'author',
-          select: 'username photo',
-        },
-        options: { limit: 5, sort: '-createdAt' }
-      });
+      .populate(POSTED_BY)
+      .populate(COMMENTS);
     if (!foundPost) {
-      next(new NOT_FOUND_EXCEPTION(requestedId));
+      next(new NOT_FOUND_EXCEPTION());
     }
     const jsonResponse: JsonHttpResponse<Post> = {
       status: 200,
@@ -120,7 +103,7 @@ export class PostController implements Controller {
     const changes: CreatePostDto = req.body;
     const updatedPost = await this._postModel
       .findByIdAndUpdate(requestedId, changes, { new: true })
-      .select('-__v');
+      .populate(POSTED_BY)
     if (!updatedPost) {
       next(new NOT_FOUND_EXCEPTION(requestedId));
     }
@@ -137,18 +120,15 @@ export class PostController implements Controller {
       next(new BAD_REQUEST_EXCEPTION('Please provide an image!'));
     }
     try {
-      const authorId = req.user._id;
       const [thumbPath, imagePath] = await this.uploadPostImage(req.file, 'url');
-      const newPost = new this._postModel({
-        ...req.body as CreatePostDto,
+      const newPost = new this._postModel(<CreatePostDto>{
+        ...req.body,
         thumbnail: thumbPath,
         image: imagePath,
-        author: authorId
+        postedBy: req.user._id,
       });
       const savedPost = await newPost.save();
-      await savedPost
-        .populate({ path: 'author', select: '-password -__v -email' })
-        .execPopulate();
+      await savedPost.populate(POSTED_BY).execPopulate();
       const response: JsonHttpResponse<Post> = {
         status: 200,
         message: 'Post has been created!',
@@ -162,18 +142,15 @@ export class PostController implements Controller {
 
   private deletePost = async (req: Req, res: Res, next: Next) => {
     const requestedId = req.params.id;
+    const foundPost = await this._postModel.findById(requestedId);
+    if (!foundPost) {
+      next(new NOT_FOUND_EXCEPTION());
+    }
     try {
-      const foundPost = await this._postModel.findById(requestedId);
-      if (!foundPost) {
-        next(new NOT_FOUND_EXCEPTION());
-      }
-      const deleted = await Promise.all([
+      await Promise.all([
         await this.imageService.removeAssociatedImages(foundPost.image, this.sizesConfigs),
         await foundPost.remove()
       ]);
-      if (!deleted) {
-        next(new INTERNAL_SERVER_EXCEPTION('Failed to remove post with images'));
-      }
       const jsonResponse: JsonHttpResponse<any> = {
         status: 200,
         message: `Delete post succeded!`,
@@ -197,7 +174,7 @@ export class PostController implements Controller {
         status: 200,
         message: `Delete multiple posts succeded!`,
         total: requestedIds.length,
-        data: { deletedPostId: requestedIds }
+        data: { deletedPostIds: requestedIds }
       }
       res.json(jsonResponse);
     } catch (error) {

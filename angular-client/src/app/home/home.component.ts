@@ -21,14 +21,14 @@ export class HomeComponent implements OnInit {
       const isSelf = this.authUser.username === 'victoriaelizabeth' ? 'Your Story' : 'victoriaelizabeth';
       return {
         username: isSelf,
-        profilePicture: this.authUser.profilePicture,
+        photo: this.authUser.photo,
       }
     }
   }
 
   public authUser: User;
   public stories: StoryWithUser[];
-  public posts: Observable<Post[]>;
+  public posts$: Observable<Post[]>;
 
   constructor(
     private store: Store<PostState>
@@ -48,36 +48,36 @@ export class HomeComponent implements OnInit {
     this.stories = [
       {
         user: {
-          username: "Daryl Dickson",
-          profilePicture: "assets/images/portrait.jpg",
+          username: "maggie",
+          photo: "assets/images/portrait.jpg",
         },
         storyIds: ["1", "2", "3", "4"],
       },
       {
         user: {
-          username: "Rick",
-          profilePicture: "assets/images/portrait.jpg",
+          username: "rickgrymes",
+          photo: "assets/images/portrait.jpg",
         },
         storyIds: ["1", "2", "3", "4"],
       },
       {
         user: {
-          username: "Maggie",
-          profilePicture: "assets/images/portrait.jpg",
+          username: "daryldickson",
+          photo: "assets/images/portrait.jpg",
         },
         storyIds: ["1", "2", "3", "4"],
       },
       {
         user: {
-          username: "Carol",
-          profilePicture: "assets/images/portrait.jpg",
+          username: "carol",
+          photo: "assets/images/portrait.jpg",
         },
         storyIds: ["1", "2", "3", "4"],
       },
       {
         user: {
-          username: "Carl",
-          profilePicture: "assets/images/portrait.jpg",
+          username: "carl",
+          photo: "assets/images/portrait.jpg",
         },
         storyIds: ["1", "2", "3", "4"],
       },
@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
 
   private getFeeds(): void {
     this.store.dispatch(GetPosts());
-    this.posts = this.store.select($_posts);
+    this.posts$ = this.store.select($_posts);
     // this.posts = [
     //   {
     //     _id: '1234',
@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit {
     //     author: {
     //       _id: "authorId122",
     //       username: "author122",
-    //       profilePicture: "assets/images/portrait.jpg"
+    //       photo: "assets/images/portrait.jpg"
     //     },
     //     image: "assets/images/post.jpeg",
     //     createdAt: new Date().toISOString()
@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
     //     author: {
     //       _id: "userId1234",
     //       username: "dualipa",
-    //       profilePicture: "assets/images/portrait.jpg"
+    //       photo: "assets/images/portrait.jpg"
     //     },
     //     image: "assets/images/post.jpeg",
     //     createdAt: new Date().toISOString()

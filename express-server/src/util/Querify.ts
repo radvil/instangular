@@ -16,8 +16,8 @@ export class Querify {
 		return this.queries.select || '-__v';
 	};
 
-	public get sort() {
-		return this.queries.sort || 'createdAt';
+	public get sort(): Array<string[]> {
+		return this.queries.sort || [['createdAt', 'descending']];
 	};
 
 	public get limit() {
