@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../posts';
-import { User } from '../users';
+import { Post } from '../post';
+import { User } from '../user';
 import { authUser } from '../auth'
 import { StoryWithUser, StoryUser } from './story/story.component';
 import { Store } from '@ngrx/store';
-import { PostState } from '../posts/store/post.state';
-import { GetPosts } from '../posts/store/post.actions';
+import { PostState } from '../post/store/post.state';
+import { GetPosts } from '../post/store/post.actions';
 import { Observable } from 'rxjs';
-import { $_posts } from '../posts/store/post.selectors';
+import { $_posts } from '../post/store/post.selectors';
 
 @Component({
   selector: 'app-home',

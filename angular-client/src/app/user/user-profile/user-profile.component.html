@@ -1,0 +1,67 @@
+<div *ngIf="user$ | async as user" class="user-profile">
+  <!-- user-profile header -->
+  <div class="user-profile__header">
+    <div class="header--text">{{ user.username }}</div>
+    <button mat-icon-button class="header--icon-right">
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+
+  <!-- user-profile intro -->
+  <section class="intro">
+    <div class="intro--header">
+      <div class="photo">
+        <div class="photo-container bordered pointer">
+          <img
+            [lazyLoad]="user.photo"
+            [defaultImage]="user.photoThumb"
+            [errorImage]="errorImagePath"
+            [alt]="user.username"
+            height="200"
+            width="200"
+          />
+        </div>
+      </div>
+      <div class="postsCount">
+        <h3>{{ user.postsCount }}</h3>
+        <span>Posts</span>
+      </div>
+      <div class="followersCount">
+        <h3>{{ user.followersCount || 0 }}</h3>
+        <span>Followers</span>
+      </div>
+      <div class="followingsCount">
+        <h3>{{ user.followingsCount || 0 }}</h3>
+        <span>Following</span>
+      </div>
+    </div>
+    <div class="intro--body">
+      <div class="name">{{ user.name }}</div>
+      <div class="bio">{{ user.bio }}</div>
+      <div class="socialLinks">
+        <div *ngIf="user.websiteLink" class="socialLinkItem">
+          <a href="#">{{ user.websiteLink | truncate }}</a>
+        </div>
+        <div *ngIf="user.facebookLink" class="socialLinkItem">
+          <fa-icon [icon]="['fab', 'facebook']"></fa-icon>&nbsp;
+          <a href="#">{{ user.facebookLink }}</a>
+        </div>
+        <div *ngIf="user.twitterLink" class="socialLinkItem">
+          <fa-icon [icon]="['fab', 'twitter']"></fa-icon>&nbsp;
+          <a href="#">{{ user.twitterLink }}</a>
+        </div>
+        <div *ngIf="user.githubLink" class="socialLinkItem">
+          <fa-icon [icon]="['fab', 'github']"></fa-icon>&nbsp;
+          <a href="#">{{ user.githubLink }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="intro--footer">
+      <button (click)="editProfile(user._id)" mat-stroked-button>Edit Profile</button>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="!(user$ | async)" class="notFound">
+  <h1>Not Found 😅</h1>
+</div>

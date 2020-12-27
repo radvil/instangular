@@ -1,4 +1,4 @@
-import { User } from "../users";
+import { User } from "../user";
 
 export const authUser: User = {
   _id: "userId123",
