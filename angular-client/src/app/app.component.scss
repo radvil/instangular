@@ -1,0 +1,64 @@
+.App {
+  display: grid;
+  place-items: center;
+  background-color: #dedede;
+  height: 100vh;
+  color: #464646;
+}
+
+.app__body {
+  display: flex;
+  background-color: #fff;
+  height: 90vh;
+  width: 90vw;
+  box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.2);
+}
+
+.sidebar {
+  flex: 0.33;
+  background-color: #f5f5f5;
+}
+
+.sidebar__header {
+  max-height: 100px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar__header__user {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .meta {
+    margin-left: 1rem;
+    h4 {
+      margin: 0;
+      line-height: 1.5rem;
+    }
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #a9a9a9;
+    }
+  }
+
+  mat-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      // border: 3px solid coral;
+    }
+  }
+
+}
