@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
     this.posts$ = this.store.select($_posts);
   }
 
-  public checkSelfUser(storyUsername: string):boolean {
+  public checkSelfUser(storyUsername: string): boolean {
     return this.authUser.username == storyUsername;
   }
 

@@ -32,3 +32,8 @@ export const $_postsOfUser = createSelector(
   $_userSelectedUsername,
   (posts, username) => posts.filter(post => post.postedBy.username == username)
 )
+export const $_post = createSelector(
+  $_postEntities,
+  $_postSelectedId,
+  (entities, postId) => postId ? entities[postId] : undefined
+);

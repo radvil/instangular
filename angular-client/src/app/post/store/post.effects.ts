@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
-
 import { of } from 'rxjs';
 import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+
 import * as postActions from './post.actions';
 import { PostService } from "../post.service";
 import { $_postCurrNext } from "./post.selectors";
+import { Post } from "../post.interface";
 
 @Injectable()
 export class PostEffects {
@@ -28,8 +29,16 @@ export class PostEffects {
     ))
   ))
 
+  getPostById$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.GetPostById),
+    switchMap(({ postId }) => this._postService.getPostById(postId).pipe(
+      map(post => postActions.GetPostByIdSuccess({ post })),
+      catchError(error => of(postActions.GetPostByIdFailure({ error })))
+    ))
+  ))
+
   constructor(
-    private _store: Store,
+    private _store: Store<Post | Comment>,
     private _actions$: Actions,
     private _postService: PostService,
   ) { }

@@ -58,7 +58,7 @@
       <span class="mention">@traxex</span>
     </p>
   </div>
-  <p *ngIf="post.commentsCount" class="view-comments">
+  <p *ngIf="post.commentsCount" (click)="viewPostComments(post._id)" class="view-comments">
     View all {{ post.commentsCount }} comments
   </p>
   <div *ngIf="post.comments.length" class="post--item-description">

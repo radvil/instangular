@@ -35,7 +35,6 @@ const schemaOptions: SchemaOptions = {
     transform: function (doc: Document, ret: Comment) {
       delete ret.__v;
       delete ret.id;
-      delete ret.postId;
     }
   }
 }

@@ -34,4 +34,8 @@ export class PostItemComponent {
     return this.post.reactionsCount
   }
 
+  public viewPostComments(postId: string) {
+    this._router.navigate(['post', postId]);
+  }
+
 }

@@ -13,29 +13,46 @@ export enum PostActionTypes {
 
   PUSH_MANY_POSTS = '[Post] Push Many Posts',
 
+  GET_POST_BY_ID = '[Post/API] Get Post By Id',
+  GET_POST_BY_ID_SUCCESS = '[Post/API] Get Post By Id Success',
+  GET_POST_BY_ID_FAILURE = '[Post/API] Get Post By Id Failure',
+
 }
 
 export const GetPosts = createAction(PostActionTypes.GET_POSTS);
 export const GetPostsSuccess = createAction(
-    PostActionTypes.GET_POSTS_SUCCESS,
-    props<{ posts: Post[] }>()
+  PostActionTypes.GET_POSTS_SUCCESS,
+  props<{ posts: Post[] }>()
 )
 export const GetPostsFailure = createAction(
-    PostActionTypes.GET_POSTS_FAILURE,
-    props<{ error: Error }>()
+  PostActionTypes.GET_POSTS_FAILURE,
+  props<{ error: Error }>()
 )
 
 export const GetNextPosts = createAction(PostActionTypes.GET_NEXT_POSTS);
 export const GetNextPostsSuccess = createAction(
-    PostActionTypes.GET_NEXT_POSTS_SUCCESS,
-    props<{ posts: Post[] }>()
+  PostActionTypes.GET_NEXT_POSTS_SUCCESS,
+  props<{ posts: Post[] }>()
 )
 export const GetNextPostsFailure = createAction(
-    PostActionTypes.GET_NEXT_POSTS_FAILURE,
-    props<{ error: Error }>()
+  PostActionTypes.GET_NEXT_POSTS_FAILURE,
+  props<{ error: Error }>()
 )
 
 export const PushManyPosts = createAction(
   PostActionTypes.PUSH_MANY_POSTS,
   props<{ posts: Post[] }>()
+)
+
+export const GetPostById = createAction(
+  PostActionTypes.GET_POST_BY_ID,
+  props<{ postId: string }>()
+);
+export const GetPostByIdSuccess = createAction(
+  PostActionTypes.GET_POST_BY_ID_SUCCESS,
+  props<{ post: Post }>()
+)
+export const GetPostByIdFailure = createAction(
+  PostActionTypes.GET_POST_BY_ID_FAILURE,
+  props<{ error: Error }>()
 )

@@ -22,6 +22,11 @@ export class PostService {
   public getIncrementalPosts(nextIndex?: number): Observable<Post[]> {
     const query = nextIndex ? `page=${nextIndex}` : `page=1`;
     return this._http.get<JsonHttpResponse<Post[]>>(`${env.be.url}/posts?${query}`)
-    .pipe( map(res => res.data) )
+      .pipe(map(res => res.data))
+  }
+
+  public getPostById(postId: string): Observable<Post> {
+    const request$ = this._http.get<JsonHttpResponse<Post>>(`${env.be.url}/posts/${postId}`);
+    return request$.pipe(map(res => res.data));
   }
 }

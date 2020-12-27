@@ -2,8 +2,8 @@ import { NgModule } from "@angular/core";
 import { EffectsModule } from "@ngrx/effects";
 import { StoreModule } from "@ngrx/store";
 
-import { PostEffects } from "./store/post.effects";
-import { postReducer } from "./store/post.reducer";
+import { PostEffects } from "./post.effects";
+import { postReducer } from "./post.reducer";
 
 @NgModule({
   imports: [
