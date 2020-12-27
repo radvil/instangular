@@ -25,7 +25,6 @@ export class AuthController implements Controller {
     this.router.post(`${this.path}/revoke-token`, authorizeAccess(), this.revokeToken);
     this.router.post(`${this.path}/revoke-all-tokens`, authorizeAccess(), this.revokeAllTokens);
     this.router.get(`${this.path}/request-auth-user`, authorizeAccess(), this.requestAuthUser);
-    this.router.post(`${this.path}/request-new-password`, authorizeAccess(), this.updateUserPassword);
     this.router.get(`${this.path}/:userId/user-refresh-tokens`, authorizeAccess(), this.getAllUserRefreshTokens);
   }
 
@@ -121,23 +120,6 @@ export class AuthController implements Controller {
         message: 'Request AuthUser succeed',
         data: requestedUser
       });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  updateUserPassword = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
-    try {
-      const updatedUser = await this._authSrv.updateUserPassword({
-        userId: req.user._id,
-        oldPassword: req.body.oldPassword,
-        newPassword: req.body.newPassword
-      });
-      res.json(<JsonHttpResponse<User>>{
-        status: 200,
-        message: "Update user's password succeed",
-        data: updatedUser
-      })
     } catch (error) {
       next(error);
     }

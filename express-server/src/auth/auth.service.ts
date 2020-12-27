@@ -104,22 +104,4 @@ export class AuthService {
   public async getUserById(userId: string) {
     return await this._userModel.findById(userId);
   }
-
-  public async updateUserPassword({ userId, oldPassword, newPassword }) {
-    const foundUser = await this._userModel.findById(userId);
-    if (!foundUser) {
-      throw new NOT_FOUND_EXCEPTION('User not found');
-    }
-    const passwordsMatched = await foundUser.validatePassword(oldPassword);
-    if (!passwordsMatched) {
-      throw new WRONG_CREDENTIALS_EXCEPTION('Invalid credentials');
-    }
-    try {
-      foundUser.password = newPassword;
-      foundUser.updatedAt = new Date().toISOString();
-      return await foundUser.save();
-    } catch (error) {
-      throw new INTERNAL_SERVER_EXCEPTION(error);
-    }
-  }
 }

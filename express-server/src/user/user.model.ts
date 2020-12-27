@@ -18,6 +18,13 @@ export interface User extends Document {
   createdAt?: string;
   updatedAt?: string;
   lastLoggedInAt?: string;
+  lastPasswordUpdatedAt?: string;
+  // basic info
+  bio?: string;
+  websiteLink?: string;
+  facebookLink?: string;
+  twitterLink?: string;
+  githubLink?: string;
   validatePassword: (plainPassword: string) => Promise<boolean>,
 }
 
@@ -30,15 +37,17 @@ const schemaOptions: SchemaOptions = {
     versionKey: false,
     transform: function (doc: Document, ret: User) {
       if (ret.photo) {
-        ret.photo = process.env.PUBLIC_IMAGE_PATH + '/' + ret.photo;
+        ret.photo = process.env.PUBLIC_IMAGE_PATH + ret.photo;
       }
       if (ret.photoThumb) {
-        ret.photoThumb = process.env.PUBLIC_IMAGE_PATH + '/' + ret.photoThumb;
+        ret.photoThumb = process.env.PUBLIC_IMAGE_PATH + ret.photoThumb;
       }
       delete ret.__v;
       delete ret.id;
       delete ret.password;
+      delete ret.lastPasswordUpdatedAt;
       delete ret.email;
+      delete ret.role;
     }
   }
 }
@@ -51,7 +60,13 @@ const schema = new Schema<User>({
   photo: { type: String, maxlength: 1000 },
   photoThumb: { type: String, maxlength: 1000 },
   password: String,
+  lastPasswordUpdatedAt: String,
   lastLoggedInAt: Date,
+  bio: {type: String, maxlength: 500},
+  websiteLink: { type: String, maxlength: 1000 },
+  facebookLink: { type: String, maxlength: 1000 },
+  twitterLink: { type: String, maxlength: 1000 },
+  githubLink: { type: String, maxlength: 1000 },
 }, schemaOptions);
 
 schema.pre('save', async function (next) {
@@ -77,6 +92,13 @@ schema.virtual('posts', {
   ref: 'Post',
   foreignField: 'postedBy',
   localField: '_id',
+});
+
+schema.virtual('postsCount', {
+  ref: 'Post',
+  foreignField: 'postedBy',
+  localField: '_id',
+  count: true,
 });
 
 export const User = model<User>('User', schema);
