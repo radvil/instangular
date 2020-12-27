@@ -8,11 +8,11 @@ export interface Post extends Document {
   image?: string;
   createdAt: Date;
   updatedAt: Date;
-  totaLikes?: number;
-  totalComments?: number;
+  likesCount?: number;
+  commentsCount?: number;
 }
 
-const postSchema = new Schema({
+const schema = new Schema({
   author: {
     ref: 'User',
     type: Schema.Types.ObjectId,
@@ -28,7 +28,7 @@ const postSchema = new Schema({
   updatedAt: Date,
 });
 
-postSchema.set('toJSON', {
+schema.set('toJSON', {
   virtuals: true,
   getters: true,
   versionKey: false,
@@ -42,10 +42,17 @@ postSchema.set('toJSON', {
   }
 });
 
-postSchema.virtual('comments', {
+schema.virtual('comments', {
   ref: 'Comment',
   foreignField: 'post',
   localField: '_id',
 });
 
-export const Post = model<Post>('Post', postSchema);
+schema.virtual('commentsCount', {
+  ref: 'Comment',
+  foreignField: 'post',
+  localField: '_id',
+  count: true,
+});
+
+export const Post = model<Post>('Post', schema);

@@ -77,9 +77,9 @@ export class PostController implements Controller {
         },
         options: { limit: 1, sort: '-createdAt' }
       })
+      .populate('commentsCount')
       .limit(querify.limit || 5)
       .skip(querify.skip)
-    console.log(foundPosts);
     const jsonResponse: JsonHttpResponse<Post[]> = {
       status: 200,
       message: 'Get all posts succeded!',
@@ -95,6 +95,7 @@ export class PostController implements Controller {
       .findById(requestedId)
       .select('-__v')
       .populate('author', '-password -__v')
+      .populate('commentsCount')
       .populate(<QueryPopulateOptions>{
         path: 'comments',
         populate: {
