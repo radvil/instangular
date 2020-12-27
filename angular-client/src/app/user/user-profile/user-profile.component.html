@@ -2,7 +2,7 @@
   <!-- user-profile header -->
   <div class="user-profile__header">
     <div class="header--text">{{ user.username }}</div>
-    <button mat-icon-button class="header--icon-right">
+    <button (click)="logout()" mat-icon-button class="header--icon-right">
       <mat-icon>settings</mat-icon>
     </button>
   </div>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Post, PostReaction } from '../post.interface';
+import { Router } from '@angular/router';
+import { Post } from '../post.interface';
 
 @Component({
   selector: 'app-post-item',
@@ -9,9 +10,17 @@ import { Post, PostReaction } from '../post.interface';
 })
 export class PostItemComponent {
 
+  @Input() post: Post;
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";
-  @Input() post: Post;
+
+  constructor(private _router: Router) { }
+
+  goToUserProfile(username: string) {
+    if (this.post) {
+      this._router.navigate(['user', username]);
+    }
+  }
 
   public get showedReactionUsername(): string {
     if (this.post.reactions.length > 0) {

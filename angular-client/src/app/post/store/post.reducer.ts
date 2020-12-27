@@ -5,33 +5,33 @@ import * as PostActions from './post.actions';
 export const postReducer = createReducer(
   initialPostState,
 
-  on(PostActions.ApiGetPosts, (state: PostState) => ({
+  on(PostActions.GetPosts, (state: PostState) => ({
     ...state,
     loaded: false,
     loading: true
   })),
-  on(PostActions.ApiGetPostsFailure, (state: PostState, { error }) => ({
+  on(PostActions.GetPostsFailure, (state: PostState, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error
   })),
-  on(PostActions.ApiGetPostsSuccess, (state: PostState, { posts }) => (
+  on(PostActions.GetPostsSuccess, (state: PostState, { posts }) => (
     postAdapter.setAll(posts, { ...state, loaded: true, loading: false })
   )),
 
-  on(PostActions.ApiGetNextPosts, (state: PostState) => ({
+  on(PostActions.GetNextPosts, (state: PostState) => ({
     ...state,
     loaded: false,
     loading: true
   })),
-  on(PostActions.ApiGetNextPostsFailure, (state: PostState, { error }) => ({
+  on(PostActions.GetNextPostsFailure, (state: PostState, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error
   })),
-  on(PostActions.ApiGetNextPostsSuccess, (state: PostState, { posts }) => (
+  on(PostActions.GetNextPostsSuccess, (state: PostState, { posts }) => (
     postAdapter.addMany([...posts], {
       ...state,
       loaded: true,

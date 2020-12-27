@@ -3,16 +3,16 @@
     <!-- sidebar -->
     <div class="sidebar">
       <div class="sidebar__header">
-        <div class="sidebar__header__user">
+        <div *ngIf="authUser$ | async as authUser" class="sidebar__header__user">
           <img
-            [src]="authUser?.photoThumb"
+            [src]="authUser.photoThumb"
             width="40"
             height="40"
             alt="avatar"
           />
           <div class="meta">
-            <h4 class="txt-1">{{ authUser?.username }}</h4>
-            <p>{{ authUser?.name }}</p>
+            <h4 class="txt-1">{{ authUser.username }}</h4>
+            <p>{{ authUser.name }}</p>
           </div>
         </div>
         <button
@@ -23,30 +23,20 @@
           <mat-icon>menu</mat-icon>
         </button>
       </div>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>home</mat-icon>
-        <span class="menu--label">Home</span>
-      </button>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>search</mat-icon>
-        <span class="menu--label">Search</span>
-      </button>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>add</mat-icon>
-        <span class="menu--label">Add Post</span>
-      </button>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>message</mat-icon>
-        <span class="menu--label">Message</span>
-      </button>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>alarm</mat-icon>
-        <span class="menu--label">Notifications</span>
-      </button>
-      <button mat-button class="sidebar__menu--list">
-        <mat-icon>settings</mat-icon>
-        <span class="menu--label">Settings</span>
-      </button>
+
+      <ng-container *ngIf="isAuth$ | async; else notAuthMenu;">
+        <button *ngFor="let menu of menuItemsPrivate" [routerLink]="menu.routerLink" mat-button class="sidebar__menu--list">
+          <mat-icon>{{ menu.icon }}</mat-icon>
+          <span class="menu--label">{{ menu.label }}</span>
+        </button>
+      </ng-container>
+
+      <ng-template #notAuthMenu>
+        <button *ngFor="let menu of menuItemsPublic" [routerLink]="menu.routerLink" mat-button class="sidebar__menu--list">
+          <mat-icon>{{ menu.icon }}</mat-icon>
+          <span class="menu--label">{{ menu.label }}</span>
+        </button>
+      </ng-template>
     </div>
 
     <!-- content -->

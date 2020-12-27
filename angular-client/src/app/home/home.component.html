@@ -8,7 +8,7 @@
 
 <!-- home story list -->
 <ul class="stories--list">
-  <app-story [user]="firstStoryItem" [enableAddIcon]="true"></app-story>
+  <app-story [user]="authUser$ | async" [enableAddIcon]="true"></app-story>
   <ng-container *ngFor="let story of stories">
     <app-story [user]="story.user" [storyIds]="story.storyIds"></app-story>
   </ng-container>

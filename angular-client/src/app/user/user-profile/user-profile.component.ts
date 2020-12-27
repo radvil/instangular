@@ -12,6 +12,7 @@ import { Post } from 'src/app/post';
 import { Store } from '@ngrx/store';
 import { PushManyPosts } from 'src/app/post/store/post.actions';
 import { $_posts } from 'src/app/post/store/post.selectors';
+import { Logout } from 'src/app/auth/store/auth.actions';
 
 @Component({
   selector: 'app-user-profile',
@@ -64,5 +65,9 @@ export class UserProfileComponent implements OnInit {
       )),
       share()
     );
+  }
+
+  public logout(): void {
+    this._store.dispatch(Logout());
   }
 }

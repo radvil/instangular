@@ -1,0 +1,26 @@
+<div class="auth--container">
+  <section class="login--header">
+    <h1>Login</h1>
+  </section>
+  <section class="login--form">
+    <form [formGroup]="form" (ngSubmit)="submitLogin()">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" placeholder="Enter your username.." formControlName="username" />
+        <mat-error *ngIf="username.invalid">{{ usernameErrorMessage }}!</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="Enter your password.." formControlName="password" />
+        <mat-error *ngIf="password.invalid">{{ passwordErrorMessage}}!</mat-error>
+      </mat-form-field>
+
+      <div class="buttons--group--submit">
+        <button type="submit" mat-stroked-button>
+          <mat-icon>fingerprint</mat-icon>&nbsp;
+          Login
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../post';
-import { User } from '../user';
-import { authUser } from '../auth'
-import { StoryWithUser, StoryUser } from './story/story.component';
-import { Store } from '@ngrx/store';
-import { PostState } from '../post/store/post.state';
-import { ApiGetPosts } from '../post/store/post.actions';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import { User } from '../user';
+import { Post } from '../post';
+import { PostState } from '../post/store/post.state';
+import { GetPosts } from '../post/store/post.actions';
 import { $_posts } from '../post/store/post.selectors';
+import { AuthState } from '../auth/store/auth.model';
+import { $_authUser } from '../auth/store/auth.selectors';
+import { StoryWithUser, StoryUser } from './story/story.component';
 
 @Component({
   selector: 'app-home',
@@ -16,22 +18,12 @@ import { $_posts } from '../post/store/post.selectors';
 })
 export class HomeComponent implements OnInit {
 
-  get firstStoryItem(): StoryUser {
-    if (this.authUser) {
-      const isSelf = this.authUser.username === 'victoriaelizabeth' ? 'Your Story' : 'victoriaelizabeth';
-      return {
-        username: isSelf,
-        photo: this.authUser.photo,
-      }
-    }
-  }
-
-  public authUser: User;
+  public authUser$: Observable<User>;
   public stories: StoryWithUser[];
   public posts$: Observable<Post[]>;
 
   constructor(
-    private store: Store<PostState>
+    private store: Store<PostState | AuthState>
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +33,7 @@ export class HomeComponent implements OnInit {
   }
 
   private getCurrentUser(): void {
-    this.authUser = authUser;
+    this.authUser$ = this.store.select($_authUser);
   }
 
   private getStories(): void {
@@ -85,7 +77,7 @@ export class HomeComponent implements OnInit {
   }
 
   private getFeeds(): void {
-    this.store.dispatch(ApiGetPosts());
+    this.store.dispatch(GetPosts());
     this.posts$ = this.store.select($_posts);
   }
 
