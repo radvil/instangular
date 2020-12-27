@@ -1,0 +1,38 @@
+li.story--list-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1rem;
+  .borderedImage {
+    border: 5px solid orangered;
+  }
+  img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid white;
+  }
+  .title {
+    text-align: center;
+    margin: 0.5rem 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  &:nth-child(1) {
+    mat-icon {
+      position: absolute;
+      top: 66px;
+      right: 3px;
+      background-color: #3797f1;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+    }
+  }
+}

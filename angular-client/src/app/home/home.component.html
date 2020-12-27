@@ -1,41 +1,12 @@
-<!-- content story -->
+<!-- home story list -->
 <ul class="stories--list">
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" alt="story_user" />
-    <mat-icon class="pointer">add</mat-icon>
-    <div class="title">Your Story</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
-  <li class="story--list-item">
-    <img src="assets/images/portrait.jpg" class="pointer" alt="story_user" />
-    <div class="title">Another</div>
-  </li>
+  <app-story [user]="firstStoryItem" [enableAddIcon]="true"></app-story>
+  <ng-container *ngFor="let story of stories">
+    <app-story [user]="story.user" [storyIds]="story.storyIds"></app-story>
+  </ng-container>
 </ul>
 
-<!-- post list -->
+<!-- home post list -->
 <div class="posts--list">
   <div class="post--item">
     <div class="post--item-header">
@@ -53,8 +24,8 @@
       </button>
     </div>
     <div class="post--item-image">
-      <div *ngIf="false" class="placeholder"></div>
-      <img src="assets/images/post.jpeg" height="720" width="720" alt="post" />
+      <!-- <div *ngIf="true" class="placeholder"></div> -->
+      <img src="assets/images/post.jpeg" alt="post" />
     </div>
     <div class="post--item-buttons">
       <button mat-icon-button class="active"><mat-icon>favorite</mat-icon></button>
@@ -86,7 +57,7 @@
   </div>
 </div>
 
-<!-- load more -->
+<!-- home load more posts -->
 <div class="load--more">
   <button mat-icon-button>
     <mat-icon>more</mat-icon>

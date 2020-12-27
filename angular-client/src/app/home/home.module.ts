@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { StoryComponent } from './story/story.component';
 
 const routes: Routes = [
   {
@@ -17,12 +18,12 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class HomeRoutingModule { }
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, StoryComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
