@@ -1,5 +1,5 @@
 <div class="App">
-  <div class="app__body">
+  <div [id]="isShrinkMode ? 'shrinkLayout' : ''" class="app__body">
     <!-- sidebar -->
     <div class="sidebar">
       <div class="sidebar__header">
@@ -11,21 +11,42 @@
             alt="avatar"
           />
           <div class="meta">
-            <h4>{{ authUser?.username }}</h4>
+            <h4 class="txt-1">{{ authUser?.username }}</h4>
             <p>{{ authUser?.name }}</p>
           </div>
         </div>
-        <button mat-icon-button class="sidebar__header_options">
-          <mat-icon>more_vert</mat-icon>
+        <button
+          (click)="switchLayoutMode()"
+          mat-icon-button
+          class="sidebar__header_options"
+        >
+          <mat-icon>menu</mat-icon>
         </button>
       </div>
-      <div class="sidebar__menu-list">
-        <button mat-button>Home</button>
-        <button mat-button>Search</button>
-        <button mat-button>Add Post</button>
-        <button mat-button>Message</button>
-        <button mat-button>Notifications</button>
-      </div>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>home</mat-icon>
+        <span class="menu--label">Home</span>
+      </button>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>search</mat-icon>
+        <span class="menu--label">Search</span>
+      </button>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>add</mat-icon>
+        <span class="menu--label">Add Post</span>
+      </button>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>message</mat-icon>
+        <span class="menu--label">Message</span>
+      </button>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>alarm</mat-icon>
+        <span class="menu--label">Notifications</span>
+      </button>
+      <button mat-button class="sidebar__menu--list">
+        <mat-icon>settings</mat-icon>
+        <span class="menu--label">Settings</span>
+      </button>
     </div>
 
     <!-- content -->

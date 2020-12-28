@@ -35,7 +35,7 @@ export class CommentController implements Controller {
     }
   }
 
-  private getCommentsByPostId = async (req: Req, res: Res): Promise<void> => {
+  private getCommentsByPostId = async (req: Req, res: Res) => {
     const querify = new Querify(req.query);
     const foundComments = await this._commentModel
       .find({ postId: req.query.postId.toString() })

@@ -58,11 +58,10 @@ const schema = new Schema<Comment>({
   }
 }, schemaOptions);
 
-// schema.virtual('likesCount', {
-//   ref: 'Like',
-//   foreignField: 'commentId',
-//   localField: '_id',
-//   count: true,
-// });
+schema.virtual('reactions', {
+  ref: 'CommentReaction',
+  foreignField: 'commentId',
+  localField: '_id',
+});
 
 export const Comment = model<Comment>('Comment', schema);

@@ -20,4 +20,18 @@ export const COMMENTS: PopulateOptions = {
   path: 'comments',
   populate: COMMENTED_BY,
   options: { limit: 5 }
-}
+};
+export const REACTED_BY: PopulateOptions = {
+  path: "reactedBy",
+  select: USER_POPULATE_SELECT
+};
+export const REACTIONS: PopulateOptions = {
+  path: 'reactions',
+  populate: REACTED_BY,
+  options: { limit: 10 }
+};
+
+export const AUTHOR: PopulateOptions = {
+  path: "author",
+  select: USER_POPULATE_SELECT
+};

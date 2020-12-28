@@ -9,10 +9,15 @@ import { User } from './users';
 })
 export class AppComponent implements OnInit {
   public authUser: User;
+  public isShrinkMode = false;
 
-  constructor() { }
+  public switchLayoutMode() {
+    this.isShrinkMode = !this.isShrinkMode;
+  }
 
   ngOnInit(): void {
     this.authUser = authUser;
   }
+
+  constructor() { }
 }

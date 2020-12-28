@@ -1,0 +1,31 @@
+#shrinkLayout {
+  .sidebar, .content {
+    flex: unset;
+  }
+  .sidebar {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sidebar__header__user {
+    display: none;
+  }
+  .sidebar__menu--list {
+    justify-content: center;
+    mat-icon {
+      display: inline;
+      margin-right: 0;
+    }
+    .menu--label {
+      display: none;
+    }
+  }
+  .sidebar__menu-list button {
+    justify-content: center;
+  }
+}

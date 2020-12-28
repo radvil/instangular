@@ -20,6 +20,9 @@
 .sidebar {
   flex: 1;
   background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .sidebar__header {
   max-height: 100px;
@@ -38,7 +41,7 @@
     border: 2px solid white;
   }
   .meta {
-    margin-left: 1rem;
+    padding: 0 1rem;
     h4 {
       margin: 0;
       line-height: 1.5rem;
@@ -50,18 +53,17 @@
     }
   }
 }
-.sidebar__menu-list {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  button {
-    display: flex; // idk why
-    align-items: center;
-    height: 80px;
-    width: 100%;
-    border-radius: 0;
-    font-weight: bold;
-    font-size: 1.5rem;
+.sidebar__menu--list {
+  display: flex; // idk why
+  align-items: center;
+  // min-height: 80px;
+  flex: 1;
+  width: 100%;
+  border-radius: 0;
+  font-weight: bold;
+  font-size: 1.4rem;
+  mat-icon {
+    margin-right: 1rem;
   }
 }
 .content {

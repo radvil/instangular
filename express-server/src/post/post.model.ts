@@ -23,10 +23,10 @@ const schemaOptions: SchemaOptions = {
     versionKey: false,
     transform: function (doc: Document, ret: Post) {
       if (ret.thumbnail) {
-        ret.thumbnail = process.env.PUBLIC_IMAGE_PATH + '/' + ret.thumbnail;
+        ret.thumbnail = process.env.PUBLIC_IMAGE_PATH + ret.thumbnail;
       }
       if (ret.image) {
-        ret.image = process.env.PUBLIC_IMAGE_PATH + '/' + ret.image;
+        ret.image = process.env.PUBLIC_IMAGE_PATH + ret.image;
       }
       delete ret.__v;
       delete ret.id;
@@ -53,6 +53,12 @@ schema.virtual('commentsCount', {
   foreignField: 'postId',
   localField: '_id',
   count: true,
+});
+
+schema.virtual('reactions', {
+  ref: 'PostReaction',
+  foreignField: 'postId',
+  localField: '_id',
 });
 
 export const Post = model<Post>('Post', schema);
