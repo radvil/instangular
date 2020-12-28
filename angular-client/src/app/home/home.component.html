@@ -1,3 +1,11 @@
+<!-- home header -->
+<div class="home__header">
+  <div class="logo--text">instAngular</div>
+  <button mat-icon-button class="logo--message">
+    <mat-icon>message</mat-icon>
+  </button>
+</div>
+
 <!-- home story list -->
 <ul class="stories--list">
   <app-story [user]="firstStoryItem" [enableAddIcon]="true"></app-story>
@@ -8,53 +16,9 @@
 
 <!-- home post list -->
 <div class="posts--list">
-  <div class="post--item">
-    <div class="post--item-header">
-      <img
-        src="assets/images/portrait.jpg"
-        class="pointer"
-        alt="author image"
-        height="40"
-        width="40"
-      />
-      <a href="#">dualipa</a>
-      <div class="fx-spacer"></div>
-      <button mat-icon-button>
-        <mat-icon>more_vert</mat-icon>
-      </button>
-    </div>
-    <div class="post--item-image">
-      <!-- <div *ngIf="true" class="placeholder"></div> -->
-      <img src="assets/images/post.jpeg" alt="post" />
-    </div>
-    <div class="post--item-buttons">
-      <button mat-icon-button class="active"><mat-icon>favorite</mat-icon></button>
-      <button mat-icon-button><mat-icon>message</mat-icon></button>
-      <button mat-icon-button><mat-icon>share</mat-icon></button>
-      <div class="fx-spacer"></div>
-      <button mat-icon-button><mat-icon>save</mat-icon></button>
-    </div>
-    <div class="post--item-likes">
-      <p>Liked by <b>davidbradley6</b> and <b>millions of others</b></p>
-    </div>
-    <div class="post--item-description">
-      <p>
-        <b>dualipa</b>&nbsp; Pandora Live Concert ❤ thank you for watching! Bts
-        shot by <span class="mention">@nixielevinson</span>
-      </p>
-    </div>
-    <p class="view-comments">View all 1,343 comments</p>
-    <div class="add-comment">
-      <img
-        src="assets/images/portrait.jpg"
-        height="40"
-        width="40"
-        alt="username"
-      />
-      <p>Add a comment...</p>
-    </div>
-    <div class="post--item-time">a minute ago</div>
-  </div>
+  <ng-container *ngFor="let post of posts">
+    <app-post-item [post]="post"></app-post-item>
+  </ng-container>
 </div>
 
 <!-- home load more posts -->

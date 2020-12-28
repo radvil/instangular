@@ -76,25 +76,3 @@
     display: none;
   }
 }
-// content header
-.content__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  background-color: #fff;
-  padding: 1rem;
-}
-.logo--text,
-.logo--message {
-  font-size: 2rem;
-  font-weight: bold;
-}
-.logo--text {
-  margin-left: 1.5rem;
-  cursor: pointer;
-}

@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { HomeComponent } from './home.component';
-import { Routes, RouterModule } from '@angular/router';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
+import { HomeComponent } from './home.component';
+import { Routes, RouterModule } from '@angular/router';
+import { PostItemModule } from '../posts/post-item/post-item.module';
 import { StoryComponent } from './story/story.component';
+
 
 const routes: Routes = [
   {
@@ -27,6 +29,7 @@ export class HomeRoutingModule { }
   imports: [
     CommonModule,
     HomeRoutingModule,
+    PostItemModule,
 
     MatButtonModule,
     MatIconModule,

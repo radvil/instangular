@@ -4,10 +4,15 @@
     <div class="sidebar">
       <div class="sidebar__header">
         <div class="sidebar__header__user">
-          <img src="assets/images/portrait.jpg" width="40" height="40" alt="avatar">
+          <img
+            [src]="authUser?.profilePicture"
+            width="40"
+            height="40"
+            alt="avatar"
+          />
           <div class="meta">
-            <h4>victoriaelizabeth</h4>
-            <p>Victoria Elizabeth</p>
+            <h4>{{ authUser?.username }}</h4>
+            <p>{{ authUser?.fullName }}</p>
           </div>
         </div>
         <button mat-icon-button class="sidebar__header_options">
@@ -15,37 +20,17 @@
         </button>
       </div>
       <div class="sidebar__menu-list">
-        <button mat-button>
-          Home
-        </button>
-        <button mat-button>
-          Search
-        </button>
-        <button mat-button>
-          Add Post
-        </button>
-        <button mat-button>
-          Message
-        </button>
-        <button mat-button>
-          Notifications
-        </button>
+        <button mat-button>Home</button>
+        <button mat-button>Search</button>
+        <button mat-button>Add Post</button>
+        <button mat-button>Message</button>
+        <button mat-button>Notifications</button>
       </div>
     </div>
 
     <!-- content -->
     <div class="content">
-      <!-- content header -->
-      <div class="content__header">
-        <div class="logo--text">instAngular</div>
-        <button mat-icon-button class="logo--message">
-          <mat-icon>message</mat-icon>
-        </button>
-      </div>
-
-      <div class="content__router">
-        <router-outlet></router-outlet>
-      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
