@@ -87,30 +87,6 @@ export class HomeComponent implements OnInit {
   private getFeeds(): void {
     this.store.dispatch(GetPosts());
     this.posts$ = this.store.select($_posts);
-    // this.posts = [
-    //   {
-    //     _id: '1234',
-    //     description: 'This is a new post test',
-    //     author: {
-    //       _id: "authorId122",
-    //       username: "author122",
-    //       photo: "assets/images/portrait.jpg"
-    //     },
-    //     image: "assets/images/post.jpeg",
-    //     createdAt: new Date().toISOString()
-    //   },
-    //   {
-    //     _id: '2345',
-    //     description: 'Pandora Live Concert ❤ thank you for watching!',
-    //     author: {
-    //       _id: "userId1234",
-    //       username: "dualipa",
-    //       photo: "assets/images/portrait.jpg"
-    //     },
-    //     image: "assets/images/post.jpeg",
-    //     createdAt: new Date().toISOString()
-    //   },
-    // ]
   }
 
 }

@@ -13,6 +13,8 @@ export interface Post {
   likesCount?: number;
   comments?: Comment[];
   commentsCount?: number;
+  reactions?: PostReaction[];
+  reactionsCount?: number;
 }
 
 export interface Comment {
@@ -23,4 +25,10 @@ export interface Comment {
   createdAt: string;
   likes?: any[];
   likesCount?: number;
+}
+
+export interface PostReaction {
+  reactedBy: User;
+  variant: string;
+  postId?: string;
 }

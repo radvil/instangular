@@ -35,7 +35,7 @@ $instangular-theme: mat-light-theme(
 @include angular-material-theme($instangular-theme);
 
 /* You can add global styles to this file, and also import other style files */
-@import '~material-design-icons/iconfont/material-icons.css';
+@import "~material-design-icons/iconfont/material-icons.css";
 
 html,
 body {
@@ -86,4 +86,44 @@ p {
   -webkit-line-clamp: 1;
   line-height: 1;
   max-height: 1 * 1;
+}
+
+// mobile
+@media (max-width: 777px) {
+  .App {
+    font-size: 1rem !important;
+  }
+  .app__body {
+    height: 100vh !important;
+    width: 100vw !important;
+    flex-direction: column-reverse !important;
+  }
+  .sidebar {
+    flex-direction: unset !important;
+    height: unset !important;
+    flex: unset !important;
+    width: 100% !important;
+  }
+  .sidebar > * {
+    padding: 1rem !important;
+    flex: 1 !important;
+    &:nth-last-child(1) { //settings button
+      display: none !important;
+    }
+  }
+  .sidebar__header {
+    display: none !important;
+  }
+  .sidebar__menu--list {
+    font-size: unset !important;
+  }
+  p {
+    line-height: 1.8rem !important;
+  }
+  .stories--list {
+    padding: 0 !important;
+  }
+  .post--item-header .photo--container {
+    border: 2px !important;
+  }
 }

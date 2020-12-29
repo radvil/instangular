@@ -7,6 +7,7 @@ import { AuthController } from './auth';
 import { PostController } from './post';
 import { UserController } from './user';
 import { CommentController } from './comment';
+import { CommentReactionController, PostReactionController } from './reaction';
 
 validateEnv();
 
@@ -16,7 +17,9 @@ const app = new App(
     new ImageController(),
     new AuthController(),
     new PostController(),
+    new PostReactionController(),
     new CommentController(),
+    new CommentReactionController(),
     new UserController(),
   ]
 );

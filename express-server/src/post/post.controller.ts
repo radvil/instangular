@@ -5,7 +5,7 @@ import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION }
 import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, TransformOptions } from '../image';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next, COMMENTS, POSTED_BY } from '../var';
+import { Req, Res, Next, COMMENTS, POSTED_BY, REACTIONS } from '../var';
 import { Querify } from '../util/Querify';
 import { CreatePostDto, Post } from './index';
 
@@ -69,8 +69,10 @@ export class PostController implements Controller {
       .select(querify.select)
       .sort(querify.sort)
       .populate(POSTED_BY)
-      .populate({ ...COMMENTS, options: { limit: 1, sort: [[...querify.sort]] } })
       .populate('commentsCount')
+      .populate({ ...COMMENTS, options: { limit: 2, sort: [[...querify.sort]] } })
+      .populate('reactionsCount')
+      .populate({...REACTIONS, options: { limit: 3, sort: [[...querify.sort]] } })
     const jsonResponse: JsonHttpResponse<Post[]> = {
       status: 200,
       message: 'Get posts succeded!',
@@ -84,9 +86,11 @@ export class PostController implements Controller {
     const requestedId = req.params.id;
     const foundPost = await this._postModel
       .findById(requestedId)
-      .populate('commentsCount')
       .populate(POSTED_BY)
-      .populate(COMMENTS);
+      .populate('commentsCount')
+      .populate(COMMENTS)
+      .populate('reactionsCount')
+      .populate(REACTIONS)
     if (!foundPost) {
       next(new NOT_FOUND_EXCEPTION());
     }

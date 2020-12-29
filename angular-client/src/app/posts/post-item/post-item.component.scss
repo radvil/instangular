@@ -7,9 +7,9 @@
 .post--item-header {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  margin: 1rem;
   .photo--container {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     height: 40px;
     width: 40px;
     padding: 3px;
@@ -65,6 +65,41 @@
   b,
   .mention {
     cursor: pointer;
+  }
+}
+.post--item-likes {
+  display: flex;
+  align-items: center;
+  .photos {
+    /** DONT TOUH THESE **/
+    position: relative;
+    height: 2rem;
+    width: calc(25px * 2 + 6px);
+    img {
+      position: absolute;
+      border-radius: 50%;
+      border: 3px solid white;
+      width: 25px;
+      height: 25px;
+      top: 0;
+      left: 0;
+      &:nth-child(2) {
+        left: 10px;
+      }
+      &:nth-child(2) {
+        left: 20px;
+      }
+    }
+  }
+  .username,
+  .count {
+    font-weight: bold;
+  }
+  // mobile
+  @media (max-width: 777px) {
+    .photos {
+      display: none;
+    }
   }
 }
 .post--item-description {

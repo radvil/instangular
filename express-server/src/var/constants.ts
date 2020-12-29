@@ -18,7 +18,7 @@ export const COMMENTED_BY: PopulateOptions = {
 };
 export const COMMENTS: PopulateOptions = {
   path: 'comments',
-  populate: COMMENTED_BY,
+  populate: [COMMENTED_BY, { path: 'reactionsCount' }],
   options: { limit: 5 }
 };
 export const REACTED_BY: PopulateOptions = {

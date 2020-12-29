@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
-import { Req, Res, Next, COMMENTED_BY } from '../var';
+import { Req, Res, Next, COMMENTED_BY, REACTIONS } from '../var';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
 import { CreateCommentDto, Comment } from './comment.model';
@@ -44,6 +44,8 @@ export class CommentController implements Controller {
       .select(querify.select)
       .sort(querify.sort)
       .populate(COMMENTED_BY)
+      .populate(REACTIONS)
+      .populate('reactionsCount')
     const jsonResponse: JsonHttpResponse<Comment[]> = {
       status: 200,
       message: 'Get comments by postId succeded!',

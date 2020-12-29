@@ -5,11 +5,10 @@
   .sidebar {
     width: 120px;
     display: flex;
-    flex-direction: column;
   }
   .sidebar__header {
-    display: flex;
-    align-items: center;
+    padding: 1rem;
+    flex: 1;
     justify-content: center;
   }
   .sidebar__header__user {

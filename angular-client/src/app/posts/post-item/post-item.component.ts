@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Post } from '../post.interface';
+import { Post, PostReaction } from '../post.interface';
 
 @Component({
   selector: 'app-post-item',
@@ -12,5 +12,17 @@ export class PostItemComponent {
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";
   @Input() post: Post;
+
+  public get showedReactionUsername(): string {
+    if (this.post.reactions.length > 0) {
+      return this.post.reactions[0].reactedBy.username;
+    } else {
+      return null;
+    }
+  }
+
+  public get reactionsCount(): number {
+    return this.post.reactionsCount
+  }
 
 }

@@ -64,4 +64,11 @@ schema.virtual('reactions', {
   localField: '_id',
 });
 
+schema.virtual('reactionsCount', {
+  ref: 'CommentReaction',
+  foreignField: 'commentId',
+  localField: '_id',
+  count: true
+});
+
 export const Comment = model<Comment>('Comment', schema);

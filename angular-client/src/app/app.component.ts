@@ -9,7 +9,7 @@ import { User } from './users';
 })
 export class AppComponent implements OnInit {
   public authUser: User;
-  public isShrinkMode = false;
+  public isShrinkMode = true;
 
   public switchLayoutMode() {
     this.isShrinkMode = !this.isShrinkMode;
