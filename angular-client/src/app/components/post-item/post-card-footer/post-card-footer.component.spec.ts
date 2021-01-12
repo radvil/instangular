@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PostItemFooterComponent } from './post-item-footer.component';
+import { PostCardFooterComponent } from './post-card-footer.component';
 
-describe('PostItemFooterComponent', () => {
-  let component: PostItemFooterComponent;
-  let fixture: ComponentFixture<PostItemFooterComponent>;
+describe('PostCardFooterComponent', () => {
+  let component: PostCardFooterComponent;
+  let fixture: ComponentFixture<PostCardFooterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PostItemFooterComponent ]
+      declarations: [ PostCardFooterComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PostItemFooterComponent);
+    fixture = TestBed.createComponent(PostCardFooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

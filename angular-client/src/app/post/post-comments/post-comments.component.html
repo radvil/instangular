@@ -3,11 +3,11 @@
   [style]="'sticky'"
 ></app-page-header>
 
-<app-post-item
+<app-post-card
   [post]="post$ | async"
   (onUserProfileClicked)="viewUserProfile($event)"
 >
-  <app-post-item-footer
+  <app-post-card-footer
     [style]="'alternative'"
     [post]="post$ | async"
     [comments]="comments"
@@ -17,5 +17,5 @@
     (onUserProfileClicked)="viewUserProfile($event)"
     (onAddCommentClicked)="addComment($event)"
   >
-  </app-post-item-footer>
-</app-post-item>
+  </app-post-card-footer>
+</app-post-card>

@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from 'src/app/user';
-import { Comment, Post } from '../../post.interface';
+import { Comment, Post } from 'src/app/post';
 
 @Component({
-  selector: 'app-post-item-footer',
-  templateUrl: './post-item-footer.component.html',
-  styleUrls: ['./post-item-footer.component.scss'],
+  selector: 'app-post-card-footer',
+  templateUrl: './post-card-footer.component.html',
+  styleUrls: ['./post-card-footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItemFooterComponent {
+export class PostCardFooterComponent {
 
   @Input() style = "default";
   @Input() post: Post;

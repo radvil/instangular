@@ -21,11 +21,11 @@
 <!-- home post list -->
 <div class="posts--list">
   <ng-container *ngFor="let post of posts$ | async">
-    <app-post-item
+    <app-post-card
       [post]="post"
       (onUserProfileClicked)="viewUserProfile($event)"
     >
-      <app-post-item-footer
+      <app-post-card-footer
         [post]="post"
         [comments]="post.comments"
         [authUser]="authUser"
@@ -33,8 +33,8 @@
         (onViewCommentsClicked)="viewPostComments($event)"
         (onUserProfileClicked)="viewUserProfile($event)"
         (onAddCommentClicked)="addComment($event)"
-      ></app-post-item-footer>
-    </app-post-item>
+      ></app-post-card-footer>
+    </app-post-card>
   </ng-container>
 </div>
 

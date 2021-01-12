@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { Post } from '../post.interface';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Post } from 'src/app/post';
 
 @Component({
-  selector: 'app-post-item',
-  templateUrl: './post-item.component.html',
-  styleUrls: ['./post-item.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-post-card',
+  templateUrl: './post-card.component.html',
+  styleUrls: ['./post-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItemComponent {
+export class PostCardComponent {
 
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";

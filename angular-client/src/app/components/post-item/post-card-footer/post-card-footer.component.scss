@@ -43,14 +43,14 @@ p {
     background-color: #f1f1f1;
     padding: 0.5rem 1rem;
     border-radius: 2rem;
-    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
   }
   .comment.self {
     display: flex;
     justify-content: flex-end;
     p {
       background-color: #d4e6f5;
-      border-bottom-left-radius: 2rem;
+      border-top-left-radius: 2rem;
       border-bottom-right-radius: 0;
     }
   }
