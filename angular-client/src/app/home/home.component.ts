@@ -11,6 +11,7 @@ import { PostState } from '../post/store/post.state';
 import { GetPosts } from '../post/store/post.actions';
 import { $_posts } from '../post/store/post.selectors';
 import { StoryWithUser } from './story/story.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,9 +23,11 @@ export class HomeComponent implements OnInit {
   public authUser: User;
   public stories: StoryWithUser[];
   public posts$: Observable<Post[]>;
+  public defaultPortrait = "assets/images/portrait.jpg";
+  public errorImagePath = "assets/images/portrait.jpg";
 
   private getCurrentUser(): void {
-    this.store
+    this._store
       .select($_authUser)
       .pipe(filter(user => user !== null))
       .subscribe(user => this.authUser = user);
@@ -80,8 +83,8 @@ export class HomeComponent implements OnInit {
   }
 
   private getFeeds(): void {
-    this.store.dispatch(GetPosts());
-    this.posts$ = this.store.select($_posts);
+    this._store.dispatch(GetPosts());
+    this.posts$ = this._store.select($_posts);
   }
 
   public checkSelfUser(storyUsername: string): boolean {
@@ -92,6 +95,22 @@ export class HomeComponent implements OnInit {
     return storyIds && (storyIds.length && storyIds.length > 0);
   }
 
+  public viewPostComments(postIdEvent: string) {
+    this._router.navigate(['post', postIdEvent]);
+  }
+
+  public viewUserProfile(usernameEvent: string) {
+    this._router.navigate(['user', usernameEvent]);
+  }
+
+  public showMessages(): void {
+    alert('TODO:// Showing user messages');
+  }
+  
+  public addComment(postIdEvent: string) {
+    alert('TODO:// Add new comment. postId = ' + postIdEvent);
+  }
+
   ngOnInit(): void {
     this.getCurrentUser();
     this.getStories();
@@ -99,7 +118,8 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private store: Store<PostState | AuthState>
+    private _store: Store<PostState | AuthState>,
+    private _router: Router,
   ) { }
 
 }

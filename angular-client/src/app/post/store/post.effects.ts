@@ -8,6 +8,7 @@ import * as postActions from './post.actions';
 import { PostService } from "../post.service";
 import { $_postCurrNext } from "./post.selectors";
 import { Post } from "../post.interface";
+import { PushManyComments } from "src/app/comment/store/comment.actions";
 
 @Injectable()
 export class PostEffects {
@@ -32,7 +33,10 @@ export class PostEffects {
   getPostById$ = createEffect(() => this._actions$.pipe(
     ofType(postActions.GetPostById),
     switchMap(({ postId }) => this._postService.getPostById(postId).pipe(
-      map(post => postActions.GetPostByIdSuccess({ post })),
+      map(({ comments, ...post }) => {
+        this._store.dispatch(PushManyComments({ comments }));
+        return postActions.GetPostByIdSuccess({ post })
+      }),
       catchError(error => of(postActions.GetPostByIdFailure({ error })))
     ))
   ))

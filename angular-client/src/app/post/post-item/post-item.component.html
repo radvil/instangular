@@ -1,14 +1,14 @@
-<div class="post--item">
+<div *ngIf="post" class="post--item">
   <div class="post--item-header">
     <div class="photo--container active">
       <img
-        [lazyLoad]="post.postedBy?.photoThumb"
+        [lazyLoad]="post.postedBy.photoThumb"
         [defaultImage]="defaultPortrait"
         [errorImage]="errorImagePath"
-        [alt]="post.postedBy?.username"
+        [alt]="post.postedBy.username"
       />
     </div>
-    <a (click)="goToUserProfile(post.postedBy.username)">{{ post.postedBy?.username }}</a>
+    <a (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</a>
     <div class="fx-spacer"></div>
     <button mat-icon-button>
       <mat-icon>more_vert</mat-icon>
@@ -41,42 +41,23 @@
       <img [src]="errorImagePath" [alt]="post.reactions[0].reactedBy.username"/>
     </div>
     <ng-container *ngFor="let reaction of post.reactions; index as idx">
-      <span class="username pointer">{{ reaction.reactedBy?.username }}</span>
+      <span class="username pointer">{{ reaction.reactedBy.username }}</span>
       {{ (idx == post.reactions?.length - 1) ? ' ' : ', ' }}
     </ng-container>
     <div *ngIf="false">
       &nbsp;and <span class="count pointer">hundreds of others</span>
     </div>
-    <!-- <span class="count" *ngIf="reactionsCount > 2">
+    <span class="count" *ngIf="reactionsCount > 2">
       &nbsp;and <b>{{ reactionsCount - 1 }} others</b>
-    </span> -->
+    </span>
   </div>
   <div class="post--item-description">
     <p>
-      <b (click)="goToUserProfile(post.postedBy.username)">{{ post.postedBy?.username }}</b
-      >&nbsp;{{ post.description }} Taken by
-      <span class="mention">@traxex</span>
+      <b (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</b>
+      &nbsp;{{ post.description }} 
+      <!-- Taken by
+      <span class="mention">@traxex</span> -->
     </p>
   </div>
-  <p *ngIf="post.commentsCount" (click)="viewPostComments(post._id)" class="view-comments">
-    View all {{ post.commentsCount }} comments
-  </p>
-  <div *ngIf="post.comments.length" class="post--item-description">
-    <p *ngFor="let comment of post.comments">
-      <b (click)="goToUserProfile(comment.commentedBy.username)">{{ comment.commentedBy.username }}</b
-      >&nbsp;{{ comment.text }}
-    </p>
-  </div>
-  <div class="add-comment">
-    <img
-      [lazyLoad]="post.postedBy?.photoThumb"
-      [defaultImage]="defaultPortrait"
-      [errorImage]="errorImagePath"
-      [alt]="post.postedBy?.username"
-      height="40"
-      width="40"
-    />
-    <p>Add a comment...</p>
-  </div>
-  <div class="post--item-time">{{ post.createdAt | date }}</div>
+  <ng-content></ng-content>
 </div>

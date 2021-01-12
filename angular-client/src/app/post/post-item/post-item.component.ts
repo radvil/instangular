@@ -1,25 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { Post } from '../post.interface';
 
 @Component({
   selector: 'app-post-item',
   templateUrl: './post-item.component.html',
   styleUrls: ['./post-item.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostItemComponent {
 
-  @Input() post: Post;
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";
+  @Input() post: Post;
+  @Output() onUserProfileClicked = new EventEmitter<string>();
 
-  constructor(private _router: Router) { }
-
-  goToUserProfile(username: string) {
-    if (this.post) {
-      this._router.navigate(['user', username]);
-    }
+  public viewUserProfile(username: string) {
+    this.onUserProfileClicked.emit(username);
   }
 
   public get showedReactionUsername(): string {
@@ -32,10 +29,6 @@ export class PostItemComponent {
 
   public get reactionsCount(): number {
     return this.post.reactionsCount
-  }
-
-  public viewPostComments(postId: string) {
-    this._router.navigate(['post', postId]);
   }
 
 }

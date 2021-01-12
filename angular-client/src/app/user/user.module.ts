@@ -10,13 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserRoutingModule } from './user-routing.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
-import { TruncatePipe } from '../utils';
 import { PostStoreModule } from '../post';
 import { UserStoreModule } from './store/user-store.module';
-
+import { PageHeaderModule } from '../components';
 
 @NgModule({
-  declarations: [UserProfileComponent, UserEditComponent, TruncatePipe],
+  declarations: [UserProfileComponent, UserEditComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -29,7 +28,7 @@ import { UserStoreModule } from './store/user-store.module';
     UserRoutingModule,
     UserStoreModule,
     PostStoreModule,
+    PageHeaderModule,
   ],
-  providers: [TruncatePipe],
 })
 export class UserModule { }

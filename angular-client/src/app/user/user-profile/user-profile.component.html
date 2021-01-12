@@ -1,11 +1,11 @@
 <div *ngIf="user$ | async as user" class="user-profile">
-  <!-- user-profile header -->
-  <div class="user-profile__header">
-    <div class="header--text">{{ user.username }}</div>
-    <button (click)="logout()" mat-icon-button class="header--icon-right">
-      <mat-icon>settings</mat-icon>
-    </button>
-  </div>
+  <!-- page header -->
+  <app-page-header
+    [title]="user.username"
+    [icon]="'settings'"
+    (onIconClicked)="showUserSettings()"
+  ></app-page-header>
+
   <!-- user-profile intro -->
   <section class="intro">
     <div class="intro--header">
@@ -61,6 +61,7 @@
       </button>
     </div>
   </section>
+
   <!-- user-profile posts container -->
   <section class="posts">
     <div *ngIf="posts$ | async as posts" class="user-posts__list">

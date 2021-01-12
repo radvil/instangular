@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 import { PostItemComponent } from './post-item.component';
-import { RouterModule } from '@angular/router';
+import { PostItemFooterComponent } from './post-item-footer/post-item-footer.component';
 
 
 @NgModule({
-  declarations: [PostItemComponent],
+  declarations: [PostItemComponent, PostItemFooterComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -18,6 +19,6 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatIconModule,
   ],
-  exports: [PostItemComponent],
+  exports: [PostItemComponent, PostItemFooterComponent],
 })
 export class PostItemModule { }

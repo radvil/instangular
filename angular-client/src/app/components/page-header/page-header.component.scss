@@ -1,4 +1,4 @@
-.post-comments__header {
+.page__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,16 +10,8 @@
   font-size: 2rem;
   font-weight: bold;
 }
-.header--text {
-  margin-left: 1.5rem;
-}
 .sticky {
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 3;
-  .header--text {
-    margin-left: unset;
-  }
 }

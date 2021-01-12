@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
+import { PageHeaderModule } from '../components';
 import { HomeComponent } from './home.component';
 import { PostItemModule } from '../post/post-item/post-item.module';
 import { StoryComponent } from './story/story.component';
@@ -34,6 +35,7 @@ export class HomeRoutingModule { }
     HomeRoutingModule,
     PostItemModule,
     PostStoreModule,
+    PageHeaderModule,
 
     MatButtonModule,
     MatIconModule,

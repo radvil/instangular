@@ -11,7 +11,7 @@
             alt="avatar"
           />
           <div class="meta">
-            <h4 class="txt-1">{{ authUser.username }}</h4>
+            <h4 class="txt-1">{{ authUser.username | truncate:5 }}</h4>
             <p>{{ authUser.name }}</p>
           </div>
         </div>

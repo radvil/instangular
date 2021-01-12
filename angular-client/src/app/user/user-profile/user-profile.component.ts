@@ -68,4 +68,8 @@ export class UserProfileComponent implements OnInit {
   public logout(): void {
     this._store.dispatch(Logout());
   }
+
+  public showUserSettings(): void {
+    alert('TODO:// show user\'s settings');
+  }
 }

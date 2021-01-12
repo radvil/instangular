@@ -1,9 +1,21 @@
-<h1>Post</h1>
-<pre>
-  {{ post$ | async | json }}
-</pre>
+<app-page-header
+  [title]="'Comments'"
+  [style]="'sticky'"
+></app-page-header>
 
-<h3>Comments</h3>
-<pre>
-  {{ comments$ | async | json }}
-</pre>
+<app-post-item
+  [post]="post$ | async"
+  (onUserProfileClicked)="viewUserProfile($event)"
+>
+  <app-post-item-footer
+    [style]="'alternative'"
+    [post]="post$ | async"
+    [comments]="comments"
+    [authUser]="authUser"
+    [viewCommentsText]="'View previous comments'"
+    (onViewCommentsClicked)="viewPreviousComments($event)"
+    (onUserProfileClicked)="viewUserProfile($event)"
+    (onAddCommentClicked)="addComment($event)"
+  >
+  </app-post-item-footer>
+</app-post-item>

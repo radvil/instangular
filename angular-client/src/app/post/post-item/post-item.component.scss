@@ -51,7 +51,7 @@
 }
 .post--item-buttons {
   display: flex;
-  margin: 1rem;
+  margin: .5rem 1rem;
   button {
     margin-right: 1rem;
     &:nth-last-child(1) {
@@ -109,29 +109,4 @@
   span.mention {
     color: #3797f1;
   }
-}
-p.view-comments {
-  width: fit-content;
-  cursor: pointer;
-  margin: 0 1rem;
-  color: #a9a9a9;
-}
-.add-comment {
-  margin: 1rem;
-  display: flex;
-  align-items: center;
-  img {
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  p {
-    cursor: pointer;
-    margin-left: 1rem;
-    color: #a9a9a9;
-  }
-}
-.post--item-time {
-  margin: 0 1rem;
-  font-size: 1rem;
-  color: #a9a9a9;
 }
