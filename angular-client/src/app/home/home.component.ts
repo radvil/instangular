@@ -5,11 +5,12 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { $_authUser } from '../auth/store/auth.selectors';
-import { $_posts } from '../post/store/post.selectors';
+import { $_posts, $_postsWithLastTwoComments } from '../post/store/post.selectors';
 import { GetPosts } from '../post/store/post.actions';
 import { StoryWithUser } from './story/story.component';
 import { User } from '../user';
 import { Post } from '../post';
+import { Comment } from '../comment';
 
 @Component({
   selector: 'app-home',
@@ -82,7 +83,7 @@ export class HomeComponent implements OnInit {
 
   private getFeeds(): void {
     this._store.dispatch(GetPosts());
-    this.posts$ = this._store.select($_posts);
+    this.posts$ = this._store.select($_postsWithLastTwoComments);
   }
 
   public checkSelfUser(storyUsername: string): boolean {
@@ -104,7 +105,7 @@ export class HomeComponent implements OnInit {
   public showMessages(): void {
     alert('TODO:// Showing user messages');
   }
-  
+
   public addComment(postIdEvent: string) {
     alert('TODO:// Add new comment. postId = ' + postIdEvent);
   }
