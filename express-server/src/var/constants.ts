@@ -16,7 +16,7 @@ export const REACTED_BY: PopulateOptions = {
 export const REACTIONS: PopulateOptions = {
   path: 'reactions',
   populate: [REACTED_BY, { path: 'reactionsCount' }],
-  options: { limit: 10 }
+  options: { limit: 5 }
 };
 export const REACTIONS_COUNT: PopulateOptions = { path: 'reactionsCount' };
 

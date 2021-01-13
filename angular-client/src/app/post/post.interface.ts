@@ -1,4 +1,5 @@
 import { User } from "../user";
+import { Comment } from '../comment';
 
 export interface Post {
   _id: string;
@@ -15,16 +16,6 @@ export interface Post {
   commentsCount?: number;
   reactions?: PostReaction[];
   reactionsCount?: number;
-}
-
-export interface Comment {
-  _id: string;
-  postId: string;
-  commentedBy: User;
-  text: string;
-  createdAt: string;
-  likes?: any[];
-  likesCount?: number;
 }
 
 export interface PostReaction {

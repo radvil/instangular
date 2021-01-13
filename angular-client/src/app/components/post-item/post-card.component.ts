@@ -8,9 +8,6 @@ import { Post } from 'src/app/post';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostCardComponent {
-
-  public defaultPortrait = "assets/images/portrait.jpg";
-  public errorImagePath = "assets/images/portrait.jpg";
   @Input() post: Post;
   @Output() onUserProfileClicked = new EventEmitter<string>();
 

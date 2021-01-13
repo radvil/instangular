@@ -7,29 +7,30 @@
     {{ viewCommentsText }}
   </p>
   <div *ngIf="post.commentsCount" class="post--comments">
-    <div *ngFor="let comment of comments" [class]="getCommentClass(comment.commentedBy.username)">
+    <div
+      *ngFor="let comment of comments"
+      [class]="getCommentClass(comment.commentedBy.username)"
+    >
       <p>
         <b (click)="viewUserProfile(comment.commentedBy.username)">{{
           comment.commentedBy.username
         }}</b
-        >&nbsp;{{ comment.text }}
-      </p>
-    </div>
-    <!-- remove later only placeholder -->
-    <div class="comment">
-      <p>
-        <b (click)="viewUserProfile('test')">testuser</b>&nbsp;Comment 🤬.
+        >{{ comment.text }}
       </p>
     </div>
   </div>
   <div class="add-comment">
     <img
-      [src]="authUser.photoThumb"
+      [lazyLoad]="authUser.photoThumb"
+      [defaultImage]="'assets/images/portrait.jpg'"
+      [errorImage]="'assets/images/portrait.jpg'"
       [alt]="authUser.username"
       height="40"
       width="40"
     />
-    <p (click)="emitAddComment(post._id)">Add a comment...</p>
+    <form (ngSubmit)="emitAddComment()">
+      <input [(ngModel)]="commentText" placeholder="Add comment.." name="text" />
+    </form>
   </div>
   <div class="post--item-time">{{ post.createdAt | date }}</div>
 </div>

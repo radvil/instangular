@@ -3,7 +3,7 @@
   <app-page-header
     [title]="user.username"
     [icon]="'settings'"
-    (onIconClicked)="showUserSettings()"
+    (onIconClicked)="logout()"
   ></app-page-header>
 
   <!-- user-profile intro -->
@@ -13,8 +13,8 @@
         <div class="photo-container bordered pointer">
           <img
             [lazyLoad]="user.photo"
-            [defaultImage]="user.photoThumb"
-            [errorImage]="errorImagePath"
+            [defaultImage]="'assets/images/portrait.jpg'"
+            [errorImage]="'assets/images/portrait.jpg'"
             [alt]="user.username"
             height="200"
             width="200"

@@ -13,7 +13,6 @@ export interface PostState extends EntityState<Post> {
   loaded: boolean;
   loading: boolean;
   selectedId?: string;
-  currNext?: number;
   error?: Error;
 }
 
@@ -23,6 +22,5 @@ export const initialPostState: PostState = postAdapter.getInitialState({
   loaded: false,
   loading: false,
   selectedId: null,
-  currNext: 1,
   error: null
 })

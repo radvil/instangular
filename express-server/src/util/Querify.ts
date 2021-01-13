@@ -1,35 +1,38 @@
 export class Querify {
-  constructor(public queries: any) {}
+  constructor(public queries: any) { }
 
-	public get search() {
-		const { field, value } = this.queries;
-		const item = {};
+  public get search() {
+    const { field, value } = this.queries;
+    const item = {};
+    if (field && value) {
+      item[field] = { $regex: `${value}`, $options: 'i' };
+    }
+    return item;
+  };
 
-		if (field && value) {
-			item[field] = { $regex: `${value}`, $options: 'i' };
-		}
+  public get select() {
+    return this.queries.select || '-__v';
+  };
 
-		return item;
-	};
+  public get sort(): string[][] {
+    if (this.queries.sortBy && this.queries.sortOrder) {
+      this.queries.sort = [
+        [this.queries.sortBy, this.queries.sortOrder]
+      ]
+    }
+    return this.queries.sort || [['createdAt', 'descending']];
+  };
 
-	public get select() {
-		return this.queries.select || '-__v';
-	};
+  public get limit() {
+    return parseInt(this.queries.limit) || 99;
+  };
 
-	public get sort(): Array<string[]> {
-		return this.queries.sort || [['createdAt', 'descending']];
-	};
+  public get page() {
+    return parseInt(this.queries.page) || 1;
+  };
 
-	public get limit() {
-		return parseInt(this.queries.limit) || 99;
-	};
-
-	public get page() {
-		return parseInt(this.queries.page) || 1;
-	};
-
-	public get skip() {
-		const { limit, page } = this.queries;
-		return (page - 1) * limit;
-	}
+  public get skip() {
+    const { limit, page } = this.queries;
+    return (page - 1) * limit;
+  }
 }

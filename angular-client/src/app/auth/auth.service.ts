@@ -5,13 +5,13 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import { environment as env } from 'src/environments/environment';
-import { ApiResponse } from "../interfaces";
+import { ApiRes } from "../interfaces";
 import { LocalStorageService } from "../services";
 import { LoginDto, LoginResponse } from "./store/auth.model";
 import { User } from "../user";
 
-type TokenRes = ApiResponse<LoginResponse>;
-type AuthUserRes = ApiResponse<User>;
+type TokenRes = ApiRes<LoginResponse>;
+type AuthUserRes = ApiRes<User>;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

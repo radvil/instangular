@@ -1,48 +1,52 @@
 import { Injectable } from "@angular/core";
 import { of } from 'rxjs';
-import { map, switchMap, catchError, withLatestFrom } from 'rxjs/operators';
+import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as postActions from './post.actions';
 import { PostService } from "../post.service";
-import { $_postCurrNext } from "./post.selectors";
-import { Post } from "../post.interface";
 import { PushManyComments } from "src/app/comment/store/comment.actions";
+import { PostState } from "./post.state";
+import { CommentState } from "src/app/comment/store/comment.state";
 
 @Injectable()
 export class PostEffects {
 
-  getApiPost$ = createEffect(() => this._actions$.pipe(
+  getManyPosts = createEffect(() => this._actions$.pipe(
     ofType(postActions.GetPosts),
-    switchMap(() => this._postService.getIncrementalPosts().pipe(
+    exhaustMap(() => this._postService.getPosts({
+      page: 1,
+      includeComments: true,
+      includeReactions: true,
+    }).pipe(
       map(posts => postActions.GetPostsSuccess({ posts })),
       catchError(error => of(postActions.GetPostsFailure({ error })))
     ))
   ));
 
-  getApiNextPosts$ = createEffect(() => this._actions$.pipe(
-    ofType(postActions.GetNextPosts),
-    withLatestFrom(this._store.select($_postCurrNext)),
-    switchMap(([action, currNext]) => this._postService.getIncrementalPosts(currNext).pipe(
-      map(posts => postActions.GetNextPostsSuccess({ posts })),
-      catchError((error) => of(postActions.GetNextPostsFailure({ error })))
-    ))
-  ))
-
   getPostById$ = createEffect(() => this._actions$.pipe(
     ofType(postActions.GetPostById),
-    switchMap(({ postId }) => this._postService.getPostById(postId).pipe(
-      map(({ comments, ...post }) => {
-        this._store.dispatch(PushManyComments({ comments }));
-        return postActions.GetPostByIdSuccess({ post })
-      }),
+    exhaustMap(({ postId }) => this._postService.getPostById(postId, {
+      includeComments: true,
+      includeReactions: true,
+    }).pipe(
+      map((post) => postActions.GetPostByIdSuccess({ post })),
       catchError(error => of(postActions.GetPostByIdFailure({ error })))
     ))
   ))
 
+  pushComments = createEffect(() => this._actions$.pipe(
+    ofType(postActions.GetPostByIdSuccess),
+    tap(({ post }) => {
+      if (post.comments && post.comments.length > 0) {
+        this._store.dispatch(PushManyComments({ comments: post.comments }));
+      }
+    }),
+  ), { dispatch: false })
+
   constructor(
-    private _store: Store<Post | Comment>,
+    private _store: Store<PostState | CommentState>,
     private _actions$: Actions,
     private _postService: PostService,
   ) { }

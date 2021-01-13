@@ -5,14 +5,16 @@
       <div class="sidebar__header">
         <div *ngIf="authUser$ | async as authUser" class="sidebar__header__user">
           <img
-            [src]="authUser.photoThumb"
+            [lazyLoad]="authUser.photoThumb"
+            [defaultImage]="'assets/images/portrait.jpg'"
+            [errorImage]="'assets/images/portrait.jpg'"
             width="40"
             height="40"
             alt="avatar"
           />
           <div class="meta">
-            <h4 class="txt-1">{{ authUser.username | truncate:5 }}</h4>
-            <p>{{ authUser.name }}</p>
+            <h4 class="txt-1">{{ authUser.username | truncate:9 }}</h4>
+            <p>{{ authUser.name | truncate:18 }}</p>
           </div>
         </div>
         <button

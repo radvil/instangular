@@ -13,8 +13,6 @@ export interface CommentState extends EntityState<Comment> {
   loaded: boolean;
   loading: boolean;
   selectedId?: string;
-  selectedPostId?: string;
-  currNext?: number;
   error?: Error;
 }
 
@@ -24,7 +22,5 @@ export const initialCommentState: CommentState = commentAdapter.getInitialState(
   loaded: false,
   loading: false,
   selectedId: null,
-  selectedPostId: null,
-  currNext: 1,
   error: null
 })

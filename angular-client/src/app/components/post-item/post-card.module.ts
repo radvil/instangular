@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +16,7 @@ import { PostCardFooterComponent } from './post-card-footer/post-card-footer.com
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     LazyLoadImageModule,
     MatButtonModule,
     MatIconModule,

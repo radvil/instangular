@@ -9,3 +9,9 @@ export interface Comment {
   likes?: any[];
   likesCount?: number;
 }
+
+export class CreateCommentDto {
+  postId: string;
+  commentedBy: string;
+  text: string;
+}

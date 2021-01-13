@@ -56,7 +56,6 @@ export class LoginComponent implements OnInit {
   }
 
   public submitLogin(): void {
-    console.log(this.form.value);
     const loginDto: LoginDto = { ...this.form.value };
     this._store.dispatch(LoginAction({ loginDto }));
   }

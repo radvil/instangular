@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 // local classes
 import { AppStateModule } from './reducers/app-state.module';
 import { TokenInterceptor, HttpErrorInterceptor } from './interceptors';
@@ -30,6 +31,7 @@ const CUSTOM_PROVIDERS = [
     AppStateModule,
     AppRoutingModule,
     HttpClientModule,
+    LazyLoadImageModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,

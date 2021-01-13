@@ -21,10 +21,6 @@ export const $_postSelectedId = createSelector(
   $_postState,
   (state: PostState) => state.selectedId
 );
-export const $_postCurrNext = createSelector(
-  $_postState,
-  (state: PostState) => state.currNext
-);
 export const $_posts = createSelector($_postState, selectAll);
 export const $_postEntities = createSelector($_postState, selectEntities);
 export const $_postsOfUser = createSelector(

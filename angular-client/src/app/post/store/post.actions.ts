@@ -29,16 +29,6 @@ export const GetPostsFailure = createAction(
   props<{ error: Error }>()
 )
 
-export const GetNextPosts = createAction(PostActionTypes.GET_NEXT_POSTS);
-export const GetNextPostsSuccess = createAction(
-  PostActionTypes.GET_NEXT_POSTS_SUCCESS,
-  props<{ posts: Post[] }>()
-)
-export const GetNextPostsFailure = createAction(
-  PostActionTypes.GET_NEXT_POSTS_FAILURE,
-  props<{ error: Error }>()
-)
-
 export const PushManyPosts = createAction(
   PostActionTypes.PUSH_MANY_POSTS,
   props<{ posts: Post[] }>()

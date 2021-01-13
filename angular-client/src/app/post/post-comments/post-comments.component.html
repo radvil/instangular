@@ -1,21 +1,24 @@
-<app-page-header
-  [title]="'Comments'"
-  [style]="'sticky'"
-></app-page-header>
+<app-page-header [title]="'Comments'" [style]="'sticky'"></app-page-header>
 
-<app-post-card
-  [post]="post$ | async"
-  (onUserProfileClicked)="viewUserProfile($event)"
->
-  <app-post-card-footer
-    [style]="'alternative'"
+<div *ngIf="isLoading$ | async; else postCard" class="nowLoading">
+  <h1>🎵🎵</h1>
+</div>
+
+<ng-template #postCard>
+  <app-post-card
     [post]="post$ | async"
-    [comments]="comments"
-    [authUser]="authUser"
-    [viewCommentsText]="'View previous comments'"
-    (onViewCommentsClicked)="viewPreviousComments($event)"
     (onUserProfileClicked)="viewUserProfile($event)"
-    (onAddCommentClicked)="addComment($event)"
   >
-  </app-post-card-footer>
-</app-post-card>
+    <app-post-card-footer
+      [style]="'alternative'"
+      [post]="post$ | async"
+      [comments]="comments$ | async"
+      [authUser]="authUser$ | async"
+      [viewCommentsText]="'View previous comments'"
+      (onViewCommentsClicked)="viewPreviousComments($event)"
+      (onUserProfileClicked)="viewUserProfile($event)"
+      (onAddCommentClicked)="addComment($event)"
+    >
+    </app-post-card-footer>
+  </app-post-card>
+</ng-template>

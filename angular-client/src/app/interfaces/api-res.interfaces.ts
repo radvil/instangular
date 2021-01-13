@@ -1,4 +1,4 @@
-export interface ApiResponse<T> {
+export interface ApiRes<T> {
   status: number;
   message?: string;
   total?: number;

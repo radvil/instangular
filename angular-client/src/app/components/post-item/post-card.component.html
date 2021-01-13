@@ -3,8 +3,8 @@
     <div class="photo--container active">
       <img
         [lazyLoad]="post.postedBy.photoThumb"
-        [defaultImage]="defaultPortrait"
-        [errorImage]="errorImagePath"
+        [defaultImage]="'assets/images/portrait.jpg'"
+        [errorImage]="'assets/images/portrait.jpg'"
         [alt]="post.postedBy.username"
       />
     </div>
@@ -36,9 +36,9 @@
   <div *ngIf="post.reactions?.length > 0" class="post--item-likes">
     <div class="label">Reacted by&nbsp;</div>
     <div class="photos pointer">
-      <img [src]="errorImagePath" [alt]="post.reactions[0].reactedBy.username"/>
-      <img [src]="errorImagePath" [alt]="post.reactions[0].reactedBy.username"/>
-      <img [src]="errorImagePath" [alt]="post.reactions[0].reactedBy.username"/>
+      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
+      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
+      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
     </div>
     <ng-container *ngFor="let reaction of post.reactions; index as idx">
       <span class="username pointer">{{ reaction.reactedBy.username }}</span>

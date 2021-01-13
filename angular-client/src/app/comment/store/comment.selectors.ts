@@ -1,4 +1,5 @@
 import { createSelector } from '@ngrx/store';
+import { $_postSelectedId } from 'src/app/post/store/post.selectors';
 import { commentAdapter, $_commentState } from './comment.state';
 
 const { selectAll, selectEntities } = commentAdapter.getSelectors();
@@ -19,19 +20,11 @@ export const $_commentSelectedId = createSelector(
   $_commentState,
   state => state.selectedId
 );
-export const $_commentSelectedPostId = createSelector(
-  $_commentState,
-  state => state.selectedPostId,
-);
-export const $_commentCurrNext = createSelector(
-  $_commentState,
-  state => state.currNext
-);
 export const $_comments = createSelector($_commentState, selectAll);
 export const $_commentEntities = createSelector($_commentState, selectEntities);
-export const $_commentsOfPost = createSelector(
+export const $_commentsByPostId = createSelector(
   $_comments,
-  $_commentSelectedPostId,
+  $_postSelectedId,
   (comments, postId) => {
     return postId ? comments.filter(comment => comment.postId == postId) : undefined;
   }

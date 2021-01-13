@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { query, Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 
 import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
@@ -50,56 +50,83 @@ export class PostController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.get(this.path, this.getAllPosts);
-    this.router.get(`${this.path}/:id`, this.getPostById);
-    this.router
-      .all(`${this.path}/*`, authorizeAccess())
-      .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.updatePost)
-      .delete(`${this.path}/:id`, authorizeAccess(), this.deletePost)
-      .delete(this.path, authorizeAccess(), this.deleteMultiplePosts)
-      .post(this.path, authorizeAccess(), validationMiddleware(CreatePostDto), this.upload.single('image'), this.createPost);
+    this.router.get(this.path, authorizeAccess(), this.getAllPosts);
+    this.router.post(this.path, authorizeAccess(), validationMiddleware(CreatePostDto), this.upload.single('image'), this.createPost);
+    this.router.delete(this.path, authorizeAccess(), this.deleteMultiplePosts);
+
+    this.router.get(`${this.path}/:id`, authorizeAccess(), this.getPostById);
+    this.router.patch(`${this.path}/:id`, authorizeAccess(), validationMiddleware(CreatePostDto, true), this.updatePost);
+    this.router.delete(`${this.path}/:id`, authorizeAccess(), this.deletePost);
   }
 
-  private getAllPosts = async (req: Req, res: Res): Promise<void> => {
+  private getAllPosts = async (req: Req, res: Res, next: Next): Promise<void> => {
     const querify = new Querify(req.query);
-    const foundPosts = await this._postModel
-      .find(querify.search || {})
-      .limit(querify.limit || 5)
+    const originalRequest = this._postModel
+      .find(querify.search)
+      .limit(querify.limit)
       .skip(querify.skip)
       .select(querify.select)
       .sort(querify.sort)
       .populate(POSTED_BY)
       .populate('commentsCount')
-      .populate({ ...COMMENTS, options: { limit: 2, sort: [[...querify.sort]] } })
       .populate('reactionsCount')
-      .populate({...REACTIONS, options: { limit: 3, sort: [[...querify.sort]] } })
-    const jsonResponse: JsonHttpResponse<Post[]> = {
-      status: 200,
-      message: 'Get posts succeded!',
-      total: foundPosts.length,
-      data: foundPosts,
+    if (req.query.includeComments == 'true') {
+      originalRequest.populate({
+        ...COMMENTS,
+        options: {
+          limit: 2,
+          sort: [[...querify.sort]]
+        }
+      })
     }
-    res.json(jsonResponse);
+    if (req.query.includeReactions == 'true') {
+      originalRequest.populate({
+        ...REACTIONS,
+        options: {
+          limit: 3,
+          sort: [[...querify.sort]]
+        }
+      })
+    }
+    try {
+      const foundPosts = await originalRequest;
+      res.json(<JsonHttpResponse<Post[]>>{
+        status: 200,
+        message: 'GET posts succeded!',
+        total: foundPosts.length,
+        data: foundPosts,
+      });
+    } catch (error) {
+      next(new INTERNAL_SERVER_EXCEPTION());
+    }
   }
 
   private getPostById = async (req: Req, res: Res, next: Next) => {
-    const requestedId = req.params.id;
-    const foundPost = await this._postModel
-      .findById(requestedId)
+    const requestedPostId = req.params.id;
+    const originalRequest = this._postModel
+      .findById(requestedPostId)
       .populate(POSTED_BY)
       .populate('commentsCount')
-      .populate(COMMENTS)
-      .populate('reactionsCount')
-      .populate(REACTIONS)
-    if (!foundPost) {
-      next(new NOT_FOUND_EXCEPTION());
+      .populate('reactionsCount');
+    if (req.query.includeComments === 'true') {
+      originalRequest.populate(COMMENTS)
     }
-    const jsonResponse: JsonHttpResponse<Post> = {
-      status: 200,
-      message: 'Get by id succeded!',
-      data: foundPost,
+    if (req.query.includeReactions === 'true') {
+      originalRequest.populate(REACTIONS)
     }
-    res.json(jsonResponse);
+    try {
+      const foundPost = await originalRequest;
+      if (!foundPost) {
+        next(new NOT_FOUND_EXCEPTION());
+      }
+      res.json(<JsonHttpResponse<Post>>{
+        status: 200,
+        message: "GET postById succeed!",
+        data: foundPost,
+      });
+    } catch (error) {
+      next(new INTERNAL_SERVER_EXCEPTION());
+    }
   }
 
   private updatePost = async (req: Req, res: Res, next: Next) => {

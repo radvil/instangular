@@ -39,7 +39,7 @@ export class CommentController implements Controller {
     const querify = new Querify(req.query);
     const foundComments = await this._commentModel
       .find({ postId: req.query.postId.toString() })
-      .limit(querify.limit || 5)
+      .limit(querify.limit)
       .skip(querify.skip)
       .select(querify.select)
       .sort(querify.sort)

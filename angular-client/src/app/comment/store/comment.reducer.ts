@@ -21,26 +21,22 @@ export const commentReducer = createReducer(
     commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
   )),
 
-  on(CommentActions.GetNextComments, state => ({
+  on(CommentActions.PushManyComments, (state, { comments }) => (
+    commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
+  )),
+
+  on(CommentActions.AddComment, (state) => ({
     ...state,
     loaded: false,
     loading: true,
   })),
-  on(CommentActions.GetNextCommentsFailure, (state, { error }) => ({
+  on(CommentActions.AddCommentFailure, (state, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error,
   })),
-  on(CommentActions.GetNextCommentsSuccess, (state, { comments }) => (
-    commentAdapter.addMany([...comments], {
-      ...state,
-      loaded: true,
-      loading: false,
-      currNext: comments.length > 0 ? ++state.currNext : state.currNext,
-    })
-  )),
-  on(CommentActions.PushManyComments, (state, { comments }) => (
-    commentAdapter.addMany([...comments], { ...state })
+  on(CommentActions.AddCommentSuccess, (state, { comment }) => (
+    commentAdapter.addOne(comment, { ...state, loaded: true, loading: false })
   )),
 )

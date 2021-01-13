@@ -9,6 +9,10 @@ p {
   margin: 0 1rem;
 }
 .comment p {
+  b {
+    cursor: pointer;
+    margin-right: .5rem;
+  }
   width: fit-content;
 }
 .add-comment {
@@ -23,6 +27,20 @@ p {
     cursor: pointer;
     margin-left: 1rem;
     color: #a9a9a9;
+  }
+  form {
+    width: 90%;
+    margin: 0 1rem;
+  }
+  input {
+    height: 2rem;
+    font-size: 1.2rem;
+    width: inherit;
+    // padding: .5rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 2rem;
+    background-color: #fff;
   }
 }
 .post--item-time {
@@ -40,17 +58,22 @@ p {
     margin: 0.5rem 0;
   }
   .comment p {
+    display: flex;
+    flex-direction: column;
     background-color: #f1f1f1;
     padding: 0.5rem 1rem;
-    border-radius: 2rem;
+    border-radius: 1rem;
     border-top-left-radius: 0;
+    b {
+      font-size: .9rem;
+    }
   }
   .comment.self {
     display: flex;
     justify-content: flex-end;
     p {
       background-color: #d4e6f5;
-      border-top-left-radius: 2rem;
+      border-top-left-radius: 1rem;
       border-bottom-right-radius: 0;
     }
   }

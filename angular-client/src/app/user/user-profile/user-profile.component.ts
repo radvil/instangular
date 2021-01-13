@@ -23,7 +23,6 @@ export class UserProfileComponent implements OnInit {
 
   public user$: Observable<User>;
   public posts$: Observable<Post[]>;
-  public errorImagePath = "assets/images/portrait.jpg";
   public isLoading$: Observable<boolean>;
   public httpError$: Observable<Error>;
 

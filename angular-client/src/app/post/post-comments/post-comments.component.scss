@@ -1,3 +1,13 @@
+.nowLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  h1 {
+    margin: 0;
+  }
+}
 .post-comments__header {
   display: flex;
   justify-content: space-between;

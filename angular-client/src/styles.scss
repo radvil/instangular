@@ -87,6 +87,10 @@ p {
   line-height: 1;
   max-height: 1 * 1;
 }
+input {
+  color: #666;
+  background-color: whitesmoke;
+}
 
 // mobile
 @media (max-width: 777px) {
@@ -119,6 +123,9 @@ p {
   }
   .post--item-header .photo--container {
     border: 2px !important;
+  }
+  input {
+    font-size: 1rem !important;
   }
 }
 // notifications overlay
