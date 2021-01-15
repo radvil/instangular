@@ -3,6 +3,11 @@ import { User } from 'src/app/user';
 import { Post } from 'src/app/post';
 import { Comment, CreateCommentDto } from 'src/app/comment';
 
+enum FooterStyle {
+  DEFAULT = "default",
+  ALTERNATIVE = "alternative"
+}
+
 @Component({
   selector: 'app-post-card-footer',
   templateUrl: './post-card-footer.component.html',
@@ -11,11 +16,13 @@ import { Comment, CreateCommentDto } from 'src/app/comment';
 })
 export class PostCardFooterComponent {
 
-  @Input() style = "default";
+  @Input() style: FooterStyle = FooterStyle.DEFAULT;
   @Input() post: Post;
   @Input() comments: Comment[];
   @Input() authUser: User;
   @Input() viewCommentsText: string = "View previous comments";
+  @Input() isCommentsLoading: boolean = false;
+  @Input() isTruncatedTexts: boolean = false;
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<any>();
@@ -32,7 +39,10 @@ export class PostCardFooterComponent {
   }
 
   getCommentClass(username: string): string {
-    return this.authUser.username === username ? 'comment self' : 'comment';
+    let currentClasses = "comment";
+    if (this.isTruncatedTexts) currentClasses += ' truncate1'
+    if (this.authUser.username === username) currentClasses += ' self';
+    return currentClasses;
   }
 
   public emitAddComment(): void {

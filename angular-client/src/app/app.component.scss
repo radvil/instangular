@@ -70,9 +70,8 @@
   height: 100%;
   width: 100%;
   flex: 2;
-  overflow-x: auto;
+  overflow-x: hidden;
   // hide scroll
-  overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {

@@ -10,10 +10,10 @@ import { CommentService } from "../comment.service";
 export class CommentEffects {
 
   getApiComment$ = createEffect(() => this._actions$.pipe(
-    ofType(commentActions.GetComments),
-    exhaustMap(({ postId }) => this._commentService.getCommentsByPostId(postId).pipe(
-      map(comments => commentActions.GetCommentsSuccess({ comments })),
-      catchError(error => of(commentActions.GetCommentsFailure({ error })))
+    ofType(commentActions.GetCommentsByPostId),
+    exhaustMap(({ dto }) => this._commentService.getCommentsByPostId(dto).pipe(
+      map(comments => commentActions.GetCommentsByPostIdSuccess({ comments })),
+      catchError(error => of(commentActions.GetCommentsByPostIdFailure({ error })))
     ))
   ));
 

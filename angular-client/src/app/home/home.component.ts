@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 
 import { $_authUser } from '../auth/store/auth.selectors';
 import { $_posts, $_postsWithLastTwoComments } from '../post/store/post.selectors';

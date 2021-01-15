@@ -6,9 +6,9 @@ import { filter, map } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { $_post, $_postError, $_postLoading } from '../store/post.selectors';
-import { $_commentsByPostId, Comment, CreateCommentDto } from 'src/app/comment';
+import { $_commentLoading, $_commentsByPostId, Comment, CreateCommentDto, GetCommentsByPostIdDto } from 'src/app/comment';
 import { GetPostById } from '../store/post.actions';
-import { AddComment } from 'src/app/comment/store/comment.actions';
+import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/comment.actions';
 import { User } from 'src/app/user';
 import { Post } from '../post.interface';
 
@@ -19,9 +19,11 @@ import { Post } from '../post.interface';
 })
 export class PostCommentsComponent implements OnInit, OnDestroy {
 
+  private pageNumber = 1;
   private _subscription = new Subscription();
-  public isLoading$: Observable<boolean>;
-  public httpError$: Observable<Error>;
+  public isPostLoading$: Observable<boolean>;
+  public isPostHttpError$: Observable<Error>;
+  public isCommentsLoading$: Observable<boolean>;
 
   public authUser$: Observable<User>;
   public post$: Observable<Post>;
@@ -33,20 +35,26 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
         .pipe(map(param => param.get('postId')))
         .subscribe(postId => {
           this._store.dispatch(GetPostById({ postId }));
+          this.pageNumber += 1;
         })
     );
 
     this.authUser$ = this._store.select($_authUser);
-    this.post$ = this._store.select($_post)
-    this.comments$ = this._store.select($_commentsByPostId).pipe(
-      filter(comments => !!comments.length)
-    );
-    this.isLoading$ = this._store.select($_postLoading);
-    this.httpError$ = this._store.select($_postError);
+    this.post$ = this._store.select($_post);
+    this.comments$ = this._store.select($_commentsByPostId);
+    this.isPostLoading$ = this._store.select($_postLoading);
+    this.isPostHttpError$ = this._store.select($_postError);
+    this.isCommentsLoading$ = this._store.select($_commentLoading);
   }
 
   public viewPreviousComments(postIdEvent: string) {
-    alert('View prev comments' + postIdEvent);
+    const dto: GetCommentsByPostIdDto = {
+      postId: postIdEvent,
+      pageNumber: this.pageNumber,
+      limit: 5,
+    };
+    this._store.dispatch(GetCommentsByPostId({ dto }));
+    this.pageNumber++;
   }
 
   public viewUserProfile(usernameEvent: string) {

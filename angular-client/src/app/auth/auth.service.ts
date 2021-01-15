@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
@@ -17,14 +16,17 @@ type AuthUserRes = ApiRes<User>;
 export class AuthService {
   constructor(
     private _http: HttpClient,
-    private _router: Router,
     private _localStorageService: LocalStorageService,
   ) { }
 
   private _authUrl = env.be.url + '/auth';
 
   public login(loginDto: LoginDto): Observable<string> {
-    const request$ = this._http.post<TokenRes>(`${this._authUrl}/login`, loginDto);
+    const request$ = this._http.post<TokenRes>(
+      `${this._authUrl}/login`,
+      loginDto,
+      { withCredentials: true }
+    );
     return request$.pipe(map(res => res.data.accessToken))
   }
 
@@ -34,7 +36,10 @@ export class AuthService {
   }
 
   public refreshToken(): Observable<string> {
-    const request$ = this._http.get<TokenRes>(`${this._authUrl}/refresh-token`);
+    const request$ = this._http.get<TokenRes>(
+      `${this._authUrl}/refresh-token`,
+      { withCredentials: true }
+    );
     return request$.pipe(
       map(res => res.data.accessToken),
       tap(token => this._localStorageService.setItem('accessToken', token))

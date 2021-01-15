@@ -128,6 +128,15 @@ input {
     font-size: 1rem !important;
   }
 }
+.truncate1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-height: 1;
+  max-height: 1 * 1;
+}
 // notifications overlay
 .error-notification-overlay {
   color: #eeeeee;

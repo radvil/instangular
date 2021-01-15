@@ -28,10 +28,10 @@ export const $_postsWithLastTwoComments = createSelector(
     if (!state) return [];
     return state.map(post => {
       const comments = [];
-      if (post.comments) {
-        comments.push(post.comments[post.comments.length - 2]);
-        comments.push(post.comments[post.comments.length - 1]);
-      }
+      if (post.comments)
+        for (let x = 1; x >= 0; x--)
+          if (post.comments[x])
+            comments.push(post.comments[x]);
       return { ...post, comments };
     })
   }

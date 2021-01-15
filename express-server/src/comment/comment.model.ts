@@ -27,6 +27,7 @@ export class CreateCommentDto {
 }
 
 const schemaOptions: SchemaOptions = {
+  timestamps: true,
   toObject: { virtuals: true, versionKey: false },
   toJSON: {
     virtuals: true,
@@ -51,17 +52,7 @@ const schema = new Schema<Comment>({
     required: true,
   },
   text: String,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
 }, schemaOptions);
-
-schema.virtual('reactions', {
-  ref: 'CommentReaction',
-  foreignField: 'commentId',
-  localField: '_id',
-});
 
 schema.virtual('reactionsCount', {
   ref: 'CommentReaction',

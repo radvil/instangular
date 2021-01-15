@@ -1,4 +1,5 @@
 <div *ngIf="post && comments" [class]="style">
+  <div class="post--item-time">{{ post.createdAt | date }}</div>
   <p
     *ngIf="comments.length < post.commentsCount"
     (click)="viewPostComments(post._id)"
@@ -7,15 +8,28 @@
     {{ viewCommentsText }}
   </p>
   <div *ngIf="post.commentsCount" class="post--comments">
+    <div *ngIf="isCommentsLoading" class="commentsPlaceholder">
+      🎵 🎵
+    </div>
     <div
       *ngFor="let comment of comments"
       [class]="getCommentClass(comment.commentedBy.username)"
     >
+    <img
+      *ngIf="style === 'alternative'"
+      [lazyLoad]="comment.commentedBy.photoThumb"
+      [defaultImage]="'assets/images/portrait.jpg'"
+      [errorImage]="'assets/images/portrait.jpg'"
+      (click)="viewUserProfile(comment.commentedBy.username)"
+      height="40"
+      width="40"
+      alt=""
+    />
       <p>
-        <b (click)="viewUserProfile(comment.commentedBy.username)">{{
-          comment.commentedBy.username
-        }}</b
-        >{{ comment.text }}
+        <b (click)="viewUserProfile(comment.commentedBy.username)">
+          {{ comment.commentedBy.username }}
+        </b>
+        {{ comment.text }}
       </p>
     </div>
   </div>
@@ -29,8 +43,12 @@
       width="40"
     />
     <form (ngSubmit)="emitAddComment()">
-      <input [(ngModel)]="commentText" placeholder="Add comment.." name="text" aria-autocomplete="none"/>
+      <input
+        [(ngModel)]="commentText"
+        placeholder="Add comment.."
+        name="text"
+        autocomplete="off"
+      />
     </form>
   </div>
-  <div class="post--item-time">{{ post.createdAt | date }}</div>
 </div>

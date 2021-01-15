@@ -3,11 +3,14 @@ import { createFeatureSelector } from '@ngrx/store'
 import { Comment } from "../comment.interface";
 
 const selectId = (comment: Comment): string => comment._id;
-const sortComparer = (commentX: Comment, commentY: Comment): number => {
-  return commentX.createdAt.toString().localeCompare(commentY.createdAt.toString())
+const sortByLatestDate = (commentX: Comment, commentY: Comment): number => {
+  return commentX.createdAt.toString().localeCompare(commentY.createdAt.toString());
 }
 
-export const commentAdapter = createEntityAdapter<Comment>({ selectId, sortComparer });
+export const commentAdapter = createEntityAdapter<Comment>({
+  selectId,
+  sortComparer: sortByLatestDate
+});
 
 export interface CommentState extends EntityState<Comment> {
   loaded: boolean;

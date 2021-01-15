@@ -1,4 +1,5 @@
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
+import { USER_POPULATE_SELECT } from '../var';
 
 export interface Post extends Document {
   postedBy: any;
@@ -46,6 +47,14 @@ schema.virtual('comments', {
   ref: 'Comment',
   foreignField: 'postId',
   localField: '_id',
+  options: {
+    sort: { createdAt: -1 },
+    limit: 5,
+    populate: [
+      { path: 'commentedBy', select: USER_POPULATE_SELECT },
+      { path: 'reactionsCount' },
+    ]
+  }
 });
 
 schema.virtual('commentsCount', {
@@ -59,6 +68,11 @@ schema.virtual('reactions', {
   ref: 'PostReaction',
   foreignField: 'postId',
   localField: '_id',
+  options: {
+    sort: { createdAt: -1 },
+    limit: 5,
+    populate: {path: 'reactedBy', select: USER_POPULATE_SELECT},
+  },
 });
 
 schema.virtual('reactionsCount', {

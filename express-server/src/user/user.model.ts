@@ -1,5 +1,6 @@
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
 import { compare as bcryptCompare, hash as bcryptHash } from 'bcrypt';
+import { USER_POPULATE_SELECT } from '../var';
 
 export enum Role {
   ADMIN = 'admin',
@@ -62,7 +63,7 @@ const schema = new Schema<User>({
   password: String,
   lastPasswordUpdatedAt: String,
   lastLoggedInAt: Date,
-  bio: {type: String, maxlength: 500},
+  bio: { type: String, maxlength: 500 },
   websiteLink: { type: String, maxlength: 1000 },
   facebookLink: { type: String, maxlength: 1000 },
   twitterLink: { type: String, maxlength: 1000 },
@@ -92,6 +93,15 @@ schema.virtual('posts', {
   ref: 'Post',
   foreignField: 'postedBy',
   localField: '_id',
+  options: {
+    sort: { createdAt: -1 },
+    limit: 10,
+    populate: [
+      { path: 'postedBy', select: USER_POPULATE_SELECT },
+      { path: 'commentsCount' },
+      { path: 'reactionsCount' },
+    ],
+  }
 });
 
 schema.virtual('postsCount', {

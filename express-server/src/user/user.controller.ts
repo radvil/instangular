@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 
-import { ImageUploader, SizeConfig, SizeLabel, TransformOptions, UploadImageDto } from '../image';
-import { Role, User } from './user.model';
-import { UpdatePasswordDto, UserBasicsInfoDto, UserSensitivesInfoDto } from './user.dto';
-
 import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
+import { ImageUploader, SizeConfig, SizeLabel, TransformOptions, UploadImageDto } from '../image';
+import { UpdatePasswordDto, UserBasicsInfoDto, UserSensitivesInfoDto } from './user.dto';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next, POSTS, POSTS_COUNT } from '../var';
+import { Role, User } from './user.model';
+import { Req, Res, Next } from '../var';
 
 export class UserController implements Controller {
   public path = '/users';
@@ -16,7 +15,10 @@ export class UserController implements Controller {
   private _userModel = User;
 
   // image upload requirement variables;
-  private upload = multer({ storage: memoryStorage(), limits: { fileSize: 1024 * 1024 } });
+  private upload = multer({
+    storage: memoryStorage(),
+    limits: { fileSize: 1024 * 1024 }
+  });
   private imageService: ImageUploader;
   private baseUploadPath = '/public/uploads/images';
   private sizesConfigs: SizeConfig[] = [
@@ -57,7 +59,10 @@ export class UserController implements Controller {
       const findQuery = this._userModel.findOne({ username });
       const includePostsOptionExists = !!(req.query.includePosts === 'true');
       if (includePostsOptionExists) {
-        findQuery.populate([POSTS, POSTS_COUNT]).exec();
+        findQuery.populate([
+          { path: 'posts', limit: 10 },
+          { path: 'postsCount' }
+        ]).exec();
       }
       const foundUser = await findQuery;
       if (!foundUser) {
@@ -215,7 +220,6 @@ export class UserController implements Controller {
     const options: TransformOptions = {};
     try {
       const images = await this.imageService.uploadImage({ file, options } as UploadImageDto);
-      console.log(images);
       const thumbPath = images.find(img => img.sizeLabel === SizeLabel.THUMB)[key || 'name'];
       const imagePath = images.find(img => img.sizeLabel === SizeLabel.SMALL)[key || 'name'];
       return [thumbPath, imagePath];

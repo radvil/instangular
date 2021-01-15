@@ -1,14 +1,14 @@
 import { createAction, props } from '@ngrx/store';
 import { Comment } from 'src/app/comment';
-import { CreateCommentDto } from '../comment.interface';
+import { CreateCommentDto, GetCommentsByPostIdDto } from '../comment.interface';
 
 export enum CommentActionTypes {
 
-  GET_COMMENTS = '[Comment/Api] Get Comments',
-  GET_COMMENTS_SUCCESS = '[Comment/Api] Get Comments Success',
-  GET_COMMENTS_FAILURE = '[Comment/Api] Get Comments Failure',
+  GET_COMMENTS_BY_POST_ID = '[Comment/Api] Get Comments By PostId',
+  GET_COMMENTS_BY_POST_ID_SUCCESS = '[Comment/Api] Get Comments By PostId Success',
+  GET_COMMENTS_BY_POST_ID_FAILURE = '[Comment/Api] Get Comments By PostId Failure',
 
-  PUSH_MANY_COMMENTS = '[Comment]ByPostId Push Many Comments',
+  PUSH_MANY_COMMENTS = '[Comment] Push Many Comments',
 
   ADD_COMMENT = '[Comment/Api] Add Comment',
   ADD_COMMENT_SUCCESS = '[Comment/Api] Add Comment Success',
@@ -16,16 +16,16 @@ export enum CommentActionTypes {
 
 }
 
-export const GetComments = createAction(
-  CommentActionTypes.GET_COMMENTS,
-  props<{ postId: string }>()
+export const GetCommentsByPostId = createAction(
+  CommentActionTypes.GET_COMMENTS_BY_POST_ID,
+  props<{ dto: GetCommentsByPostIdDto }>()
 );
-export const GetCommentsSuccess = createAction(
-  CommentActionTypes.GET_COMMENTS_SUCCESS,
+export const GetCommentsByPostIdSuccess = createAction(
+  CommentActionTypes.GET_COMMENTS_BY_POST_ID_SUCCESS,
   props<{ comments: Comment[] }>()
 )
-export const GetCommentsFailure = createAction(
-  CommentActionTypes.GET_COMMENTS_FAILURE,
+export const GetCommentsByPostIdFailure = createAction(
+  CommentActionTypes.GET_COMMENTS_BY_POST_ID_FAILURE,
   props<{ error: Error }>()
 )
 

@@ -15,3 +15,9 @@ export class CreateCommentDto {
   commentedBy: string;
   text: string;
 }
+
+export class GetCommentsByPostIdDto {
+  postId: string;
+  pageNumber?: number;
+  limit?: number;
+}

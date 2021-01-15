@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { authorizeAccess } from "../middleware";
-import { Controller, JsonHttpResponse, RequestUser } from "../interface";
-import { Next, REACTED_BY, Req, Res } from "../var";
-import { CommentReaction, PostReaction } from "./reaction.model";
+
 import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, UNAUTHORIZED_EXCEPTION } from "../exception";
+import { Controller, JsonHttpResponse, RequestUser } from "../interface";
+import { CommentReaction, PostReaction } from "./reaction.model";
+import { authorizeAccess } from "../middleware";
 import { Querify } from "../util/Querify";
+import { Next, Req, Res, USER_POPULATE_SELECT } from "../var";
 
 export class PostReactionController implements Controller {
   public path = "/post-reactions";
@@ -31,7 +32,10 @@ export class PostReactionController implements Controller {
         next(new BAD_REQUEST_EXCEPTION('failed to react!'));
       }
       try {
-        await createdReaction.populate(REACTED_BY).execPopulate();
+        await createdReaction.populate({
+          path: 'reactedBy',
+          select: USER_POPULATE_SELECT,
+        }).execPopulate();
         return res.json(<JsonHttpResponse<null>>{
           status: 200,
           message: "React post succeed!",
@@ -64,7 +68,10 @@ export class PostReactionController implements Controller {
       .skip(querify.skip)
       .select(querify.select)
       .sort(querify.sort)
-      .populate(REACTED_BY)
+      .populate({
+        path: 'reactedBy',
+        select: USER_POPULATE_SELECT,
+      })
     const jsonResponse: JsonHttpResponse<PostReaction[]> = {
       status: 200,
       message: 'Get post reactions succeded!',
@@ -105,7 +112,10 @@ export class CommentReactionController implements Controller {
         next(new BAD_REQUEST_EXCEPTION('failed to react!'));
       }
       try {
-        await createdReaction.populate(REACTED_BY).execPopulate();
+        await createdReaction.populate({
+          path: 'reactedBy',
+          select: USER_POPULATE_SELECT
+        }).execPopulate();
         return res.json(<JsonHttpResponse<null>>{
           status: 200,
           message: "react comment succeed!",
@@ -138,7 +148,10 @@ export class CommentReactionController implements Controller {
       .skip(querify.skip)
       .select(querify.select)
       .sort(querify.sort)
-      .populate(REACTED_BY)
+      .populate({
+        path: 'reactedBy',
+        select: USER_POPULATE_SELECT
+      })
     const jsonResponse: JsonHttpResponse<CommentReaction[]> = {
       status: 200,
       message: 'Get posts succeded!',

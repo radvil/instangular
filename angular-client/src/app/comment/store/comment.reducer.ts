@@ -5,19 +5,19 @@ import * as CommentActions from './comment.actions';
 export const commentReducer = createReducer(
   initialCommentState,
 
-  on(CommentActions.GetComments, (state, { postId }) => ({
+  on(CommentActions.GetCommentsByPostId, (state, { dto }) => ({
     ...state,
     loaded: false,
     loading: true,
-    selectedPostId: postId,
+    selectedPostId: dto.postId,
   })),
-  on(CommentActions.GetCommentsFailure, (state, { error }) => ({
+  on(CommentActions.GetCommentsByPostIdFailure, (state, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
     error,
   })),
-  on(CommentActions.GetCommentsSuccess, (state, { comments }) => (
+  on(CommentActions.GetCommentsByPostIdSuccess, (state, { comments }) => (
     commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
   )),
 

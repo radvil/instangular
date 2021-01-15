@@ -1,11 +1,11 @@
-import { query, Router } from 'express';
+import { Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 
 import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
 import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, TransformOptions } from '../image';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next, COMMENTS, POSTED_BY, REACTIONS } from '../var';
+import { Req, Res, Next, USER_POPULATE_SELECT } from '../var';
 import { Querify } from '../util/Querify';
 import { CreatePostDto, Post } from './index';
 
@@ -14,7 +14,9 @@ export class PostController implements Controller {
   public router = Router();
 
   private _postModel = Post;
-  private upload = multer({ storage: memoryStorage() });
+  private upload = multer({
+    storage: memoryStorage()
+  });
   private imageService: ImageUploader;
   private baseUploadPath = '/public/uploads/images';
   private sizesConfigs: SizeConfig[] = [
@@ -52,7 +54,6 @@ export class PostController implements Controller {
   private initializeRoutes(): void {
     this.router.get(this.path, authorizeAccess(), this.getAllPosts);
     this.router.post(this.path, authorizeAccess(), validationMiddleware(CreatePostDto), this.upload.single('image'), this.createPost);
-    this.router.delete(this.path, authorizeAccess(), this.deleteMultiplePosts);
 
     this.router.get(`${this.path}/:id`, authorizeAccess(), this.getPostById);
     this.router.patch(`${this.path}/:id`, authorizeAccess(), validationMiddleware(CreatePostDto, true), this.updatePost);
@@ -67,26 +68,17 @@ export class PostController implements Controller {
       .skip(querify.skip)
       .select(querify.select)
       .sort(querify.sort)
-      .populate(POSTED_BY)
+      .populate({
+        path: 'postedBy',
+        select: USER_POPULATE_SELECT
+      })
       .populate('commentsCount')
       .populate('reactionsCount')
     if (req.query.includeComments == 'true') {
-      originalRequest.populate({
-        ...COMMENTS,
-        options: {
-          limit: 2,
-          sort: [[...querify.sort]]
-        }
-      })
+      originalRequest.populate('comments');
     }
     if (req.query.includeReactions == 'true') {
-      originalRequest.populate({
-        ...REACTIONS,
-        options: {
-          limit: 3,
-          sort: [[...querify.sort]]
-        }
-      })
+      originalRequest.populate('reactions');
     }
     try {
       const foundPosts = await originalRequest;
@@ -105,14 +97,17 @@ export class PostController implements Controller {
     const requestedPostId = req.params.id;
     const originalRequest = this._postModel
       .findById(requestedPostId)
-      .populate(POSTED_BY)
+      .populate({
+        path: 'postedBy',
+        select: USER_POPULATE_SELECT,
+      })
       .populate('commentsCount')
       .populate('reactionsCount');
     if (req.query.includeComments === 'true') {
-      originalRequest.populate(COMMENTS)
+      originalRequest.populate('comments');
     }
     if (req.query.includeReactions === 'true') {
-      originalRequest.populate(REACTIONS)
+      originalRequest.populate('reactions');
     }
     try {
       const foundPost = await originalRequest;
@@ -134,7 +129,7 @@ export class PostController implements Controller {
     const changes: CreatePostDto = req.body;
     const updatedPost = await this._postModel
       .findByIdAndUpdate(requestedId, changes, { new: true })
-      .populate(POSTED_BY)
+      .populate({ path: 'postedBy', select: USER_POPULATE_SELECT })
     if (!updatedPost) {
       next(new NOT_FOUND_EXCEPTION(requestedId));
     }
@@ -159,7 +154,10 @@ export class PostController implements Controller {
         postedBy: req.user._id,
       });
       const savedPost = await newPost.save();
-      await savedPost.populate(POSTED_BY).execPopulate();
+      await savedPost.populate({
+        path: 'postedBy',
+        select: USER_POPULATE_SELECT,
+      }).execPopulate();
       const response: JsonHttpResponse<Post> = {
         status: 200,
         message: 'Post has been created!',
@@ -190,26 +188,6 @@ export class PostController implements Controller {
       res.json(jsonResponse);
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION(error));
-    }
-  }
-
-  private deleteMultiplePosts = async (req: Req, res: Res, next: Next) => {
-    const requestedIds: string[] = req.body.ids;
-    try {
-      // TODO: FindMany Query
-      const deletedPosts = await this._postModel.deleteMany({ _id: requestedIds });
-      if (!deletedPosts) {
-        next(new NOT_FOUND_EXCEPTION(requestedIds.toString()));
-      }
-      const jsonResponse: JsonHttpResponse<any> = {
-        status: 200,
-        message: `Delete multiple posts succeded!`,
-        total: requestedIds.length,
-        data: { deletedPostIds: requestedIds }
-      }
-      res.json(jsonResponse);
-    } catch (error) {
-      next(new BAD_REQUEST_EXCEPTION('Failed to delete this posts!'));
     }
   }
 

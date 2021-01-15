@@ -55,7 +55,7 @@
         </div>
       </div>
     </div>
-    <div class="intro--footer">
+    <div *ngIf="isSelf$ | async" class="intro--footer">
       <button (click)="editProfile(user._id)" mat-stroked-button>
         Edit Profile
       </button>
@@ -81,7 +81,7 @@
 </div>
 
 <div *ngIf="isLoading$ | async" class="placeholder">
-  <h2>🎶 🎶 🎶</h2>
+  <h2>🎵 🎵 🎵</h2>
 </div>
 
 <div *ngIf="httpError$ | async as httpError" class="placeholder">

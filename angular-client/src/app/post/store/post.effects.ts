@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { of } from 'rxjs';
-import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { map, exhaustMap, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
@@ -9,6 +9,7 @@ import { PostService } from "../post.service";
 import { PushManyComments } from "src/app/comment/store/comment.actions";
 import { PostState } from "./post.state";
 import { CommentState } from "src/app/comment/store/comment.state";
+import { $_post } from "./post.selectors";
 
 @Injectable()
 export class PostEffects {
@@ -37,10 +38,23 @@ export class PostEffects {
   ))
 
   pushComments = createEffect(() => this._actions$.pipe(
-    ofType(postActions.GetPostByIdSuccess),
-    tap(({ post }) => {
-      if (post.comments && post.comments.length > 0) {
-        this._store.dispatch(PushManyComments({ comments: post.comments }));
+    ofType(
+      postActions.GetPostByIdSuccess,
+    ),
+    withLatestFrom(
+      combineLatest([
+        this._store.select($_post),
+      ])
+    ),
+    tap(([{ type }, [post]]) => {
+      const { PostActionTypes } = postActions;
+      switch (type) {
+        case PostActionTypes.GET_POST_BY_ID_SUCCESS:
+          if (post)
+            if (post.comments && post.comments.length)
+              this._store.dispatch(PushManyComments({ comments: post.comments }));
+          return;
+        default: return;
       }
     }),
   ), { dispatch: false })

@@ -126,5 +126,8 @@
       }
     }
   },
-  "defaultProject": "instangular"
+  "defaultProject": "instangular",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
