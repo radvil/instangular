@@ -8,11 +8,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 import { PostCardComponent } from './post-card.component';
-import { PostCardFooterComponent } from './post-card-footer/post-card-footer.component';
+import { InstAngularPipesModule } from 'src/app/utils';
 
 
 @NgModule({
-  declarations: [PostCardComponent, PostCardFooterComponent],
+  declarations: [
+    PostCardComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -20,7 +22,10 @@ import { PostCardFooterComponent } from './post-card-footer/post-card-footer.com
     LazyLoadImageModule,
     MatButtonModule,
     MatIconModule,
+    InstAngularPipesModule,
   ],
-  exports: [PostCardComponent, PostCardFooterComponent],
+  exports: [
+    PostCardComponent,
+  ],
 })
 export class PostCardModule { }

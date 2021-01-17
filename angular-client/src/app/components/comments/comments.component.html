@@ -1,0 +1,94 @@
+<div *ngIf="post && comments" class="comments__container">
+  <!-- view all comments -->
+  <div class="comment__paging">
+    <p
+      class="viewPrevComments"
+      *ngIf="comments.length < post.commentsCount"
+      (click)="viewPostComments(post._id)"
+    >
+      View previous comments
+    </p>
+  </div>
+  <div class="comments__list" *ngIf="post.commentsCount">
+    <!-- loading ph -->
+    <div *ngIf="isCommentsLoading" class="commentsPlaceholder">🎵 🎵</div>
+
+    <!-- comment row -->
+    <ng-container *ngFor="let comment of comments">
+      <div class="comment__item">
+        <div class="user__photo__container">
+          <img
+            [lazyLoad]="comment.commentedBy.photoThumb"
+            [defaultImage]="'assets/images/portrait.jpg'"
+            [errorImage]="'assets/images/portrait.jpg'"
+            (click)="viewUserProfile(comment.commentedBy.username)"
+            alt=""
+            height="40"
+            width="40"
+          />
+        </div>
+        <div class="column">
+          <!-- comment__box -->
+          <div>
+            <div [class]="getCommentClass(comment.commentedBy.username)">
+              <small (click)="viewUserProfile(comment.commentedBy.username)">
+                {{ comment.commentedBy.username }}
+              </small>
+              <p>{{ comment.text }}</p>
+            </div>
+            <div class="comment__actions">
+              <div class="time">
+                {{ comment.createdAt | relativeTime: "short" }}
+              </div>
+              <div class="react">React</div>
+              <div class="reply">Reply</div>
+              <div class="reactions__count">❤ 9</div>
+            </div>
+          </div>
+          <!-- comment__replies -->
+          <ng-container *ngIf="comment.replies && comment.replies.length">
+            <div class="view__prev">
+              View previous {{ comment.replies.length }} replies
+            </div>
+            <ul class="replies__list">
+              <li *ngFor="let reply of comment.replies">
+                <img
+                  [lazyLoad]="reply.commentedBy.photoThumb"
+                  [defaultImage]="'assets/images/portrait.jpg'"
+                  [errorImage]="'assets/images/portrait.jpg'"
+                  alt=""
+                  height="25"
+                  width="25"
+                />
+                <span class="username">{{ reply.commentedBy.username }}</span>
+                <p class="textLimit1">{{ reply.text }}</p>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="comment__add">
+      <div class="user__photo__container">
+        <img
+          [lazyLoad]="authUser.photoThumb"
+          [defaultImage]="'assets/images/portrait.jpg'"
+          [errorImage]="'assets/images/portrait.jpg'"
+          [alt]="authUser.username"
+          height="40"
+          width="40"
+        />
+      </div>
+      <form (ngSubmit)="emitAddComment()">
+        <input
+          [(ngModel)]="commentInputText"
+          placeholder="Add Comment .."
+          autocomplete="off"
+          name="text"
+        />
+        <button type="submit">></button>
+      </form>
+    </div>
+  </div>
+</div>

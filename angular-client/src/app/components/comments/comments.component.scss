@@ -1,0 +1,140 @@
+:host {
+	overflow: hidden;
+	font-family: Roboto;
+	font-size: 16px;
+}
+.comment__paging {
+  margin: .5rem 1rem 0;
+  width: fit-content;
+  font-weight: bold;
+}
+.viewPrevComments {
+  color: #5f5f5f;
+}
+small {
+	font-weight: bold;
+}
+.comments__list {
+  padding: 1rem;
+}
+.comments__list > * {
+  overflow: hidden;
+}
+.comment__item {
+	display: flex;
+  line-height: 1.4rem;
+}
+.comment__item p {
+	margin: 0;
+}
+.user__photo__container {
+	margin-right: 0.5rem;
+  height: fit-content;
+  img {
+    object-fit: cover;
+  }
+}
+.user__photo__container img {
+	border-radius: 50%;
+	cursor: pointer;
+}
+.comment__box,
+.comment__actions {
+	padding: 0.5rem 1rem;
+}
+.comment__box {
+	background-color: #f1f1f1;
+	border-radius: 1.5rem;
+}
+.self {
+	background-color: bisque;
+}
+.comment__actions {
+	display: flex;
+}
+.comment__actions > * {
+	margin-right: 0.5rem;
+	font-weight: bold;
+	color: #5f5f5f;
+	font-weight: bold;
+}
+.comment__actions > .time,
+.comment__actions > .reactions__count {
+	font-weight: inherit;
+}
+.view__prev {
+	font-size: small;
+	font-weight: bold;
+	margin-bottom: 0.5rem;
+	width: fit-content;
+}
+.replies__list {
+	padding: 0;
+	margin: 0.5rem 0;
+	list-style: none;
+}
+.replies__list li {
+	display: flex;
+	align-items: center;
+	margin: 0.5rem 0;
+}
+.replies__list li .username {
+	margin: 0 0.5rem;
+	font-weight: bold;
+}
+.replies__list li img {
+	border-radius: 50%;
+}
+.textLimit1 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	line-height: 1;
+	max-height: 1 * 1;
+}
+.comment__add {
+  display: flex;
+  align-items: center;
+  margin-top: .5rem;
+}
+.comment__add form {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.comment__add form input {
+  padding: 1rem;
+  width: -webkit-fill-available;
+  border-radius: 2rem;
+  outline: none;
+  border: none;
+  background-color: #f1f1f1;
+  font-size: 14px;
+}
+.comment__add button {
+  position: absolute;
+  right: 1rem;
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  background-color: bisque;
+  color: #222;
+  font-weight: bold;
+}
+
+.comment__paging,
+.user__photo__container img,
+.comment__box small,
+.view__prev,
+.react,
+.reply,
+.reactions__count,
+.replies__list li,
+.comment__add button {
+	cursor: pointer;
+}

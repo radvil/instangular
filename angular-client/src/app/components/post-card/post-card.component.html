@@ -8,7 +8,10 @@
         [alt]="post.postedBy.username"
       />
     </div>
-    <a (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</a>
+    <div class="post--item-texts">
+      <a (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</a>
+      <div class="time">{{ post.createdAt | relativeTime }}</div>
+    </div>
     <div class="fx-spacer"></div>
     <button mat-icon-button>
       <mat-icon>more_vert</mat-icon>

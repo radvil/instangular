@@ -1,34 +1,26 @@
-import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { User } from 'src/app/user';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { CreateCommentDto } from 'src/app/comment';
 import { Post } from 'src/app/post';
-import { Comment, CreateCommentDto } from 'src/app/comment';
-
-enum FooterStyle {
-  DEFAULT = "default",
-  ALTERNATIVE = "alternative"
-}
+import { User } from 'src/app/user';
 
 @Component({
-  selector: 'app-post-card-footer',
-  templateUrl: './post-card-footer.component.html',
-  styleUrls: ['./post-card-footer.component.scss'],
+  selector: 'app-comments',
+  templateUrl: './comments.component.html',
+  styleUrls: ['./comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostCardFooterComponent {
+export class CommentsComponent  {
 
-  @Input() style: FooterStyle = FooterStyle.DEFAULT;
   @Input() post: Post;
   @Input() comments: Comment[];
   @Input() authUser: User;
-  @Input() viewCommentsText: string = "View previous comments";
   @Input() isCommentsLoading: boolean = false;
   @Input() isTruncatedTexts: boolean = false;
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<any>();
-  public commentText = "";
+  public commentInputText: string;
 
-  constructor() { }
 
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);
@@ -39,22 +31,20 @@ export class PostCardFooterComponent {
   }
 
   getCommentClass(username: string): string {
-    let currentClasses = "comment";
-    if (this.isTruncatedTexts) currentClasses += ' truncate1'
+    let currentClasses = "comment__box";
     if (this.authUser.username === username) currentClasses += ' self';
     return currentClasses;
   }
 
   public emitAddComment(): void {
-    if (this.post && this.commentText) {
+    if (this.post && this.commentInputText) {
       const comment = {
         postId: this.post._id,
-        text: this.commentText,
+        text: this.commentInputText,
         commentedBy: this.authUser._id,
       } as CreateCommentDto;
       this.onAddCommentClicked.emit(comment);
-      this.commentText = "";
+      this.commentInputText = "";
     }
   }
-
 }

@@ -17,8 +17,6 @@
     border-radius: 50%;
     cursor: pointer;
     &.active {
-      height: 33px;
-      width: 33px;
       border: 2px solid red !important;
     }
   }
@@ -30,6 +28,16 @@
   }
   a {
     cursor: pointer;
+  }
+}
+.post--item-texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .time {
+    margin-top: .2rem;
+    font-size: 0.9rem;
+    color: #b7b7b7;
   }
 }
 .post--item-image {

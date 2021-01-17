@@ -12,7 +12,7 @@ import { TokenInterceptor, HttpErrorInterceptor } from './interceptors';
 import { AppErrorHandler } from './services';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TruncatePipe } from './utils';
+import { InstAngularPipesModule } from './utils';
 
 const CUSTOM_PROVIDERS = [
   { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
@@ -23,7 +23,6 @@ const CUSTOM_PROVIDERS = [
 @NgModule({
   declarations: [
     AppComponent,
-    TruncatePipe,
   ],
   imports: [
     BrowserModule,
@@ -35,8 +34,9 @@ const CUSTOM_PROVIDERS = [
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    InstAngularPipesModule,
   ],
-  providers: [...CUSTOM_PROVIDERS, TruncatePipe],
+  providers: [...CUSTOM_PROVIDERS],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

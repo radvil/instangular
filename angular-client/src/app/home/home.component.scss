@@ -51,3 +51,13 @@ li.story--list-item {
     }
   }
 }
+.post__comments {
+  margin: 0 1rem;
+  b, .viewComments {
+    cursor: pointer;
+  }
+  .viewComments {
+    color: #b7b7b7;
+    width: fit-content;
+  }
+}
