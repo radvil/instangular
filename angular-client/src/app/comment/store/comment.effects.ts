@@ -1,10 +1,14 @@
 import { Injectable } from "@angular/core";
 import { of } from 'rxjs';
-import { map, switchMap, catchError, exhaustMap } from 'rxjs/operators';
+import { map, switchMap, catchError, exhaustMap, withLatestFrom } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as commentActions from './comment.actions';
 import { CommentService } from "../comment.service";
+import { Store } from "@ngrx/store";
+import { Comment } from "../comment.interface";
+import { CommentState } from "./comment.state";
+import { $_commentSelectedId } from "./comment.selectors";
 
 @Injectable()
 export class CommentEffects {
@@ -25,8 +29,22 @@ export class CommentEffects {
     ))
   ))
 
+  getCommentReplies$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.GetReplies),
+    exhaustMap(({ dto }) => this._commentService.getRepliesByCommentId({
+      commentId: dto.commentId,
+      pageNumber: dto.pageNumber,
+      limit: 5
+    }).pipe(
+      withLatestFrom(this._store.select($_commentSelectedId)),
+      map(([replies, commentId]) => commentActions.GetRepliesSuccess({ commentId, replies })),
+      catchError(error => of(commentActions.GetRepliesFailure({ error })))
+    ))
+  ))
+
   constructor(
     private _actions$: Actions,
+    private _store: Store<CommentState>,
     private _commentService: CommentService,
   ) { }
 

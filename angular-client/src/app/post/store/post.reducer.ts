@@ -21,7 +21,7 @@ export const postReducer = createReducer(
   )),
 
   on(PostActions.PushManyPosts, (state: PostState, { posts }) => (
-    postAdapter.addMany([...posts], { ...state })
+    postAdapter.addMany(posts, { ...state })
   )),
 
   on(PostActions.GetPostById, (state, { postId }) => ({

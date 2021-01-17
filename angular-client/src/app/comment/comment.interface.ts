@@ -9,7 +9,7 @@ export interface Comment {
   likes?: any[];
   likesCount?: number;
   repliedTo?: string;
-  replies?: string[];
+  replies?: Comment[];
 }
 
 export class CreateCommentDto {
@@ -20,6 +20,12 @@ export class CreateCommentDto {
 
 export class GetCommentsByPostIdDto {
   postId: string;
+  pageNumber?: number;
+  limit?: number;
+}
+
+export class GetRepliesByCommentIdDto {
+  commentId: string;
   pageNumber?: number;
   limit?: number;
 }

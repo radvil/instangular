@@ -57,6 +57,7 @@ export class CommentController implements Controller {
         path: 'commentedBy',
         select: USER_POPULATE_SELECT
       })
+      .populate('replies')
       .populate('reactionsCount')
     const jsonResponse: JsonHttpResponse<Comment[]> = {
       status: 200,

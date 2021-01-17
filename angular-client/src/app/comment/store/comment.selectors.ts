@@ -41,3 +41,16 @@ export const $_commentsByPostIdHasNextPage = createSelector(
     return commentsHasNextPage;
   }
 )
+export const $_comment = createSelector(
+  $_commentSelectedId,
+  $_commentEntities,
+  (id: string, entities) => {
+    const entity = id ? entities[id] : undefined;
+    return entity;
+    // if (entity && entity.replies.length) {
+    //   return entity.replies;
+    // } else {
+    //   return [];
+    // }
+  }
+)

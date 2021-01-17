@@ -1,6 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { Comment } from 'src/app/comment';
-import { CreateCommentDto, GetCommentsByPostIdDto } from '../comment.interface';
+import {
+  CreateCommentDto,
+  GetCommentsByPostIdDto,
+  GetRepliesByCommentIdDto
+} from '../comment.interface';
 
 export enum CommentActionTypes {
 
@@ -13,6 +17,10 @@ export enum CommentActionTypes {
   ADD_COMMENT = '[Comment/Api] Add Comment',
   ADD_COMMENT_SUCCESS = '[Comment/Api] Add Comment Success',
   ADD_COMMENT_FAILURE = '[Comment/Api] Add Comment Failure',
+
+  GET_REPLIES = '[Comment/Api] Get Replies',
+  GET_REPLIES_SUCCESS = '[Comment/Api] Get Replies Success',
+  GET_REPLIES_FAILURE = '[Comment/Api] Get Replies Failure',
 
 }
 
@@ -44,5 +52,18 @@ export const AddCommentSuccess = createAction(
 )
 export const AddCommentFailure = createAction(
   CommentActionTypes.ADD_COMMENT_FAILURE,
+  props<{ error: Error }>()
+)
+
+export const GetReplies = createAction(
+  CommentActionTypes.GET_REPLIES,
+  props<{ dto: GetRepliesByCommentIdDto }>()
+);
+export const GetRepliesSuccess = createAction(
+  CommentActionTypes.GET_REPLIES_SUCCESS,
+  props<{ commentId: string, replies: Comment[] }>()
+)
+export const GetRepliesFailure = createAction(
+  CommentActionTypes.GET_REPLIES_FAILURE,
   props<{ error: Error }>()
 )

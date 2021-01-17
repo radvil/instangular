@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { Comment, CreateCommentDto, GetCommentsByPostIdDto } from "./comment.interface";
+import { Comment, CreateCommentDto, GetCommentsByPostIdDto, GetRepliesByCommentIdDto } from "./comment.interface";
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from "../interfaces";
 
@@ -23,6 +23,22 @@ export class CommentService {
 
     const request$ = this._http.get<ApiRes<Comment[]>>(
       `${env.be.url}/comments`,
+      { params: httpParams }
+    );
+    return request$.pipe(map(res => res.data));
+  }
+
+  public getRepliesByCommentId(
+    getRepliesByCommentIdDto: GetRepliesByCommentIdDto
+  ): Observable<Comment[]> {
+    const { commentId, pageNumber, limit } = getRepliesByCommentIdDto;
+
+    let httpParams = new HttpParams();
+    if (pageNumber) httpParams = httpParams.set('page', pageNumber.toString());
+    if (limit) httpParams = httpParams.set('limit', limit.toString());
+
+    const request$ = this._http.get<ApiRes<Comment[]>>(
+      `${env.be.url}/comments/${commentId}`,
       { params: httpParams }
     );
     return request$.pipe(map(res => res.data));

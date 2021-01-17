@@ -26,7 +26,7 @@ export const commentReducer = createReducer(
       ...state,
       loaded: true,
       loading: false,
-      selectedPostId: comments[0].postId,
+      // selectedPostId: comments[0].postId,
     })
   )),
 
@@ -44,4 +44,33 @@ export const commentReducer = createReducer(
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
     commentAdapter.addOne(comment, { ...state, loaded: true, loading: false })
   )),
+
+  on(CommentActions.GetReplies, (state, { dto }) => ({
+    ...state,
+    loaded: false,
+    loading: true,
+    selectedId: dto.commentId
+  })),
+  on(CommentActions.GetRepliesFailure, (state, { error }) => ({
+    ...state,
+    loaded: false,
+    loading: false,
+    error,
+  })),
+  on(CommentActions.GetRepliesSuccess, (state, { commentId, replies }) => {
+    const entity = state.entities[commentId];
+    if (!entity) return state;
+
+    return commentAdapter.updateOne({
+      id: commentId,
+      changes: { replies: entity.replies.concat(replies) }
+    }, { ...state, loaded: true, loading: false })
+  })
+  // on(CommentActions.GetRepliesSuccess, (state, { commentId, replies }) => (
+  //   // commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
+  //   commentAdapter.updateOne(
+  //     { id: commentId, changes: { replies } },
+  //     { ...state, loaded: true, loading: false }
+  //   )
+  // )),
 )
