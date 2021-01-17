@@ -76,7 +76,8 @@ small {
 .replies__list li {
 	display: flex;
 	align-items: center;
-	margin: 0.5rem 0;
+  margin: 0.5rem 0;
+  width: fit-content;
 }
 .replies__list li .username {
 	margin: 0 0.5rem;

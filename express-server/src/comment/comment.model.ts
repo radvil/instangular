@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
+import { USER_POPULATE_SELECT } from '../var';
 import { User } from '../user';
 
 export interface Comment extends Document {
@@ -7,6 +8,7 @@ export interface Comment extends Document {
   postId: string;
   commentedBy: User;
   text: string;
+  repliedTo: string;
   createdAt: string;
   likes?: any[];
   likesCount?: number;
@@ -46,6 +48,9 @@ const schema = new Schema<Comment>({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  repliedTo: {
+    type: String
+  },
   commentedBy: {
     ref: 'User',
     type: Schema.Types.ObjectId,
@@ -57,8 +62,22 @@ const schema = new Schema<Comment>({
 schema.virtual('reactionsCount', {
   ref: 'CommentReaction',
   foreignField: 'commentId',
-  localField: '_id',
+  localField: '_id', // CommentSchemaId
   count: true
+});
+
+schema.virtual('replies', {
+  ref: 'Comment',
+  foreignField: 'repliedTo',
+  localField: '_id',
+  options: {
+    limit: 3,
+    sort: { createdAt: -1 },
+    populate: {
+      path: 'commentedBy',
+      select: USER_POPULATE_SELECT,
+    }
+  }
 });
 
 export const Comment = model<Comment>('Comment', schema);

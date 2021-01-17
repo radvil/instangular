@@ -48,8 +48,9 @@ schema.virtual('comments', {
   foreignField: 'postId',
   localField: '_id',
   options: {
-    sort: { createdAt: -1 },
     limit: 5,
+    sort: { createdAt: -1 },
+    where: { repliedTo: { $eq: null } },
     populate: [
       { path: 'commentedBy', select: USER_POPULATE_SELECT },
       { path: 'reactionsCount' },
@@ -71,7 +72,7 @@ schema.virtual('reactions', {
   options: {
     sort: { createdAt: -1 },
     limit: 5,
-    populate: {path: 'reactedBy', select: USER_POPULATE_SELECT},
+    populate: { path: 'reactedBy', select: USER_POPULATE_SELECT },
   },
 });
 

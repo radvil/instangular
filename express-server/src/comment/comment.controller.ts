@@ -65,7 +65,7 @@ export class CommentController implements Controller {
     if (!foundComment) {
       next(new NOT_FOUND_EXCEPTION());
     }
-    if (<any>foundComment.commentedBy != req.user._id) {
+    if (<any>foundComment.commentedBy.toString() !== req.user._id.toString()) {
       next(new UNAUTHORIZED_EXCEPTION())
     }
     try {

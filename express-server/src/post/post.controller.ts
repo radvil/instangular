@@ -8,6 +8,7 @@ import { authorizeAccess, validationMiddleware } from '../middleware';
 import { Req, Res, Next, USER_POPULATE_SELECT } from '../var';
 import { Querify } from '../util/Querify';
 import { CreatePostDto, Post } from './index';
+import { ModelPopulateOptions } from 'mongoose';
 
 export class PostController implements Controller {
   public path = '/posts';
@@ -104,7 +105,12 @@ export class PostController implements Controller {
       .populate('commentsCount')
       .populate('reactionsCount');
     if (req.query.includeComments === 'true') {
-      originalRequest.populate('comments');
+      originalRequest.populate(<ModelPopulateOptions>{
+        path: 'comments',
+        populate: {
+          path: 'replies',
+        }
+      });
     }
     if (req.query.includeReactions === 'true') {
       originalRequest.populate('reactions');
