@@ -97,21 +97,20 @@ export class CommentController implements Controller {
 
   private getCommentReplies = async (req: Req, res: Res, next: Next) => {
     const querify = new Querify(req.query);
-    const originalRequest = this._commentModel
-      .findOne({ replyTo: req.params.commentId })
-      .limit(querify.limit || 5)
-      .skip(querify.skip)
-      .sort(querify.sort)
-      .populate({
-        path: 'commentedBy',
-        select: USER_POPULATE_SELECT
-      })
-      .populate('reactionsCount');
     try {
-      const foundComment = await originalRequest;
-      res.json(<JsonHttpResponse<Comment>>{
+      const foundComment = await this._commentModel
+        .find({ repliedTo: req.params.commentId })
+        .limit(querify.limit || 5)
+        .skip(querify.skip)
+        .sort(querify.sort)
+        .populate({
+          path: 'commentedBy',
+          select: USER_POPULATE_SELECT
+        })
+        .populate('reactionsCount');
+      res.json(<JsonHttpResponse<Comment[]>>{
         status: 200,
-        message: 'Get comment replies succeded!',
+        message: 'GET comment replies succeded!',
         data: foundComment,
       });
     } catch (error) {
