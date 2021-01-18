@@ -27,7 +27,7 @@
     >
     <div class="post__comments" *ngIf="post.comments.length">
       <p class="viewComments" (click)="viewPostComments(post._id)">
-        View all {{ post.comments.length }} comments
+        View all {{ post.commentsCount }} comments
       </p>
       <p class="truncate1" *ngFor="let comment of post.comments">
         <b (click)="viewUserProfile(comment.commentedBy.username)">

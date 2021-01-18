@@ -62,9 +62,16 @@ schema.virtual('commentsCount', {
   ref: 'Comment',
   foreignField: 'postId',
   localField: '_id',
-  // options: {
-  //   where: { repliedTo: { $eq: null } },
-  // },
+  count: true,
+});
+
+schema.virtual('commentsAsParentCount', {
+  ref: 'Comment',
+  foreignField: 'postId',
+  localField: '_id',
+  options: {
+    where: { repliedTo: { $eq: null } },
+  },
   count: true,
 });
 

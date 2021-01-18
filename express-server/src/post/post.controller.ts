@@ -71,7 +71,7 @@ export class PostController implements Controller {
       .sort(querify.sort)
       .populate({
         path: 'postedBy',
-        select: USER_POPULATE_SELECT
+        select: USER_POPULATE_SELECT,
       })
       .populate('commentsCount')
       .populate('reactionsCount')
@@ -103,6 +103,7 @@ export class PostController implements Controller {
         select: USER_POPULATE_SELECT,
       })
       .populate('commentsCount')
+      .populate('commentsAsParentCount')
       .populate('reactionsCount');
     if (req.query.includeComments === 'true') {
       originalRequest.populate(<ModelPopulateOptions>{

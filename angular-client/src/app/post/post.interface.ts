@@ -14,6 +14,7 @@ export interface Post {
   likesCount?: number;
   comments?: Comment[];
   commentsCount?: number;
+  commentsAsParentCount?: number;
   reactions?: PostReaction[];
   reactionsCount?: number;
 }

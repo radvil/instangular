@@ -1,6 +1,8 @@
 import { createSelector } from '@ngrx/store';
-import { $_postSelectedId } from 'src/app/post/store/post.selectors';
+import { $_post, $_postSelectedId } from 'src/app/post/store/post.selectors';
 import { commentAdapter, $_commentState } from './comment.state';
+
+const MAX_COMMENTS_LIMIT = 5;
 
 const { selectAll, selectEntities } = commentAdapter.getSelectors();
 
@@ -30,3 +32,12 @@ export const $_commentsByPostId = createSelector(
     return postId ? comments.filter(comment => comment.postId == postId) : undefined;
   }
 );
+export const $_commentsByPostIdHasNextPage = createSelector(
+  $_commentsByPostId,
+  $_post,
+  (comments, post) => {
+    const commentsHasNextPage = comments.length < post.commentsAsParentCount;
+    console.log('_commentsByPostIdHasNextPage', commentsHasNextPage);
+    return commentsHasNextPage;
+  }
+)

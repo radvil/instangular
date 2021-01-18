@@ -12,8 +12,9 @@ import { User } from 'src/app/user';
 export class CommentsComponent  {
 
   @Input() post: Post;
-  @Input() comments: Comment[];
   @Input() authUser: User;
+  @Input() comments: Comment[];
+  @Input() commentsHasNextPage: boolean;
   @Input() isCommentsLoading: boolean = false;
   @Input() isTruncatedTexts: boolean = false;
   @Output() onViewCommentsClicked = new EventEmitter<string>();
@@ -21,14 +22,6 @@ export class CommentsComponent  {
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<any>();
   public commentInputText: string;
-
-  get commentsHasNextPage(): boolean {
-    if (this.comments.length && this.post.commentsCount) {
-      // TODO: // Fix count!!
-      console.log(this.comments.length, this.post.commentsCount);
-      return this.comments.length < this.post.commentsCount;
-    }
-  }
 
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);

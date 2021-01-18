@@ -17,6 +17,7 @@
       [post]="post$ | async"
       [comments]="comments$ | async"
       [authUser]="authUser$ | async"
+      [commentsHasNextPage]="postCommentsHasNext$ | async"
       [isCommentsLoading]="isCommentsLoading$ | async"
       (onViewCommentsClicked)="viewPreviousComments($event)"
       (onViewRepliesClicked)="viewCommentReplies($event)"

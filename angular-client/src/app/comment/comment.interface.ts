@@ -8,6 +8,8 @@ export interface Comment {
   createdAt: string;
   likes?: any[];
   likesCount?: number;
+  repliedTo?: string;
+  replies?: string[];
 }
 
 export class CreateCommentDto {

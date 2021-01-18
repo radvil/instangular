@@ -6,7 +6,7 @@ import { filter, map, tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { $_post, $_postError, $_postLoading } from '../store/post.selectors';
-import { $_commentLoading, $_commentsByPostId, Comment, CreateCommentDto, GetCommentsByPostIdDto } from 'src/app/comment';
+import { $_commentLoading, $_commentsByPostId, $_commentsByPostIdHasNextPage, Comment, CreateCommentDto, GetCommentsByPostIdDto } from 'src/app/comment';
 import { GetPostById } from '../store/post.actions';
 import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/comment.actions';
 import { User } from 'src/app/user';
@@ -28,6 +28,7 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
   public authUser$: Observable<User>;
   public post$: Observable<Post>;
   public comments$: Observable<Comment[]>;
+  public postCommentsHasNext$: Observable<boolean>;
 
   private initValues(): void {
     this._subscription.add(
@@ -45,6 +46,7 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
     this.authUser$ = this._store.select($_authUser);
     this.post$ = this._store.select($_post);
     this.comments$ = this._store.select($_commentsByPostId);
+    this.postCommentsHasNext$ = this._store.select($_commentsByPostIdHasNextPage);
     this.isPostLoading$ = this._store.select($_postLoading);
     this.isPostHttpError$ = this._store.select($_postError);
     this.isCommentsLoading$ = this._store.select($_commentLoading);
