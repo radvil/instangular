@@ -9,7 +9,7 @@ export const commentReducer = createReducer(
     ...state,
     loaded: false,
     loading: true,
-    selectedPostId: dto.postId,
+    selectedPostId: dto.postId
   })),
   on(CommentActions.GetCommentsByPostIdFailure, (state, { error }) => ({
     ...state,
@@ -22,7 +22,12 @@ export const commentReducer = createReducer(
   )),
 
   on(CommentActions.PushManyComments, (state, { comments }) => (
-    commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
+    commentAdapter.addMany(comments, {
+      ...state,
+      loaded: true,
+      loading: false,
+      selectedPostId: comments[0].postId,
+    })
   )),
 
   on(CommentActions.AddComment, (state) => ({

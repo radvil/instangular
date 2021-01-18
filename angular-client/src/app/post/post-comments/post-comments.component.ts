@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { $_post, $_postError, $_postLoading } from '../store/post.selectors';
@@ -32,11 +32,14 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
   private initValues(): void {
     this._subscription.add(
       this._route.paramMap
-        .pipe(map(param => param.get('postId')))
-        .subscribe(postId => {
-          this._store.dispatch(GetPostById({ postId }));
-          this.pageNumber += 1;
-        })
+        .pipe(
+          map(param => param.get('postId')),
+          tap(postId => {
+            this._store.dispatch(GetPostById({ postId }));
+            this.pageNumber += 1;
+          })
+        )
+        .subscribe()
     );
 
     this.authUser$ = this._store.select($_authUser);
@@ -55,6 +58,12 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
     };
     this._store.dispatch(GetCommentsByPostId({ dto }));
     this.pageNumber++;
+  }
+
+  public viewCommentReplies(commentIdEvent: string) {
+    // Get Comment By Id and includingReplies = 'true'
+    // queryOpts: includingReplies, limit, page, sort;
+    this._router.navigate(['post', 'comment', commentIdEvent]);
   }
 
   public viewUserProfile(usernameEvent: string) {

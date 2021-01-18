@@ -6,10 +6,11 @@ import { PostRoutingModule } from './post-routing.module';
 import { PostStoreModule } from './store/post-store.module';
 import { PostCommentsComponent } from './post-comments/post-comments.component';
 import { CommentStoreModule } from '../comment';
+import { CommentRepliesComponent } from './comment-replies/comment-replies.component';
 
 
 @NgModule({
-  declarations: [PostCommentsComponent],
+  declarations: [PostCommentsComponent, CommentRepliesComponent],
   imports: [
     CommonModule,
     PostRoutingModule,

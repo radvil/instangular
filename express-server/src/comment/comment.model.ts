@@ -63,7 +63,7 @@ schema.virtual('reactionsCount', {
   ref: 'CommentReaction',
   foreignField: 'commentId',
   localField: '_id', // CommentSchemaId
-  count: true
+  count: true,
 });
 
 schema.virtual('replies', {
@@ -71,7 +71,6 @@ schema.virtual('replies', {
   foreignField: 'repliedTo',
   localField: '_id',
   options: {
-    limit: 3,
     sort: { createdAt: -1 },
     populate: {
       path: 'commentedBy',

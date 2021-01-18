@@ -109,6 +109,7 @@ export class PostController implements Controller {
         path: 'comments',
         populate: {
           path: 'replies',
+          options: { limit: 3 }
         }
       });
     }

@@ -16,6 +16,7 @@ export interface CommentState extends EntityState<Comment> {
   loaded: boolean;
   loading: boolean;
   selectedId?: string;
+  selectedPostId?: string;
   error?: Error;
 }
 
@@ -25,5 +26,6 @@ export const initialCommentState: CommentState = commentAdapter.getInitialState(
   loaded: false,
   loading: false,
   selectedId: null,
+  selectedPostId: null,
   error: null
 })

@@ -3,7 +3,7 @@
   <div class="comment__paging">
     <p
       class="viewPrevComments"
-      *ngIf="comments.length < post.commentsCount"
+      *ngIf="commentsHasNextPage"
       (click)="viewPostComments(post._id)"
     >
       View previous comments
@@ -47,11 +47,18 @@
           </div>
           <!-- comment__replies -->
           <ng-container *ngIf="comment.replies && comment.replies.length">
-            <div class="view__prev">
-              View previous {{ comment.replies.length }} replies
+            <div
+              class="view__prev"
+              (click)="viewCommentReplies(comment._id)"
+              *ngIf="comment.replies.length > 3"
+            >
+              View previous {{ comment.replies.length - 3 }} replies
             </div>
             <ul class="replies__list">
-              <li *ngFor="let reply of comment.replies">
+              <li
+                *ngFor="let reply of comment.replies"
+                (click)="viewCommentReplies(comment._id)"
+              >
                 <img
                   [lazyLoad]="reply.commentedBy.photoThumb"
                   [defaultImage]="'assets/images/portrait.jpg'"

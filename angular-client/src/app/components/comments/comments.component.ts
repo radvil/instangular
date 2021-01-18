@@ -17,13 +17,25 @@ export class CommentsComponent  {
   @Input() isCommentsLoading: boolean = false;
   @Input() isTruncatedTexts: boolean = false;
   @Output() onViewCommentsClicked = new EventEmitter<string>();
+  @Output() onViewRepliesClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<any>();
   public commentInputText: string;
 
+  get commentsHasNextPage(): boolean {
+    if (this.comments.length && this.post.commentsCount) {
+      // TODO: // Fix count!!
+      console.log(this.comments.length, this.post.commentsCount);
+      return this.comments.length < this.post.commentsCount;
+    }
+  }
 
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);
+  }
+
+  public viewCommentReplies(commentId: string) {
+    this.onViewRepliesClicked.emit(commentId);
   }
 
   public viewUserProfile(username: string) {

@@ -26,6 +26,7 @@ export const $_commentsByPostId = createSelector(
   $_comments,
   $_postSelectedId,
   (comments, postId) => {
+    console.log('$_commentsByPostId >> ' + postId);
     return postId ? comments.filter(comment => comment.postId == postId) : undefined;
   }
 );
