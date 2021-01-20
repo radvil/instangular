@@ -19,7 +19,7 @@ import {
 } from 'src/app/_shared/components';
 import { AddComment } from 'src/app/comment/store/comment.actions';
 import { UpdatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
-import { User } from 'src/app/user/interfaces';
+import { User, UserBasic } from 'src/app/user/interfaces';
 import { CreatePostCommentDto } from 'src/app/comment/interfaces';
 import {
   DeletePostById,
@@ -29,7 +29,7 @@ import {
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
 
 @Component({
-  selector: 'nsg-post-card',
+  selector: 'app-post-card',
   templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,8 +72,8 @@ export class PostCardComponent implements OnDestroy {
     return this.post.reactionsCount;
   }
 
-  viewUserProfile(usernameEvent: string) {
-    this._router.navigate(['user', usernameEvent]);
+  showUser(event: UserBasic) {
+    this._router.navigate(['user', event.username]);
   }
 
   openUpdatePostDialog(postIdEvent: string) {

@@ -10,7 +10,6 @@
 <div class="container" *ngIf="comment">
   <app-comment-row
     [comment]="comment"
-    (clikUsername)="viewUserProfile($event)"
     (clickReact)="openReactionDialog($event, 'COMMENT')"
     (clickReply)="replyToComment($event)"
     (clickReactionsCount)="showCommentReactions($event)"
@@ -35,7 +34,6 @@
       <app-comment-row
         [comment]="reply"
         [bgClass]="getCommentClassByUsername(reply.commentedBy.username)"
-        (clickUsername)="viewUserProfile($event)"
         (clickReact)="openReactionDialog($event, 'REPLY')"
         (clickReply)="replyToComment($event)"
         (clickReactionsCount)="showCommentReactions($event)"

@@ -1,14 +1,5 @@
-<div class="container">
-  <div class="photo__container" *ngIf="user">
-    <img
-      [lazyLoad]="user.photo"
-      [defaultImage]="'assets/images/portrait.jpg'"
-      [errorImage]="'assets/images/portrait.jpg'"
-      [alt]="user.username"
-      height="40"
-      width="40"
-    />
-  </div>
+<section>
+  <app-user-avatar [user]="user"></app-user-avatar>
   <form (ngSubmit)="onSubmitInput()">
     <input
       [(ngModel)]="commentInputText"
@@ -20,4 +11,4 @@
       <mat-icon>send</mat-icon>
     </button>
   </form>
-</div>
+</section>

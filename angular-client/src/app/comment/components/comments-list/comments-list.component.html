@@ -20,20 +20,19 @@
         [comment]="comment"
         [bgClass]="getCommentClass(comment.commentedBy.username)"
         (contextmenu)="onContextMenu($event, comment)"
-        (clickUsername)="viewUserProfile($event)"
         (clickReact)="openReactionDialog($event)"
         (clickReply)="clickComment($event)"
         (clickReactionsCount)="viewCommentReactions($event)"
       >
         <!-- comment__replies -->
         <ng-container *ngIf="comment.replies && comment.replies.length">
-          <nsg-replies-preview
+          <app-replies-preview
             [commentId]="comment._id"
             [replies]="comment.replies"
             [repliesCount]="comment.repliesCount"
             (onViewRepliesClicked)="viewCommentReplies($event)"
           >
-          </nsg-replies-preview>
+          </app-replies-preview>
         </ng-container>
       </app-comment-row>
     </ng-container>

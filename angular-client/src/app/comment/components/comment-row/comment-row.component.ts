@@ -1,4 +1,6 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserBasic } from 'src/app/user/interfaces';
 
 @Component({
   selector: 'app-comment-row',
@@ -10,13 +12,14 @@ export class CommentRowComponent {
 
   @Input() comment: Comment;
   @Input() bgClass: string = "comment__box";
-  @Output() clickUsername = new EventEmitter<string>();
   @Output() clickReact = new EventEmitter<string>();
   @Output() clickReply = new EventEmitter<string>();
   @Output() clickReactionsCount = new EventEmitter<string>();
 
-  public onClickUsername(username: string): void {
-    this.clickUsername.emit(username);
+  constructor(private _router: Router) {}
+
+  public showUser(user: UserBasic): void {
+    this._router.navigate(['user', user.username]);
   }
 
   public onClickReact(commentId: string): void {

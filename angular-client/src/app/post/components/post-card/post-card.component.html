@@ -1,14 +1,14 @@
 <div *ngIf="post" class="post--item">
   <!-- post card header -->
-  <nsg-post-card-header
+  <app-post-card-header
     [post]="post"
     [enableEdit]="sameAsAuthor"
     [enableDelete]="sameAsAuthor"
-    (onUsernameClicked)="viewUserProfile($event)"
+    (clickUser)="showUser($event)"
     (onMenuEditClicked)="openUpdatePostDialog($event)"
     (onMenuDeleteClicked)="openDeletePostDialog($event)"
   >
-  </nsg-post-card-header>
+  </app-post-card-header>
 
   <!-- post card image -->
   <div class="post--item-image">
@@ -22,17 +22,17 @@
   </div>
 
   <!-- post card buttons -->
-  <nsg-post-card-buttons
+  <app-post-card-buttons
     [postId]="post._id"
     [myReaction]="post.myReaction"
     (onReactClicked)="openReactionsDialog($event)"
     (onCommentClicked)="clickComment($event)"
     (onShareClicked)="clickShare($event)"
     (onSaveClicked)="clickSave($event)"
-  ></nsg-post-card-buttons>
+  ></app-post-card-buttons>
 
   <!-- post card reactions -->
-  <div *ngIf="post.reactions.length" class="post--item-likes">
+  <div *ngIf="post.reactions?.length" class="post--item-likes">
     <div class="label">Reacted by&nbsp;</div>
     <!-- <div class="photos pointer">
       <img
@@ -74,7 +74,7 @@
 
   <!-- comment form -->
   <div
-    *ngIf="authUser?.username"
+    *ngIf="authUser"
     class="addCommentField"
     [ngClass]="textInputClass"
   >

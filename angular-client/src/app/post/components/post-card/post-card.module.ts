@@ -14,6 +14,7 @@ import {
   FormFieldModule,
   MenuActionsModule,
   ReactionsDialogModule,
+  UserAvatarModule,
 } from 'src/app/_shared/components';
 import { PostCardComponent } from './post-card.component';
 import { PostCardHeaderComponent } from './post-card-header/post-card-header.component';
@@ -46,6 +47,7 @@ import { PostEditDialogModule } from '../post-edit-dialog/post-edit-dialog.modul
     ConfirmDialogModule,
     ReactionsDialogModule,
     CommentDialogModule,
+    UserAvatarModule,
   ],
   exports: [
     PostCardComponent,

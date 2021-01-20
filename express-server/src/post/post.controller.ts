@@ -279,8 +279,6 @@ export class PostController implements Controller {
     foundPost.tags = req.body.tags;
     try {
       const updatedPost = await foundPost.save();
-      // await updatedPost
-      //   .populate({ path: 'postedBy', select: USER_POPULATE_SELECT }).execPopulate();
       res.json(<JsonHttpResponse<Post>>{
         status: 200,
         message: 'Update post succeded!',

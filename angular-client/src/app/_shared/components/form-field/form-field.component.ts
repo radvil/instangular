@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from 'src/app/user';
+import { UserBasic } from 'src/app/user';
 
 @Component({
   selector: 'app-form-field',
@@ -10,7 +10,7 @@ import { User } from 'src/app/user';
 export class FormFieldComponent {
   public commentInputText: string;
 
-  @Input() user: User;
+  @Input() user: UserBasic;
   @Input() placeholder: string;
   @Output() submitInput = new EventEmitter<string>();
 

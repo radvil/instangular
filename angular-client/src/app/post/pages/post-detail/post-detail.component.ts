@@ -16,7 +16,7 @@ import {
   $_commentsAsParentsByPostId,
   $_commentsAsParentsByPostIdHasNextPage,
 } from 'src/app/comment/store/comment.selectors';
-import { User } from 'src/app/user';
+import { User, UserBasic } from 'src/app/user';
 import { Post } from '../../interfaces';
 import { GetPostById } from '../../store/post.actions';
 import { $_post, $_postLoading } from '../../store/post.selectors';
@@ -95,8 +95,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['comment', commentIdEvent]);
   }
 
-  viewUserProfile(usernameEvent: string) {
-    this._router.navigate(['user', usernameEvent]);
+  showUser(user: UserBasic) {
+    this._router.navigate(['user', user.username]);
   }
 
   openCommentForm() {

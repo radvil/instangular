@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from 'src/app/user';
+import { User, UserBasic } from 'src/app/user';
 
 @Component({
   selector: 'app-user-avatar',
@@ -7,23 +7,19 @@ import { User } from 'src/app/user';
   styleUrls: ['./user-avatar.component.scss']
 })
 export class UserAvatarComponent {
-  @Input() user: User;
+  @Input() user: UserBasic;
   @Input() imageHeight = "40";
   @Input() imageWidth = "40";
   @Input() clickable = false;
-  @Output() clickUser: EventEmitter<User>;
+  @Input() bordered = false;
+  @Output() clickUser = new EventEmitter<UserBasic>();
 
   public get imageContainerStyle() {
     return {
       cursor: this.clickable ? "pointer" : "initial",
       height: `${parseInt(this.imageHeight) + 6}px`,
-      width: `${parseInt(this.imageHeight) + 6}px`
-    }
-  }
-
-  constructor() {
-    if (this.clickable) {
-      this.clickUser = new EventEmitter();
+      width: `${parseInt(this.imageHeight) + 6}px`,
+      border: this.bordered ? `2px solid red`: 'none'
     }
   }
 

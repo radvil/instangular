@@ -1,18 +1,13 @@
 import { Post } from "src/app/post/interfaces";
 import { UserRole } from "./user-role.enum";
 
-export interface User {
-  _id: string;
-  username: string;
+export interface User extends UserBasic {
   email: string;
   name: string;
-  photo?: string;
-  photoThumb?: string;
   role?: UserRole;
   password?: string;
   createdAt?: string;
   updatedAt?: string;
-  lastLoggedInAt?: string;
   posts?: Post[];
   // basiscInfo
   bio?: string;
@@ -20,4 +15,12 @@ export interface User {
   facebookLink?: string;
   twitterLink?: string;
   githubLink?: string;
+}
+
+export interface UserBasic {
+  _id: string;
+  username: string;
+  photo: string;
+  photoThumb: string;
+  lastLoggedInAt: string;
 }

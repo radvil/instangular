@@ -7,7 +7,7 @@ import { UpdatePasswordDto, UserBasicsInfoDto, UserSensitivesInfoDto } from './u
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
 import { Role, User } from './user.model';
-import { Req, Res, Next } from '../var';
+import { Req, Res, Next, USER_POPULATE_SELECT } from '../var';
 
 export class UserController implements Controller {
   public path = '/users';
@@ -57,10 +57,29 @@ export class UserController implements Controller {
     const username = req.params.username;
     try {
       const findQuery = this._userModel.findOne({ username });
-      const includePostsOptionExists = !!(req.query.includePosts === 'true');
+      const includePostsOptionExists = req.query.includePosts === 'true';
       if (includePostsOptionExists) {
         findQuery.populate([
-          { path: 'posts', limit: 10 },
+          {
+            path: 'posts',
+            limit: 10,
+            populate: [
+              {
+                path: 'reactions',
+                options: {
+                  sort: {
+                    createdAt: -1
+                  },
+                  limit: 5,
+                  populate: {
+                    path: 'reactedBy',
+                    select: USER_POPULATE_SELECT
+                  },
+                }
+              },
+              { path: 'reactionsCount' }
+            ]
+          },
           { path: 'postsCount' }
         ]).exec();
       }

@@ -4,6 +4,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { InstAngularPipesModule } from 'src/app/_shared/pipes';
 import { CommentRowComponent } from './comment-row.component';
+import { UserAvatarModule } from 'src/app/_shared';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -12,8 +14,10 @@ import { CommentRowComponent } from './comment-row.component';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     LazyLoadImageModule,
     InstAngularPipesModule,
+    UserAvatarModule,
   ],
   exports: [
     CommentRowComponent,

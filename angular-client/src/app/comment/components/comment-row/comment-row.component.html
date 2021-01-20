@@ -1,20 +1,15 @@
 <div class="comment__item" *ngIf="comment">
-  <div class="user__photo__container">
-    <img
-      [lazyLoad]="comment.commentedBy.photoThumb"
-      [defaultImage]="'assets/images/portrait.jpg'"
-      [errorImage]="'assets/images/portrait.jpg'"
-      (click)="clickUsername(comment.commentedBy.username)"
-      alt=""
-      height="40"
-      width="40"
-    />
-  </div>
+  <app-user-avatar
+    [user]="comment.commentedBy"
+    [clickable]="true"
+    (clickUser)="showUser($event)"
+  ></app-user-avatar>
+
   <div class="column">
     <!-- comment__box -->
     <div>
       <div [class]="bgClass">
-        <small (click)="onClickUsername(comment.commentedBy.username)">
+        <small (click)="showUser(comment.commentedBy)">
           {{ comment.commentedBy.username }}
         </small>
         <p>{{ comment.text }}</p>

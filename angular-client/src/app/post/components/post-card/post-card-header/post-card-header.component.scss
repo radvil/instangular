@@ -6,24 +6,6 @@
     cursor: pointer;
   }
 }
-.photo--container {
-  margin-right: 0.5rem;
-  height: 40px;
-  width: 40px;
-  padding: 3px;
-  background-color: white;
-  border-radius: 50%;
-  cursor: pointer;
-  &.active {
-    border: 2px solid red !important;
-  }
-  img {
-    object-fit: cover;
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
-  }
-}
 .post-card--texts {
   display: flex;
   flex-direction: column;

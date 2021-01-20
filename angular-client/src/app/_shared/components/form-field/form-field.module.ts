@@ -6,6 +6,7 @@ import { FormFieldComponent } from './form-field.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { UserAvatarModule } from '../user-avatar/user-avatar.module';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
     LazyLoadImageModule,
     MatButtonModule,
     MatIconModule,
+    UserAvatarModule,
   ],
   exports: [FormFieldComponent]
 })

@@ -6,7 +6,7 @@ import { filter, map, tap } from 'rxjs/operators';
 
 import { compareToGetClass, ReactionsDialogComponent } from 'src/app/_shared';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
-import { User } from 'src/app/user';
+import { User, UserBasic } from 'src/app/user';
 
 import { State as CommentState } from '../../store/comment.state';
 import { PostComment, CommentReaction, CreatePostCommentDto, GetCommentRepliesDto } from '../../interfaces';
@@ -97,10 +97,6 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     }
     this._store.dispatch(GetCommentReplies({ dto }));
     this.pageNumber += 1;
-  }
-
-  viewUserProfile(usernameEvent: string): void {
-    this._router.navigate(['user', usernameEvent]);
   }
 
   openReactionDialog(commentIdEvent: string, type: string): void {

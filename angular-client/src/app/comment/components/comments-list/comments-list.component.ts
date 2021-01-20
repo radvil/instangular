@@ -34,7 +34,7 @@ import {
 } from '../../store/comment.actions';
 
 @Component({
-  selector: 'nsg-comments-list',
+  selector: 'app-comments-list',
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +49,6 @@ export class CommentsListComponent {
 
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onViewRepliesClicked = new EventEmitter<string>();
-  @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<CreatePostCommentDto>();
 
   public commentDialogRef: MatDialogRef<CommentDialogComponent>;
@@ -122,10 +121,6 @@ export class CommentsListComponent {
 
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);
-  }
-
-  public viewUserProfile(username: string) {
-    this.onUserProfileClicked.emit(username);
   }
 
   public openReactionDialog(commentId: string) {

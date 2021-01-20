@@ -1,14 +1,13 @@
-<div class="post-card--header">
-  <div class="photo--container active">
-    <img
-      [lazyLoad]="post.postedBy.photoThumb"
-      [defaultImage]="'assets/images/portrait.jpg'"
-      [errorImage]="'assets/images/portrait.jpg'"
-      [alt]="post.postedBy.username"
-    />
-  </div>
+<div *ngIf="post" class="post-card--header">
+  <app-user-avatar
+    [user]="post.postedBy"
+    [clickable]="true"
+    [bordered]="true"
+    (clickUser)="onClickUser($event)"
+  ></app-user-avatar>
+
   <div class="post-card--texts">
-    <a (click)="clickUsername(post.postedBy.username)">
+    <a (click)="onClickUser(post.postedBy)">
       {{ post.postedBy.username }}
     </a>
     <div class="timestamp">

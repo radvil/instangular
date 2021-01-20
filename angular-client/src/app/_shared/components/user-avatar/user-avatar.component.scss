@@ -7,8 +7,10 @@
 
   img {
     object-fit: cover;
+    border-radius: 50%;
   }
-}
-.photo__container img {
-  border-radius: 50%;
+
+  @media (max-width: 777px) {
+    margin-right: .5rem;
+  }
 }

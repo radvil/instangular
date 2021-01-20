@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PostReaction } from 'src/app/post/interfaces';
 
 @Component({
-  selector: 'nsg-post-card-buttons',
+  selector: 'app-post-card-buttons',
   templateUrl: './post-card-buttons.component.html',
   styleUrls: ['./post-card-buttons.component.scss']
 })

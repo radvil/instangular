@@ -21,7 +21,7 @@
 <!-- home post list -->
 <div class="posts__list">
   <ng-container *ngFor="let post of posts">
-    <nsg-post-card [post]="post" [authUser]="authUser">
+    <app-post-card [post]="post" [authUser]="authUser">
       <!-- post comments previews -->
       <div class="post__comments" *ngIf="post.comments?.length">
         <p class="viewComments" (click)="viewPostComments(post._id)">
@@ -34,7 +34,7 @@
           {{ comment.text }}
         </p>
       </div>
-    </nsg-post-card>
+    </app-post-card>
   </ng-container>
 </div>
 

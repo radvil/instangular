@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'nsg-replies-preview',
+  selector: 'app-replies-preview',
   templateUrl: './replies-preview.component.html',
   styleUrls: ['./replies-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

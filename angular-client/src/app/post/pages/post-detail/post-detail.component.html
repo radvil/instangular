@@ -9,11 +9,11 @@
   </div>
 
   <ng-template #postCard>
-    <nsg-post-card
+    <app-post-card
       [post]="post"
       [authUser]="authUser"
     >
-      <nsg-comments-list
+      <app-comments-list
         [post]="post"
         [authUser]="authUser"
         [comments]="comments$ | async"
@@ -21,8 +21,8 @@
         [isCommentsLoading]="isCommentsLoading$ | async"
         (onViewCommentsClicked)="viewPreviousComments($event)"
         (onViewRepliesClicked)="viewCommentReplies($event)"
-        (onUserProfileClicked)="viewUserProfile($event)"
-      ></nsg-comments-list>
-    </nsg-post-card>
+        (clickUser)="showUser($event)"
+      ></app-comments-list>
+    </app-post-card>
   </ng-template>
 </ng-container>

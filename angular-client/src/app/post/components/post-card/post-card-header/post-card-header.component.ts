@@ -1,22 +1,22 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Post } from 'src/app/post';
+import { UserBasic } from 'src/app/user';
 
 @Component({
-  selector: 'nsg-post-card-header',
+  selector: 'app-post-card-header',
   templateUrl: './post-card-header.component.html',
   styleUrls: ['./post-card-header.component.scss'],
 })
 export class PostCardHeaderComponent {
-
   @Input() post: Post;
   @Input() enableEdit = true;
   @Input() enableDelete = true;
-  @Output() onUsernameClicked = new EventEmitter<string>();
+  @Output() clickUser = new EventEmitter<UserBasic>();
   @Output() onMenuEditClicked = new EventEmitter<string>();
   @Output() onMenuDeleteClicked = new EventEmitter<string>();
 
-  clickUsername(username: string): void {
-    this.onUsernameClicked.emit(username);
+  onClickUser(user: UserBasic): void {
+    this.clickUser.emit(user);
   }
 
   clickMenuEdit(postId: string): void {
