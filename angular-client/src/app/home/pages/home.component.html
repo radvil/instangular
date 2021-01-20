@@ -21,20 +21,13 @@
 <!-- home post list -->
 <div class="posts__list">
   <ng-container *ngFor="let post of posts">
-    <nsg-post-card
-      [post]="post"
-      (onUserProfileClicked)="viewUserProfile($event)"
-      (onAddComment)="commentToPost($event, post._id)"
-      (onEditSelected)="openEditDialog($event, post)"
-      (onDeleteSelected)="openDeleteDialog($event)"
-      (onSubmitAddCommentInput)="commentToPost($event, post._id)"
-    >
+    <nsg-post-card [post]="post" [authUser]="authUser">
       <!-- post comments previews -->
       <div class="post__comments" *ngIf="post.comments.length">
         <p class="viewComments" (click)="viewPostComments(post._id)">
           View all {{ post.commentsCount }} comments
         </p>
-        <p class="truncate1" *ngFor="let comment of post.comments | slice:0:2">
+        <p class="truncate1" *ngFor="let comment of post.comments | slice: 0:2">
           <b (click)="viewUserProfile(comment.commentedBy.username)">
             {{ comment.commentedBy.username }}
           </b>

@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
 
 import { PageHeaderModule } from 'src/app/_shared';
 import { PostCardModule } from 'src/app/post/components';
@@ -40,7 +39,6 @@ export class HomeRoutingModule { }
 
     MatButtonModule,
     MatIconModule,
-    MatDialogModule,
   ]
 })
 export class HomeModule { }

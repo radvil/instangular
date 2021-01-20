@@ -1,5 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { Post } from 'src/app/post';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+import { CreateCommentDto } from 'src/app/comment/interfaces';
+import { AddComment } from 'src/app/comment/store/actions';
+import { CreatePostDto, Post } from 'src/app/post/interfaces';
+import { User } from 'src/app/user/interfaces';
+import { UpdatePostById } from '../../store/post.actions';
+import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
+
 
 @Component({
   selector: 'nsg-post-card',
@@ -7,14 +20,25 @@ import { Post } from 'src/app/post';
   styleUrls: ['./post-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostCardComponent {
+export class PostCardComponent implements OnDestroy {
   @Input() post: Post;
+  @Input() authUser: User;
   @Input() textInputClass: string = null;
-  @Output() onUserProfileClicked = new EventEmitter<string>();
-  @Output() onEditSelected = new EventEmitter<string>();
-  @Output() onDeleteSelected = new EventEmitter<string>();
   @Output() onCommentClicked = new EventEmitter<string>();
-  @Output() onSubmitAddCommentInput = new EventEmitter<string>();
+
+  public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
+  private _subscription = new Subscription();
+
+  constructor(
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private _store: Store,
+    private _router: Router,
+  ) { }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
 
   public get showedReactionUsername(): string {
     if (this.post.reactions.length > 0) {
@@ -28,16 +52,34 @@ export class PostCardComponent {
     return this.post.reactionsCount;
   }
 
-  viewUserProfile(username: string) {
-    this.onUserProfileClicked.emit(username);
+  viewUserProfile(usernameEvent: string) {
+    this._router.navigate(['user', usernameEvent]);
   }
 
   selectMenuEdit(postIdEvent: string) {
-    this.onEditSelected.emit(postIdEvent);
+    this.updateDialogRef = this._dialog.open(PostEditDialogComponent, {
+      width: '333px',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'updatePostDialog',
+      data: { postId: postIdEvent, currentPost: this.post }
+    });
+
+    const doAfterClose$ = this.updateDialogRef
+      .afterClosed()
+      .pipe(tap((dto: CreatePostDto) => {
+        if (dto) {
+          let changes = { description: dto.description };
+          this._store.dispatch(UpdatePostById({ postId: postIdEvent, changes }));
+          this._snackBar.open('Post Updated', 'See Post');
+        }
+      }))
+
+    this._subscription.add(doAfterClose$.subscribe());
   }
 
   selectMenuDelete(postIdEvent: string) {
-    this.onDeleteSelected.emit(postIdEvent);
+    // TODO: //delete popup
   }
 
   clickReact(postId: string) {
@@ -46,7 +88,8 @@ export class PostCardComponent {
   }
 
   clickComment(postId: string) {
-    this.onCommentClicked.emit(postId);
+    // this.onCommentClicked.emit(postId);
+    alert('TODO:// Autofocus to input');
   }
 
   clickShare(postId: string) {
@@ -57,8 +100,15 @@ export class PostCardComponent {
     alert('TODO:// openSaveOptions(postId)');
   }
 
-  submitAddCommentInput(commentText: string) {
-    this.onSubmitAddCommentInput.emit(commentText);
+  commentToPost(text: string, commentedBy: string) {
+    if (text && this.post._id) {
+      const createCommentDto = <CreateCommentDto>{
+        postId: this.post._id,
+        text: text,
+        commentedBy,
+      }
+      this._store.dispatch(AddComment({ createCommentDto }));
+    }
   }
 
 }

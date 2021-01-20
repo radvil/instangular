@@ -15,7 +15,7 @@
     <img
       [defaultImage]="post.thumbnail"
       [lazyLoad]="post.image"
-      [errorImage]="errorImagePath"
+      [errorImage]="'assets/images/post.jpeg'"
       class="blur"
       alt="post alt text"
     />
@@ -76,10 +76,14 @@
   <ng-content></ng-content>
 
   <!-- comment form -->
-  <div class="addCommentField" [ngClass]="textInputClass">
+  <div
+    *ngIf="authUser.username"
+    class="addCommentField"
+    [ngClass]="textInputClass"
+  >
     <app-form-field
       [placeholder]="'Add Comment..'"
-      (onInputConfirmed)="submitAddCommentInput($event)"
+      (onInputConfirmed)="commentToPost($event, authUser.username)"
     ></app-form-field>
   </div>
 </div>

@@ -11,14 +11,7 @@
   <ng-template #postCard>
     <nsg-post-card
       [post]="post"
-      (onUserProfileClicked)="viewUserProfile($event)"
-      (onEditSelected)="openEditPostDialog($event)"
-      (onMenuDeleteClicked)="openDeletePostDialog($event)"
-
-      (onCommentClicked)="openCommentForm($event)"
-
-      [textInputClass]="commentInputClass"
-      (onSubmitAddCommentInput)="commentToPost($event, post._id)"
+      [authUser]="authUser"
     >
       <nsg-comments-list
         [post]="post"

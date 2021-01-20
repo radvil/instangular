@@ -12,6 +12,9 @@ import { FormFieldModule, InstAngularPipesModule, MenuActionsModule } from 'src/
 import { PostCardComponent } from './post-card.component';
 import { PostCardHeaderComponent } from './post-card-header/post-card-header.component';
 import { PostCardButtonsComponent } from './post-card-buttons/post-card-buttons.component';
+import { PostStoreModule } from '../../store/post-store.module';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CommentStoreModule } from 'src/app/comment/store/comment-store.module';
 
 
 @NgModule({
@@ -27,10 +30,13 @@ import { PostCardButtonsComponent } from './post-card-buttons/post-card-buttons.
     LazyLoadImageModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     MatSnackBarModule,
     InstAngularPipesModule,
     MenuActionsModule,
     FormFieldModule,
+    PostStoreModule,
+    CommentStoreModule,
   ],
   exports: [
     PostCardComponent,
