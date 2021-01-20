@@ -17,6 +17,7 @@
     <!-- comment row -->
     <ng-container *ngFor="let comment of comments">
       <nsg-comment-row
+        (contextmenu)="onContextMenu($event, comment)"
         [comment]="comment"
         [bgClass]="getCommentClass(comment.commentedBy.username)"
         (onUsernameClicked)="viewUserProfile($event)"
@@ -37,9 +38,22 @@
       </nsg-comment-row>
     </ng-container>
 
-    <!-- <app-form-field
-      [placeholder]="'Add Comment..'"
-      (onInputConfirmed)="emitAddComment($event)"
-    ></app-form-field> -->
+    <!-- contextMenu -->
+    <div
+      style="visibility: hidden; position: fixed"
+      [style.left]="contextMenuPosition.x"
+      [style.top]="contextMenuPosition.y"
+      [matMenuTriggerFor]="contextMenu"
+    ></div>
+    <mat-menu #contextMenu="matMenu">
+      <ng-template matMenuContent let-item="item">
+        <button mat-menu-item (click)="onContextMenuEditAction(item)">
+          Edit
+        </button>
+        <button mat-menu-item (click)="onContextMenuDeleteAction(item)">
+          Delete
+        </button>
+      </ng-template>
+    </mat-menu>
   </div>
 </div>

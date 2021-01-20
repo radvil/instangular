@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { ReactionsDialogModule } from 'src/app/_shared/components';
 import { CommentStoreModule } from '../../store/comment-store.module';
@@ -18,6 +19,7 @@ import { CommentsListComponent } from './comments-list.component';
     RepliesPreviewModule,
     CommentStoreModule,
     ReactionsDialogModule,
+    MatMenuModule,
   ],
   exports: [
     CommentsListComponent,

@@ -7,3 +7,4 @@
 ➕ Init Post UserRegistration units
 📷 Post UserRegistration \"Setup User Photo\"
 📖 Post UserRegistration \"Setup Basics Info\"
+✔️ Add Comment ContextMenu
