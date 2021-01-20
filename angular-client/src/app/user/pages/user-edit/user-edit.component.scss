@@ -1,7 +1,11 @@
 h5 {
-  margin: 1rem 0;
+  margin: 1rem;
 }
 .fx-container {
   display: flex;
   align-items: center;
+}
+.change-btn button {
+  border-radius: 2rem;
+  font-weight: bold;
 }

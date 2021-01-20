@@ -21,7 +21,6 @@ export class EditBasicsProfileComponent implements OnInit, OnDestroy {
   public isLoading: boolean;
   public isLoaded: boolean;
   public submitButtonText = "Save";
-  public submitButtonColor = "accent";
   private _subscription = new Subscription();
 
   constructor(
@@ -71,9 +70,9 @@ export class EditBasicsProfileComponent implements OnInit, OnDestroy {
     const isLoaded$ = this._store.select($_userLoaded).pipe(
       tap(isLoaded => {
         this.isLoaded = isLoaded;
+        this.isLoading = false;
         if (this.form.disabled && isLoaded) {
-          this.submitButtonText = "Info saved!";
-          this.submitButtonColor = "primary";
+          this.submitButtonText = "Save";
           this.form.enable();
         }
       })

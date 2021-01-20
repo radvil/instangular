@@ -1,7 +1,11 @@
-<div
-  class="container"
-  *ngIf="!(isLoading$ | async) || (isLoaded$ | async); else isLoading"
->
+<!-- close button if as a dialog -->
+<!-- <div *ngIf="asDialog" class="closeDialog">
+  <button mat-icon-button color="warn">
+    <mat-icon>close</mat-icon>
+  </button>
+</div> -->
+
+<div class="container">
   <!-- hidden input -->
   <input
     #fileInput
@@ -27,28 +31,21 @@
     class="image__preview"
     *ngIf="imagePreviewPath && imagePreviewPath !== null"
   >
-    <img
-      [src]="imagePreviewPath"
-      alt="photo preview"
-      (click)="fileInput.click()"
-    />
+    <img [src]="imagePreviewPath" alt="photo preview" />
+    <div (click)="fileInput.click()" class="change__backdrop">
+      <mat-icon>photo</mat-icon>
+    </div>
   </div>
 
   <!-- submit button -->
   <button
     (click)="submitUpload()"
-    [disabled]="!selectedImage || (isLoading$ | async)"
+    [disabled]="!selectedImage || isUploading || isUploaded"
     mat-flat-button
     color="primary"
     class="upload__button"
     type="button"
   >
-    Upload now
+    {{ buttonTextSub.value }}
   </button>
 </div>
-
-<ng-template #isLoading>
-  <div class="loading__container">
-    <h2>🎵🎵 Uploading image ...</h2>
-  </div>
-</ng-template>

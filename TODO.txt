@@ -10,3 +10,4 @@
 ✔️ Add Comment ContextMenu
 ✔️ Add CommentAction Delete on 
 💬 Make CommentDialogComponent
+✔️ Edit User Profile

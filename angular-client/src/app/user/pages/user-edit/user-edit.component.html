@@ -1,14 +1,20 @@
-<section class="container">
-  <h5>Profile Picture</h5>
-  <div class="fx-container">
-    <app-user-avatar [user]="authUser" [imageHeight]="100" [imageWidth]="100">
-    </app-user-avatar>
-    <div class="change-btn">
-      <button mat-flat-button color="accent">Change</button>
+<section>
+  <div class="rad-card">
+    <h5>Profile Picture</h5>
+    <div class="fx-container">
+      <app-user-avatar [user]="authUser" [imageHeight]="100" [imageWidth]="100">
+      </app-user-avatar>
+      <div class="change-btn">
+        <button (click)="openPhotoDialog()" mat-flat-button color="accent">
+          Change
+        </button>
+      </div>
     </div>
   </div>
 </section>
 
 <section>
-  <app-edit-basics-profile></app-edit-basics-profile>
+  <div class="rad-card">
+    <app-edit-basics-profile></app-edit-basics-profile>
+  </div>
 </section>

@@ -14,6 +14,7 @@ import { UserStoreModule } from '../store/user-store.module';
 import { PostStoreModule } from 'src/app/post/store/post-store.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [
   {
@@ -44,6 +45,7 @@ export class UserRoutingModule { }
     FontAwesomeModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     // local modules
     UserRoutingModule,
     InstAngularPipesModule,

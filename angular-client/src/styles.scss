@@ -141,8 +141,24 @@ input {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+section {
+  margin: 2rem;
+
+  @media(max-width: 777px) {
+    margin: 1rem;
+  }
+}
 .container {
   margin: 1rem;
+}
+.rad-card {
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  box-shadow: -1px 4px 20px -6px #00000033;
+
+  @media(max-width: 777px) {
+    padding: 1rem;
+  }
 }
 .updatePostPanel .mat-dialog-container {
   padding: 0;
