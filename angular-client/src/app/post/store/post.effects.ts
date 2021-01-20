@@ -7,6 +7,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as postActions from './post.actions';
 import { PostService } from "../services/post.service";
 import { PushManyComments } from "src/app/comment/store/actions/comment.actions";
+import { NotificationService } from "src/app/_shared/services";
 
 @Injectable()
 export class PostEffects {
@@ -46,10 +47,24 @@ export class PostEffects {
     ))
   ))
 
+  doneActions$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.UpdatePostByIdSuccess),
+    tap((action) => {
+      switch (action.type) {
+        case postActions.PostActionTypes.UPDATE_POST_BY_ID_SUCCESS:
+          this._notificationService.success('Post updated');
+          break;
+        default:
+          this._notificationService.error('Failed');
+      }
+    })
+  ), { dispatch: false })
+
   constructor(
     private _store: Store,
     private _actions$: Actions,
     private _postService: PostService,
+    private _notificationService: NotificationService,
   ) { }
 
 }

@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 import { CreateCommentDto } from 'src/app/comment/interfaces';
 import { AddComment } from 'src/app/comment/store/actions';
@@ -56,7 +56,7 @@ export class PostCardComponent implements OnDestroy {
     this._router.navigate(['user', usernameEvent]);
   }
 
-  selectMenuEdit(postIdEvent: string) {
+  openUpdatePostDialog(postIdEvent: string) {
     this.updateDialogRef = this._dialog.open(PostEditDialogComponent, {
       width: '333px',
       maxWidth: '95vw',
@@ -65,17 +65,16 @@ export class PostCardComponent implements OnDestroy {
       data: { postId: postIdEvent, currentPost: this.post }
     });
 
-    const doAfterClose$ = this.updateDialogRef
-      .afterClosed()
-      .pipe(tap((dto: CreatePostDto) => {
+    const updateAndCloseDialog$ = this.updateDialogRef.beforeClosed().pipe(
+      tap((dto: CreatePostDto) => {
         if (dto) {
           let changes = { description: dto.description };
           this._store.dispatch(UpdatePostById({ postId: postIdEvent, changes }));
-          this._snackBar.open('Post Updated', 'See Post');
         }
-      }))
+      })
+    )
 
-    this._subscription.add(doAfterClose$.subscribe());
+    this._subscription.add(updateAndCloseDialog$.subscribe());
   }
 
   selectMenuDelete(postIdEvent: string) {
