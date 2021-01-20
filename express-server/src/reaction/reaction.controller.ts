@@ -18,7 +18,7 @@ export class PostReactionController implements Controller {
   }
 
   private react = async (req: RequestUser, res: Res, next: Next) => {
-    const foundReaction = await this._reactionModel.findOne({ 
+    const foundReaction = await this._reactionModel.findOne({
       reactedBy: req.user._id,
       postId: req.body.postId,
     });
@@ -45,14 +45,26 @@ export class PostReactionController implements Controller {
         next(new INTERNAL_SERVER_EXCEPTION());
       }
     } else {
-      if (foundReaction.reactedBy['_id'] != req.user._id) {
-        next(new UNAUTHORIZED_EXCEPTION());
-      }
-      try {
-        await foundReaction.remove();
+      if (foundReaction.variant == req.body.variant) {
+        if (!(await foundReaction.remove())) {
+          next(new INTERNAL_SERVER_EXCEPTION());
+        };
         return res.json(<JsonHttpResponse<null>>{
           status: 200,
-          message: "Undo react post succeed!"
+          message: "undo react comment succeed!"
+        });
+      }
+      try {
+        foundReaction.variant = req.body.variant;
+        const updated = await foundReaction.save();
+        await updated.populate({
+          path: 'reactedBy',
+          select: USER_POPULATE_SELECT
+        }).execPopulate();
+        return res.json(<JsonHttpResponse<PostReaction>>{
+          status: 200,
+          message: "react comment change succeed!",
+          data: updated
         });
       } catch (error) {
         next(new INTERNAL_SERVER_EXCEPTION());
@@ -125,14 +137,26 @@ export class CommentReactionController implements Controller {
         next(new INTERNAL_SERVER_EXCEPTION());
       }
     } else {
-      if (foundReaction.reactedBy['_id'] != req.user._id) {
-        next(new UNAUTHORIZED_EXCEPTION());
-      }
-      try {
-        await foundReaction.remove();
+      if (foundReaction.variant == req.body.variant) {
+        if (!(await foundReaction.remove())) {
+          next(new INTERNAL_SERVER_EXCEPTION());
+        };
         return res.json(<JsonHttpResponse<null>>{
           status: 200,
-          message: "unde react comment succeed!"
+          message: "undo react comment succeed!"
+        });
+      }
+      try {
+        foundReaction.variant = req.body.variant;
+        const updated = await foundReaction.save();
+        await updated.populate({
+          path: 'reactedBy',
+          select: USER_POPULATE_SELECT
+        }).execPopulate();
+        return res.json(<JsonHttpResponse<CommentReaction>>{
+          status: 200,
+          message: "react comment change succeed!",
+          data: updated
         });
       } catch (error) {
         next(new INTERNAL_SERVER_EXCEPTION());

@@ -53,14 +53,14 @@ export class CommentsListComponent {
     return compareToGetClass(this.authUser.username, authorUsername);
   }
 
-  public emitAddComment(inputText: string): void {
-    if (this.post && inputText) {
-      const comment = <CreateCommentDto>{
-        postId: this.post._id,
-        text: inputText,
-        commentedBy: this.authUser._id,
-      };
-      this.onAddCommentClicked.emit(comment);
-    }
-  }
+  // public emitAddComment(inputText: string): void {
+  //   if (this.post && inputText) {
+  //     const comment = <CreateCommentDto>{
+  //       postId: this.post._id,
+  //       text: inputText,
+  //       commentedBy: this.authUser._id,
+  //     };
+  //     this.onAddCommentClicked.emit(comment);
+  //   }
+  // }
 }

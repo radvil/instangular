@@ -49,17 +49,6 @@ schema.virtual('comments', {
   ref: 'Comment',
   foreignField: 'postId',
   localField: '_id',
-  // options: {
-  //   limit: 5,
-  //   sort: { createdAt: -1 },
-  //   where: { repliedTo: { $eq: null } },
-  //   populate: [
-  //     { path: 'commentedBy', select: USER_POPULATE_SELECT },
-  //     { path: 'replies' }, // can't override options from commentSchema virtual
-  //     { path: 'repliesCount' },
-  //     { path: 'reactionsCount' },
-  //   ]
-  // }
 });
 
 schema.virtual('commentsCount', {
@@ -83,11 +72,6 @@ schema.virtual('reactions', {
   ref: 'PostReaction',
   foreignField: 'postId',
   localField: '_id',
-  // options: {
-  //   sort: { createdAt: -1 },
-  //   limit: 5,
-  //   populate: { path: 'reactedBy', select: USER_POPULATE_SELECT },
-  // },
 });
 
 schema.virtual('reactionsCount', {
@@ -95,6 +79,13 @@ schema.virtual('reactionsCount', {
   foreignField: 'postId',
   localField: '_id',
   count: true,
+});
+
+schema.virtual('myReaction', {
+  ref: 'PostReaction',
+  foreignField: 'postId',
+  localField: '_id',
+  justOne: true,
 });
 
 export const Post = model<Post>('Post', schema);

@@ -2,8 +2,11 @@
   [title]="pageHeaderTitle"
   [style]="'sticky'"
   [fontSize]="'1rem'"
+  [icon]="'visibility'"
+  (onIconClicked)="showPost(comment.commentedToPost?._id)"
 ></app-page-header>
-<!-- comment detail -->
+
+<!-- comment rows -->
 <div class="container" *ngIf="comment">
   <nsg-comment-row
     [comment]="comment"
@@ -16,7 +19,7 @@
 
   <!-- replies list -->
   <div class="replies__list" *ngIf="comment.replies.length">
-    <!-- view all comments -->
+    <!-- view prev replies -->
     <div class="paginator">
       <p
         class="paginator__text"

@@ -61,7 +61,7 @@ export class PostController implements Controller {
     this.router.delete(`${this.path}/:id`, authorizeAccess(), this.deletePost);
   }
 
-  private getAllPosts = async (req: Req, res: Res, next: Next): Promise<void> => {
+  private getAllPosts = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const querify = new Querify(req.query);
     const originalRequest = this._postModel
       .find(querify.search)
@@ -73,6 +73,15 @@ export class PostController implements Controller {
         path: 'postedBy',
         select: USER_POPULATE_SELECT,
       })
+    if (req.user._id) {
+      originalRequest.populate(<ModelPopulateOptions>{
+        path: 'myReaction',
+        options: {
+          where: { reactedBy: req.user._id },
+          select: '-_id -reactedBy',
+        }
+      })
+    }
     if (req.query.includeComments == 'true') {
       originalRequest
         .populate(<ModelPopulateOptions>{
@@ -147,6 +156,15 @@ export class PostController implements Controller {
         path: 'postedBy',
         select: USER_POPULATE_SELECT,
       });
+    if (req.user._id) {
+      originalRequest.populate(<ModelPopulateOptions>{
+        path: 'myReaction',
+        options: {
+          where: { reactedBy: req.user._id },
+          select: '-_id -reactedBy',
+        }
+      })
+    }
     if (req.query.includeComments === 'true') {
       originalRequest
         .populate(<ModelPopulateOptions>{
@@ -194,6 +212,13 @@ export class PostController implements Controller {
                 ]
               }
             },
+            {
+              path: 'myReaction',
+              options: {
+                where: { reactedBy: req.user._id },
+                select: '-_id -reactedBy',
+              }
+            }
           ]
         })
         .populate('commentsAsParentCount')

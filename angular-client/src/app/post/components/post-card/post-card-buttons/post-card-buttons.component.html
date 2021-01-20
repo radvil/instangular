@@ -1,5 +1,9 @@
 <div *ngIf="postId" class="post-card--buttons">
-  <button (click)="clickReactIcon(postId)" mat-icon-button class="active">
+  <button
+    (click)="clickReactIcon(postId)"
+    mat-icon-button
+    [class.active]="myReaction?.variant === 'love'"
+  >
     <mat-icon>favorite</mat-icon>
   </button>
   <button (click)="clickCommentIcon(postId)" mat-icon-button>

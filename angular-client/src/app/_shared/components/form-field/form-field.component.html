@@ -14,8 +14,11 @@
       [(ngModel)]="commentInputText"
       [placeholder]="placeholder"
       autocomplete="off"
+      autofocus="on"
       name="inputText"
     />
-    <button type="submit">></button>
+    <button mat-icon-button type="submit">
+      <mat-icon>send</mat-icon>
+    </button>
   </form>
 </div>

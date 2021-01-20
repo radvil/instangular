@@ -12,6 +12,8 @@
     <nsg-post-card
       [post]="post"
       (onUserProfileClicked)="viewUserProfile($event)"
+      (onEditSelected)="openEditPostDialog($event)"
+      (onMenuDeleteClicked)="openDeletePostDialog($event)"
     >
       <nsg-comments-list
         [post]="post"
@@ -22,8 +24,14 @@
         (onViewCommentsClicked)="viewPreviousComments($event)"
         (onViewRepliesClicked)="viewCommentReplies($event)"
         (onUserProfileClicked)="viewUserProfile($event)"
-        (onAddCommentClicked)="addComment($event)"
       ></nsg-comments-list>
+
+      <div class="add__comment">
+        <app-form-field
+          [placeholder]="'Add Comment..'"
+          (onInputConfirmed)="addComment($event)"
+        ></app-form-field>
+      </div>
     </nsg-post-card>
   </ng-template>
 </ng-container>

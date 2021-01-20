@@ -6,6 +6,7 @@
       *ngIf="commentsHasNextPage"
       (click)="viewPostComments(post._id)"
     >
+      <!-- View previous {{ remainingCommentsTotal }} comments -->
       View previous comments
     </p>
   </div>
@@ -36,9 +37,9 @@
       </nsg-comment-row>
     </ng-container>
 
-    <app-form-field
+    <!-- <app-form-field
       [placeholder]="'Add Comment..'"
       (onInputConfirmed)="emitAddComment($event)"
-    ></app-form-field>
+    ></app-form-field> -->
   </div>
 </div>

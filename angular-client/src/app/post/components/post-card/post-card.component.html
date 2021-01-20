@@ -24,6 +24,7 @@
   <!-- post card buttons -->
   <nsg-post-card-buttons
     [postId]="post._id"
+    [myReaction]="post.myReaction"
     (onReactClicked)="clickReact($event)"
     (onCommentClicked)="clickComment($event)"
     (onShareClicked)="clickShare($event)"

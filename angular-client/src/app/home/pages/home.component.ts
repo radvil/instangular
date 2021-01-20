@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
   public authUser: User;
   public stories: StoryWithUser[];
-  public posts$: Observable<Post[]>;
+  public posts: Post[];
   public defaultPortrait = "assets/images/portrait.jpg";
   public errorImagePath = "assets/images/portrait.jpg";
 
@@ -90,7 +90,9 @@ export class HomeComponent implements OnInit {
 
   private getFeeds(): void {
     this._store.dispatch(GetPosts());
-    this.posts$ = this._store.select($_posts);
+    this._subscription.add(
+      this._store.select($_posts).subscribe(posts => this.posts = posts)
+    );
   }
 
   public checkSelfUser(storyUsername: string): boolean {

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PageHeaderModule } from 'src/app/_shared/components';
+import { FormFieldModule, PageHeaderModule } from 'src/app/_shared/components';
 import { CommentStoreModule } from 'src/app/comment/store/comment-store.module';
 import { CommentsListModule } from 'src/app/comment/components';
 
@@ -21,6 +21,7 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
     PostCardModule,
     PageHeaderModule,
     CommentsListModule,
+    FormFieldModule,
   ]
 })
 export class PostModule { }

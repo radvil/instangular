@@ -50,8 +50,10 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
         filter(comment => !!comment),
       ).subscribe(comment => {
         this.comment = comment;
-        if (comment.commentedBy.username) {
-          this.pageHeaderTitle = `Replies to ${comment.commentedBy.username}'s comment`;
+        if (comment.commentedBy && comment.commentedToPost) {
+          const commentAuthor = this.decideUsernameText(comment.commentedBy?.username);
+          const postAuthor = this.decideUsernameText(comment.commentedToPost?.postedBy?.username);
+          this.pageHeaderTitle = `Replies to ${commentAuthor} comment on ${postAuthor} post`;
         }
       })
     )
@@ -68,6 +70,22 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   private loadCommentDetail(commentId: string): void {
     this._store.dispatch(GetCommentById({ commentId }));
     this.pageNumber += 1;
+  }
+
+  private decideUsernameText(username: string): string {
+    let properName = "";
+    if (this.authUser) {
+      if (this.authUser.username === username) {
+        properName = `your`;
+      } else {
+        properName = `${username}'s`
+      }
+    }
+    return properName;
+  }
+
+  showPost(postId: string): void {
+    this._router.navigate(['post', postId]);
   }
 
   viewPreviousReplies(commentId: string) {

@@ -34,14 +34,12 @@ export const replyReducer = createReducer(
 
   on(replyActions.PushManyReplies, (state, { replies }) => {
     const selectedPostId = replies[0].postId;
-    const selectedCommentId = replies[0].repliedTo;
 
     return replyAdapter.upsertMany(replies, {
       ...state,
       loaded: true,
       loading: false,
       selectedPostId,
-      selectedCommentId,
     })
   }),
 

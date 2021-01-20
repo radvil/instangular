@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class PostCardButtonsComponent {
 
   @Input() postId: string;
+  @Input() myReaction: { variant: string } = null;
   @Output() onReactClicked = new EventEmitter<string>();
   @Output() onCommentClicked = new EventEmitter<string>();
   @Output() onShareClicked = new EventEmitter<string>();

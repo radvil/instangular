@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
 import { User } from '../user';
-import { PostReaction } from '../reaction';
 
 export interface Comment extends Document {
   _id: string;
@@ -58,6 +57,13 @@ const schema = new Schema<Comment>({
   text: String,
 }, schemaOptions);
 
+schema.virtual('commentedToPost', {
+  ref: 'Post',
+  foreignField: '_id',
+  localField: 'postId',
+  justOne: true,
+});
+
 schema.virtual('reactions', {
   ref: 'CommentReaction',
   foreignField: 'commentId',
@@ -69,6 +75,13 @@ schema.virtual('reactionsCount', {
   foreignField: 'commentId',
   localField: '_id', // CommentSchemaId
   count: true,
+});
+
+schema.virtual('myReaction', {
+  ref: 'CommentReaction',
+  foreignField: 'commentId',
+  localField: '_id',
+  justOne: true,
 });
 
 schema.virtual('replies', {

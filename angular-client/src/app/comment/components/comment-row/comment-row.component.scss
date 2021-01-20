@@ -6,7 +6,7 @@
   margin: 0;
 }
 small {
-	font-weight: bold;
+  font-weight: bold;
 }
 .user__photo__container {
   margin-right: 0.5rem;
@@ -42,6 +42,29 @@ small {
 .comment__actions > .time,
 .comment__actions > .reactions__count {
   font-weight: inherit;
+}
+.react {
+  padding: 0 0.5rem;
+  border-radius: 1rem;
+  background-color: #fff;
+  &.like {
+    color: #41a7eb;
+  }
+  &.love {
+    color: #d42f2d;
+  }
+  &.haha {
+    color: #f6bf22;
+  }
+  &.huhu {
+    color: #d44bab;
+  }
+  &.angry {
+    color: #dd5147;
+  }
+  &.care {
+    color: #3fdb80;
+  }
 }
 .user__photo__container img,
 .comment__box small,

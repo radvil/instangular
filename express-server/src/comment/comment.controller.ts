@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
-import { Req, Res, Next, USER_POPULATE_SELECT } from '../var';
+import { Res, Next, USER_POPULATE_SELECT } from '../var';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
 import { CreateCommentDto, Comment } from './comment.model';
@@ -47,64 +47,74 @@ export class CommentController implements Controller {
       postId: req.query.postId.toString(),
       repliedTo: { $eq: null },
     };
-    try {
-      const foundComments = await this._commentModel
-        .find(parentCommentsQuery)
-        .limit(querify.limit)
-        .skip(querify.skip)
-        .select(querify.select)
-        .sort(querify.sort)
-        .populate({
-          path: 'commentedBy',
-          select: USER_POPULATE_SELECT
-        })
-        .populate(<ModelPopulateOptions>{
-          path: 'replies',
-          options: {
-            where: {
-              repliedTo: { $ne: null },
-            },
-            sort: {
-              createdAt: -1,
-            },
-            limit: 5,
-            populate: [
-              {
-                path: 'commentedBy',
-                select: USER_POPULATE_SELECT,
-              },
-              {
-                path: 'reactions',
-                options: {
-                  sort: {
-                    createdAt: -1,
-                  },
-                  limit: 5,
-                  populate: {
-                    path: 'reactedBy',
-                    select: USER_POPULATE_SELECT,
-                  }
-                }
-              } as ModelPopulateOptions,
-              { path: 'reactionsCount' },
-            ]
-          }
-        })
-        .populate('repliesCount')
-        .populate(<ModelPopulateOptions>{
-          path: 'reactions',
-          options: {
-            sort: {
-              createdAt: -1,
-            },
-            limit: 5,
-            populate: {
-              path: 'reactedBy',
+    const originalRequest = this._commentModel
+      .find(parentCommentsQuery)
+      .limit(querify.limit)
+      .skip(querify.skip)
+      .select(querify.select)
+      .sort(querify.sort)
+      .populate({
+        path: 'commentedBy',
+        select: USER_POPULATE_SELECT
+      })
+      .populate(<ModelPopulateOptions>{
+        path: 'replies',
+        options: {
+          where: {
+            repliedTo: { $ne: null },
+          },
+          sort: {
+            createdAt: -1,
+          },
+          limit: 5,
+          populate: [
+            {
+              path: 'commentedBy',
               select: USER_POPULATE_SELECT,
-            }
+            },
+            {
+              path: 'reactions',
+              options: {
+                sort: {
+                  createdAt: -1,
+                },
+                limit: 5,
+                populate: {
+                  path: 'reactedBy',
+                  select: USER_POPULATE_SELECT,
+                }
+              }
+            } as ModelPopulateOptions,
+            { path: 'reactionsCount' },
+          ]
+        }
+      })
+      .populate('repliesCount')
+      .populate(<ModelPopulateOptions>{
+        path: 'reactions',
+        options: {
+          sort: {
+            createdAt: -1,
+          },
+          limit: 5,
+          populate: {
+            path: 'reactedBy',
+            select: USER_POPULATE_SELECT,
           }
-        })
-        .populate('reactionsCount');
+        }
+      })
+      .populate('reactionsCount');
+    if (req.user._id) {
+      originalRequest.populate(<ModelPopulateOptions>{
+        path: 'myReaction',
+        options: {
+          where: { reactedBy: req.user._id },
+          select: '-_id -reactedBy',
+        }
+      })
+    }
+    try {
+      const foundComments = await originalRequest;
       const jsonResponse: JsonHttpResponse<Comment[]> = {
         status: 200,
         message: 'Get comments by postId succeded!',
@@ -118,7 +128,7 @@ export class CommentController implements Controller {
     }
   }
 
-  private getCommentById = async (req: Req, res: Res, next: Next) => {
+  private getCommentById = async (req: RequestUser, res: Res, next: Next) => {
     const originalRequest = this._commentModel
       .findById(req.params.commentId)
       .populate({
@@ -138,7 +148,26 @@ export class CommentController implements Controller {
           }
         }
       })
+      .populate(<ModelPopulateOptions>{
+        path: 'commentedToPost',
+        options: {
+          populate: <ModelPopulateOptions>{
+            path: 'postedBy',
+            select: 'username name'
+          },
+          select: '_id postedBy',
+        }
+      })
       .populate('reactionsCount');
+    if (req.user._id) {
+      originalRequest.populate(<ModelPopulateOptions>{
+        path: 'myReaction',
+        options: {
+          where: { reactedBy: req.user._id },
+          select: '-_id -reactedBy',
+        }
+      })
+    }
     if (req.query.includingReplies === 'true') {
       originalRequest
         .populate(<ModelPopulateOptions>{
@@ -170,6 +199,13 @@ export class CommentController implements Controller {
                 }
               } as ModelPopulateOptions,
               { path: 'reactionsCount' },
+              {
+                path: 'myReaction',
+                options: {
+                  where: { reactedBy: req.user._id },
+                  select: '-_id -reactedBy',
+                }
+              }
             ]
           }
         })
@@ -187,10 +223,10 @@ export class CommentController implements Controller {
     }
   }
 
-  private getCommentReplies = async (req: Req, res: Res, next: Next) => {
+  private getCommentReplies = async (req: RequestUser, res: Res, next: Next) => {
     const querify = new Querify(req.query);
     try {
-      const foundReplies = await this._commentModel
+      const originalRequest = this._commentModel
         .find({ repliedTo: req.params.commentId })
         .limit(querify.limit || 5)
         .skip(querify.skip)
@@ -213,6 +249,16 @@ export class CommentController implements Controller {
           }
         })
         .populate('reactionsCount');
+      if (req.user._id) {
+        originalRequest.populate(<ModelPopulateOptions>{
+          path: 'myReaction',
+          options: {
+            where: { reactedBy: req.user._id },
+            select: '-_id -reactedBy',
+          }
+        })
+      }
+      const foundReplies = await originalRequest;
       res.json(<JsonHttpResponse<Comment[]>>{
         status: 200,
         message: 'GET comment replies succeded!',

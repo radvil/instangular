@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -12,8 +12,18 @@ import { CreatePostDto, Post } from "../interfaces";
 export class PostService {
   constructor(private _http: HttpClient) { }
 
-  public getPosts(paramsOptions?: HttpQueryOptions): Observable<Post[]> {
-    const params = paramsOptions ? makeHttpQueries(paramsOptions) : null;
+  public getPosts(paramsOptions: HttpQueryOptions): Observable<Post[]> {
+    // const params = makeHttpQueries(paramsOptions);
+    let params = new HttpParams();
+    if (paramsOptions.page) {
+      params= params.set('page', `${paramsOptions.page}`)
+    }
+    if (paramsOptions.includeComments) {
+      params= params.set('includeComments', 'true')
+    }
+    if (paramsOptions.includeReactions) {
+      params= params.set('includeReactions', 'true')
+    }
     const request$ = this._http.get<ApiRes<Post[]>>(`${env.be.url}/posts`, { params });
     return request$.pipe(map(res => res.data));
   }

@@ -23,27 +23,68 @@
         <div class="time">
           {{ comment.createdAt | relativeTime: "short" }}
         </div>
-        <div (click)="clickReact(comment._id)" class="react">React</div>
+        <div
+          *ngIf="!comment.myReaction; else reactionsList"
+          (click)="clickReact(comment._id)"
+          class="react"
+        >
+          React
+        </div>
+        <ng-template #reactionsList>
+          <div
+            *ngIf="comment.myReaction?.variant === 'like'"
+            (click)="clickReact(comment._id)"
+            class="react like"
+          >
+            👍🏻 like
+          </div>
+          <div
+            *ngIf="comment.myReaction?.variant === 'love'"
+            (click)="clickReact(comment._id)"
+            class="react love"
+          >
+            ❤ love
+          </div>
+          <div
+            *ngIf="comment.myReaction?.variant === 'haha'"
+            (click)="clickReact(comment._id)"
+            class="react haha"
+          >
+            😂 haha
+          </div>
+          <div
+            *ngIf="comment.myReaction?.variant === 'huhu'"
+            (click)="clickReact(comment._id)"
+            class="react huhu"
+          >
+            😢 huhu
+          </div>
+          <div
+            *ngIf="comment.myReaction?.variant === 'angry'"
+            (click)="clickReact(comment._id)"
+            class="react angry"
+          >
+            💢 angry
+          </div>
+          <div
+            *ngIf="comment.myReaction?.variant === 'care'"
+            (click)="clickReact(comment._id)"
+            class="react care"
+          >
+            🥴 care
+          </div>
+        </ng-template>
         <div (click)="clickReply(comment._id)" class="reply">Reply</div>
         <div
           (click)="clickReactionsCount(comment._id)"
           class="reactions__count"
           *ngIf="comment.reactionsCount"
         >
-          ❤ {{ comment.reactionsCount }}
+          🚩 {{ comment.reactionsCount }}
         </div>
       </div>
     </div>
     <!-- comment__replies -->
     <ng-content></ng-content>
-    <!-- <ng-container *ngIf="comment.replies && comment.replies.length">
-      <nsg-replies-preview
-        [commentId]="comment._id"
-        [replies]="comment.replies"
-        [repliesCount]="comment.repliesCount"
-        (onViewRepliesClicked)="clickViewReplies($event)"
-      >
-      </nsg-replies-preview>
-    </ng-container> -->
   </div>
 </div>

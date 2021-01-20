@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import {
@@ -14,7 +14,8 @@ import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/actions';
 import {
   $_commentLoading,
   $_commentsByPostId,
-  $_commentsByPostIdHasNextPage
+  $_commentsByPostIdHasNextPage,
+  // $_replies
 } from 'src/app/comment/store/selectors';
 import { User } from 'src/app/user';
 import { Post } from '../../interfaces';
@@ -70,6 +71,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.isCommentsLoading$ = this._store.select($_commentLoading);
   }
 
+  openEditPostDialog(postId: string) {
+    alert('Open update post dialog');
+  }
+
+  openDeletePostDialog(postId: string) {
+    alert('Open delete post dialog');
+  }
+
   viewPreviousComments(postIdEvent: string) {
     const dto: GetCommentsDto = {
       postId: postIdEvent,
@@ -90,8 +99,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['user', usernameEvent]);
   }
 
-  addComment(commentEvent: CreateCommentDto) {
-    this._store.dispatch(AddComment({ createCommentDto: commentEvent }));
+  addComment(inputText: string) {
+    if (this.post && inputText) {
+      const createCommentDto = <CreateCommentDto>{
+        postId: this.post._id,
+        text: inputText,
+      };
+      this._store.dispatch(AddComment({ createCommentDto }));
+    }
   }
 
   showOptions(): void {
@@ -102,7 +117,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _route: ActivatedRoute,
     private _router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initValues();

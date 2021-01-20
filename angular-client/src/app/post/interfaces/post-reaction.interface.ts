@@ -1,7 +1,8 @@
 import { User } from "src/app/user/interfaces";
 
 export interface PostReaction {
-  reactedBy: User;
-  variant: string;
+  _id?: string;
   postId?: string;
+  reactedBy?: User;
+  variant: string;
 }
