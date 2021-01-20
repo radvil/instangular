@@ -69,6 +69,14 @@ export class CommentEffects {
     ))
   ))
 
+  deleteComment$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.DeleteComment),
+    switchMap(({ commentId }) => this._commentService.deleteComment(commentId).pipe(
+      map(() => commentActions.DeleteCommentSuccess({ commentId })),
+      catchError(error => of(commentActions.DeleteCommentFailure({ error })))
+    ))
+  ))
+
   constructor(
     private _actions$: Actions,
     private _commentService: CommentService,

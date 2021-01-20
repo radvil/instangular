@@ -8,3 +8,4 @@
 📷 Post UserRegistration \"Setup User Photo\"
 📖 Post UserRegistration \"Setup Basics Info\"
 ✔️ Add Comment ContextMenu
+✔️ Add CommentAction Delete on contextMenu

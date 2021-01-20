@@ -27,9 +27,13 @@ export enum CommentActionTypes {
   GET_COMMENT_REPLIES_SUCCESS = '[Comment/Api] Get Comment Replies Success',
   GET_COMMENT_REPLIES_FAILURE = '[Comment/Api] Get Comment Replies Failure',
   
-  REACT_COMMENT = '[Post/API] React Comment',
-  REACT_COMMENT_SUCCESS = '[Post/API] React Comment Success',
-  REACT_COMMENT_FAILURE = '[Post/API] React Comment Failure',
+  REACT_COMMENT = '[Comment/API] React Comment',
+  REACT_COMMENT_SUCCESS = '[Comment/API] React Comment Success',
+  REACT_COMMENT_FAILURE = '[Comment/API] React Comment Failure',
+
+  DELETE_COMMENT = '[Comment/API] Delete Comment',
+  DELETE_COMMENT_SUCCESS = '[Comment/API] Delete Comment Success',
+  DELETE_COMMENT_FAILURE = '[Comment/API] Delete Comment Failure',
 
 }
 
@@ -102,5 +106,20 @@ export const ReactCommentSuccess = createAction(
 
 export const ReactCommentFailure = createAction(
   CommentActionTypes.REACT_COMMENT_FAILURE,
+  props<{ error: Error }>()
+);
+
+export const DeleteComment = createAction(
+  CommentActionTypes.DELETE_COMMENT,
+  props<{ commentId: string }>()
+);
+
+export const DeleteCommentSuccess = createAction(
+  CommentActionTypes.DELETE_COMMENT_SUCCESS,
+  props<{ commentId: string }>()
+);
+
+export const DeleteCommentFailure = createAction(
+  CommentActionTypes.DELETE_COMMENT_FAILURE,
   props<{ error: Error }>()
 );

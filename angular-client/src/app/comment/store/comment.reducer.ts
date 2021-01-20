@@ -136,4 +136,24 @@ export const commentReducer = createReducer(
       return state
     }
   }),
+
+  on(CommentActions.DeleteComment, (state, { commentId }) => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+    selectedId: commentId,
+  })),
+  on(CommentActions.DeleteCommentFailure, (state, { error }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error,
+  })),
+  on(CommentActions.DeleteCommentSuccess, (state, { commentId }) => (
+    adapter.removeOne(commentId, {
+      ...state,
+      isLoading: false,
+      isLoaded: true,
+    })
+  )),
 )

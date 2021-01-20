@@ -50,7 +50,11 @@
         <button mat-menu-item (click)="onContextMenuEditAction(item)">
           Edit
         </button>
-        <button mat-menu-item (click)="onContextMenuDeleteAction(item)">
+        <button
+          mat-menu-item
+          *ngIf="compareAuthor(item?.commentedBy?._id)"
+          (click)="onContextMenuDeleteAction(item)"
+        >
           Delete
         </button>
       </ng-template>

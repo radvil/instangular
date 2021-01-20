@@ -72,4 +72,8 @@ export class CommentService {
   public reactComment(dto: CommentReaction): Observable<any> {
     return this._http.post<ApiRes<CommentReaction>>(`${env.be.url}/comment-reactions`, dto);
   }
+
+  public deleteComment(commentId: string): Observable<ApiRes<any>> {
+    return this._http.delete<ApiRes<any>>(`${env.be.url}/comments/${commentId}`);
+  }
 }
