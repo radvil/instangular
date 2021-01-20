@@ -16,6 +16,7 @@ export class PostEffects {
     ofType(postActions.GetPosts),
     exhaustMap(() => this._postService.getPosts({
       page: 1,
+      limit: 5,
       includeComments: true,
       includeReactions: true,
     }).pipe(
@@ -60,6 +61,14 @@ export class PostEffects {
     switchMap(({ dto }) => this._postService.reactPost(dto).pipe(
       map(_ => postActions.ReactPostSuccess({ data: dto })),
       catchError(error => of(postActions.ReactPostFailure({ error })))
+    ))
+  ))
+
+  addPost$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.AddPost),
+    switchMap(({ dto }) => this._postService.createPost(dto).pipe(
+      map(data => postActions.AddPostSuccess({ data })),
+      catchError(error => of(postActions.AddPostFailure({ error })))
     ))
   ))
 

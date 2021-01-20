@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 
-import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION } from '../exception';
+import { BAD_REQUEST_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { SizeConfig, SizeLabel, UploadImageDto, ImageUploader, TransformOptions } from '../image';
 import { Controller, RequestUser, JsonHttpResponse } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
-import { Req, Res, Next, USER_POPULATE_SELECT } from '../var';
+import { Res, Next, USER_POPULATE_SELECT } from '../var';
 import { Querify } from '../util/Querify';
 import { CreatePostDto, Post } from './index';
 import { ModelPopulateOptions } from 'mongoose';
@@ -63,86 +63,86 @@ export class PostController implements Controller {
 
   private getAllPosts = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const querify = new Querify(req.query);
-    const foundPosts = await this._postModel
-      .find(querify.search)
-      .limit(querify.limit)
-      .skip(querify.skip)
-      .select(querify.select)
-      .sort(querify.sort)
-      .populate({
-        path: 'postedBy',
-        select: USER_POPULATE_SELECT,
-      })
-      .populate(<ModelPopulateOptions>{
-        path: 'myReaction',
-        options: {
-          where: { reactedBy: req.user._id },
-          // select: '-_id -reactedBy',
-          populate: <ModelPopulateOptions>{
-            path: 'reactedBy',
-            select: USER_POPULATE_SELECT,
-          },
-        }
-      })
-
-    for (const post of foundPosts) {
-      if (req.query.includeComments == 'true') {
-        await post
-          .populate(<ModelPopulateOptions>{
-            path: 'comments',
-            options: {
-              where: { repliedTo: { $eq: null } },
-              limit: 5,
-              sort: { createdAt: -1 },
-            },
-            populate: [
-              { path: 'reactionsCount' },
-              { path: 'commentedBy', select: USER_POPULATE_SELECT },
-              {
-                path: 'replies',
-                options: {
-                  where: {
-                    repliedTo: {
-                      $ne: null
-                    },
-                  },
-                  sort: {
-                    createdAt: -1,
-                  },
-                  limit: 5,
-                  populate: {
-                    path: 'commentedBy',
-                    select: USER_POPULATE_SELECT,
-                  }
-                }
-              },
-            ]
-          })
-          .populate('commentsAsParentCount')
-          .populate('commentsCount')
-          .execPopulate();
-      }
-      if (req.query.includeReactions == 'true') {
-        await post
-          .populate(<ModelPopulateOptions>{
-            path: 'reactions',
-            options: {
-              sort: {
-                createdAt: -1
-              },
-              limit: 5,
-              populate: {
-                path: 'reactedBy',
-                select: USER_POPULATE_SELECT
-              },
-            },
-          })
-          .populate('reactionsCount')
-          .execPopulate()
-      }
-    }
-
     try {
+      const foundPosts = await this._postModel
+        .find(querify.search)
+        .limit(querify.limit)
+        .skip(querify.skip)
+        .select(querify.select)
+        .sort(querify.sort)
+        .populate({
+          path: 'postedBy',
+          select: USER_POPULATE_SELECT,
+        })
+        .populate(<ModelPopulateOptions>{
+          path: 'myReaction',
+          options: {
+            where: { reactedBy: req.user._id },
+            // select: '-_id -reactedBy',
+            populate: <ModelPopulateOptions>{
+              path: 'reactedBy',
+              select: USER_POPULATE_SELECT,
+            },
+          }
+        })
+
+      for (const post of foundPosts) {
+        if (req.query.includeComments == 'true') {
+          await post
+            .populate(<ModelPopulateOptions>{
+              path: 'comments',
+              options: {
+                where: { repliedTo: { $eq: null } },
+                limit: 5,
+                sort: { createdAt: -1 },
+              },
+              populate: [
+                { path: 'reactionsCount' },
+                { path: 'commentedBy', select: USER_POPULATE_SELECT },
+                {
+                  path: 'replies',
+                  options: {
+                    where: {
+                      repliedTo: {
+                        $ne: null
+                      },
+                    },
+                    sort: {
+                      createdAt: -1,
+                    },
+                    limit: 5,
+                    populate: {
+                      path: 'commentedBy',
+                      select: USER_POPULATE_SELECT,
+                    }
+                  }
+                },
+              ]
+            })
+            .populate('commentsAsParentCount')
+            .populate('commentsCount')
+            .execPopulate();
+        }
+        if (req.query.includeReactions == 'true') {
+          await post
+            .populate(<ModelPopulateOptions>{
+              path: 'reactions',
+              options: {
+                sort: {
+                  createdAt: -1
+                },
+                limit: 5,
+                populate: {
+                  path: 'reactedBy',
+                  select: USER_POPULATE_SELECT
+                },
+              },
+            })
+            .populate('reactionsCount')
+            .execPopulate()
+        }
+      }
+
       res.json(<JsonHttpResponse<Post[]>>{
         status: 200,
         message: 'GET posts succeded!',
@@ -150,7 +150,7 @@ export class PostController implements Controller {
         data: foundPosts,
       });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      return next(new INTERNAL_SERVER_EXCEPTION());
     }
   }
 
@@ -254,7 +254,7 @@ export class PostController implements Controller {
     try {
       const foundPost = await originalRequest;
       if (!foundPost) {
-        next(new NOT_FOUND_EXCEPTION());
+        return next(new NOT_FOUND_EXCEPTION());
       }
       res.json(<JsonHttpResponse<Post>>{
         status: 200,
@@ -262,30 +262,36 @@ export class PostController implements Controller {
         data: foundPost,
       });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION());
+      return next(new INTERNAL_SERVER_EXCEPTION());
     }
   }
 
-  private updatePost = async (req: Req, res: Res, next: Next) => {
+  private updatePost = async (req: RequestUser, res: Res, next: Next) => {
     const requestedId = req.params.id;
-    const changes: CreatePostDto = req.body;
-    const updatedPost = await this._postModel
-      .findByIdAndUpdate(requestedId, changes, { new: true })
-      .populate({ path: 'postedBy', select: USER_POPULATE_SELECT })
-    if (!updatedPost) {
-      next(new NOT_FOUND_EXCEPTION(requestedId));
+    const foundPost = await this._postModel.findById(requestedId);
+    if (!foundPost) {
+      return next(new NOT_FOUND_EXCEPTION());
     }
-    const jsonResponse: JsonHttpResponse<Post> = {
-      status: 200,
-      message: 'Update post succeded!',
-      data: updatedPost,
+    if (req.user._id.toString() !== foundPost.postedBy.toString()) {
+      return next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
     }
-    res.json(jsonResponse);
+    foundPost.description = req.body.description;
+    foundPost.tags = req.body.tags;
+    try {
+      const updatedPost = await foundPost.save();
+      res.json(<JsonHttpResponse<Post>>{
+        status: 200,
+        message: 'Update post succeded!',
+        data: updatedPost,
+      });
+    } catch (error) {
+      return next(new INTERNAL_SERVER_EXCEPTION())
+    }
   }
 
   private createPost = async (req: RequestUser, res: Res, next: Next) => {
     if (!req.file) {
-      next(new BAD_REQUEST_EXCEPTION('Please provide an image!'));
+      return next(new BAD_REQUEST_EXCEPTION('Please provide an image!'));
     }
     try {
       const [thumbPath, imagePath] = await this.uploadPostImage(req.file, 'url');
@@ -296,40 +302,46 @@ export class PostController implements Controller {
         postedBy: req.user._id,
       });
       const savedPost = await newPost.save();
-      await savedPost.populate({
-        path: 'postedBy',
-        select: USER_POPULATE_SELECT,
-      }).execPopulate();
-      const response: JsonHttpResponse<Post> = {
+      await savedPost
+        .populate([
+          { path: 'postedBy', select: USER_POPULATE_SELECT },
+          { path: 'comments' },
+          { path: 'commentsCount' },
+          { path: 'reactions' },
+          { path: 'reactionsCount' },
+        ])
+        .execPopulate();
+      res.json(<JsonHttpResponse<Post>>{
         status: 200,
         message: 'Post has been created!',
         data: savedPost,
-      }
-      res.json(response);
+      });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION(error));
+      return next(new INTERNAL_SERVER_EXCEPTION(error));
     }
   }
 
-  private deletePost = async (req: Req, res: Res, next: Next) => {
+  private deletePost = async (req: RequestUser, res: Res, next: Next) => {
     const requestedId = req.params.id;
     const foundPost = await this._postModel.findById(requestedId);
     if (!foundPost) {
-      next(new NOT_FOUND_EXCEPTION());
+      return next(new NOT_FOUND_EXCEPTION());
+    }
+    if (req.user._id.toString() !== foundPost.postedBy.toString()) {
+      return next(new UNAUTHORIZED_EXCEPTION('Not allowed'));
     }
     try {
       await Promise.all([
-        await this.imageService.removeAssociatedImages(foundPost.image, this.sizesConfigs),
-        await foundPost.remove()
+        this.imageService.removeAssociatedImages(foundPost.image, this.sizesConfigs),
+        foundPost.remove()
       ]);
-      const jsonResponse: JsonHttpResponse<any> = {
+      res.json(<JsonHttpResponse<any>>{
         status: 200,
         message: `Delete post succeded!`,
         data: { deletedPostId: requestedId }
-      }
-      res.json(jsonResponse);
+      });
     } catch (error) {
-      next(new INTERNAL_SERVER_EXCEPTION(error));
+      return next(new INTERNAL_SERVER_EXCEPTION(error));
     }
   }
 

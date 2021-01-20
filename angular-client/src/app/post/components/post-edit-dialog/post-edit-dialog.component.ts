@@ -4,7 +4,7 @@ import {
   Inject
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CreatePostDto, Post } from 'src/app/post';
+import { UpdatePostDto, Post } from 'src/app/post';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class PostEditDialogComponent {
 
   public submitUpdate(): void {
     if (this.data) {
-      this._dialogRef.close(<CreatePostDto>{
+      this._dialogRef.close(<UpdatePostDto>{
         description: this.descriptionText
       });
     }

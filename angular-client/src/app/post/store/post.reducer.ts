@@ -120,4 +120,23 @@ export const postReducer = createReducer(
       return state
     }
   }),
+
+  on(PostActions.AddPost, (state) => ({
+    ...state,
+    loading: true,
+    loaded: false,
+  })),
+  on(PostActions.AddPostFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(PostActions.AddPostSuccess, (state, { data }) => (
+    postAdapter.addOne(data, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
+  )),
 )

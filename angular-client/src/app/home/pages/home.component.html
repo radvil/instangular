@@ -23,7 +23,7 @@
   <ng-container *ngFor="let post of posts">
     <nsg-post-card [post]="post" [authUser]="authUser">
       <!-- post comments previews -->
-      <div class="post__comments" *ngIf="post.comments.length">
+      <div class="post__comments" *ngIf="post.comments?.length">
         <p class="viewComments" (click)="viewPostComments(post._id)">
           View all {{ post.commentsCount }} comments
         </p>

@@ -1,0 +1,92 @@
+<app-page-header
+  [style]="'sticky'"
+  [title]="'Add post'"
+  [icon]="'home'"
+  (onIconClicked)="goHome()"
+>
+</app-page-header>
+
+<div class="page__content">
+  <!-- Post pre upload preview -->
+  <section class="post__preview">
+    <div
+      class="image__container"
+      *ngIf="imagePreviewPath && imagePreviewPath !== null"
+    >
+      <img
+        [src]="imagePreviewPath"
+        (click)="fileInput.click()"
+        alt="post preview"
+      />
+    </div>
+
+    <div class="upload__input-group">
+      <button
+        mat-flat-button
+        color="accent"
+        type="button"
+        (click)="fileInput.click()"
+        *ngIf="!imagePreviewPath"
+      >
+        <mat-icon>photo</mat-icon>
+      </button>
+      <input
+        #fileInput
+        required
+        type="file"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </section>
+
+  <!-- ReactiveForm Starts -->
+  <form [formGroup]="form" (ngSubmit)="submitPost()">
+    <!-- Description -->
+    <mat-form-field appearance="fill" color="accent">
+      <mat-label>Post description</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        type="text"
+        autocomplete="off"
+        formControlName="description"
+        placeholder="Write description..."
+      >
+      </textarea>
+
+      <mat-error *ngIf="form.get('description').hasError('required')">
+        Description is required.
+      </mat-error>
+      <mat-error *ngIf="form.get('description').hasError('minlength')">
+        Minimum 5 characters allowed.
+      </mat-error>
+      <mat-error *ngIf="form.get('description').hasError('maxlength')">
+        Maximum 1000 characters allowed.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Buttons Group -->
+    <div class="form--buttons__group">
+      <button
+        [disabled]="form.invalid || form.disabled"
+        mat-raised-button
+        color="accent"
+        type="submit"
+        class="submit"
+      >
+        Submit
+      </button>
+
+      <!-- cancel -->
+      <button
+        mat-stroked-button
+        type="button"
+        class="cancel"
+        (click)="goHome()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

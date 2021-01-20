@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CreatePostDto, Post, PostReaction } from '../interfaces';
+import { UpdatePostDto, Post, PostReaction, CreatePostDto } from '../interfaces';
 
 export enum PostActionTypes {
 
@@ -28,6 +28,10 @@ export enum PostActionTypes {
   REACT_POST = '[Post/API] React Post',
   REACT_POST_SUCCESS = '[Post/API] React Post Success',
   REACT_POST_FAILURE = '[Post/API] React Post Failure',
+
+  ADD_POST = '[Post/API] Add Post',
+  ADD_POST_SUCCESS = '[Post/API] Add Post Success',
+  ADD_POST_FAILURE = '[Post/API] Add Post Failure',
 }
 
 export const GetPosts = createAction(PostActionTypes.GET_POSTS);
@@ -60,7 +64,7 @@ export const GetPostByIdFailure = createAction(
 
 export const UpdatePostById = createAction(
   PostActionTypes.UPDATE_POST_BY_ID,
-  props<{ postId: string, changes: CreatePostDto }>()
+  props<{ postId: string, changes: UpdatePostDto }>()
 );
 export const UpdatePostByIdSuccess = createAction(
   PostActionTypes.UPDATE_POST_BY_ID_SUCCESS,
@@ -95,6 +99,21 @@ export const ReactPostSuccess = createAction(
 );
 
 export const ReactPostFailure = createAction(
+  PostActionTypes.REACT_POST_FAILURE,
+  props<{ error: Error }>()
+);
+
+export const AddPost = createAction(
+  PostActionTypes.ADD_POST,
+  props<{ dto: CreatePostDto }>()
+);
+
+export const AddPostSuccess = createAction(
+  PostActionTypes.ADD_POST_SUCCESS,
+  props<{ data: Post }>()
+);
+
+export const AddPostFailure = createAction(
   PostActionTypes.REACT_POST_FAILURE,
   props<{ error: Error }>()
 );

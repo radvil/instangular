@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { $_authUser } from './auth/store/auth.selectors';
 import { GetAuthUser } from './auth/store/auth.actions'

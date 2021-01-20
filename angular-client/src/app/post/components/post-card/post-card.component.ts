@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 
 import { CreateCommentDto } from 'src/app/comment/interfaces';
 import { AddComment } from 'src/app/comment/store/actions';
-import { CreatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
+import { UpdatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
 import { ConfirmDialogComponent, ReactionsDialogComponent } from 'src/app/_shared/components';
 import { DeletePostById, ReactPost, UpdatePostById } from '../../store/post.actions';
@@ -67,7 +67,7 @@ export class PostCardComponent implements OnDestroy {
     });
 
     const updateAndCloseDialog$ = this.updateDialogRef.beforeClosed().pipe(
-      tap((dto: CreatePostDto) => {
+      tap((dto: UpdatePostDto) => {
         if (dto) {
           let changes = { description: dto.description };
           this._store.dispatch(UpdatePostById({ postId: postIdEvent, changes }));
