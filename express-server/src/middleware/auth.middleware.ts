@@ -36,13 +36,11 @@ function verifyToken() {
       req.user = user;
       next();
     } catch (error) {
-      const errorMessage = (error instanceof JsonWebTokenError)
-        ? new TokenExpiredError('Token has been expired', null).message : error.message;
-      next(new UNAUTHORIZED_EXCEPTION(errorMessage, 401));
+      next(new UNAUTHORIZED_EXCEPTION(error, 401));
     }
   }
-
 }
+
 function verifyRole(roles: Role | Role[]) {
   return async (req: RequestUser, res: Res, next: Next) => {
     const isAuthenticated = !!req.user;
