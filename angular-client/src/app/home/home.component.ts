@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
 import { $_authUser } from '../auth/store/auth.selectors';
-import { $_posts, $_postsWithLastTwoComments } from '../post/store/post.selectors';
+import { $_posts } from '../post/store/post.selectors';
 import { GetPosts } from '../post/store/post.actions';
 import { StoryWithUser } from './story/story.component';
 import { User } from '../user';
@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
 
   private getFeeds(): void {
     this._store.dispatch(GetPosts());
-    this.posts$ = this._store.select($_postsWithLastTwoComments);
+    this.posts$ = this._store.select($_posts);
   }
 
   public checkSelfUser(storyUsername: string): boolean {

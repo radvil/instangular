@@ -38,6 +38,7 @@ export const $_commentsByPostIdHasNextPage = createSelector(
   (comments, post) => {
     const commentsHasNextPage = comments.length < post.commentsAsParentCount;
     console.log('_commentsByPostIdHasNextPage', commentsHasNextPage);
+    console.log(comments.length, post.commentsAsParentCount);
     return commentsHasNextPage;
   }
 )
@@ -47,10 +48,5 @@ export const $_comment = createSelector(
   (id: string, entities) => {
     const entity = id ? entities[id] : undefined;
     return entity;
-    // if (entity && entity.replies.length) {
-    //   return entity.replies;
-    // } else {
-    //   return [];
-    // }
   }
 )

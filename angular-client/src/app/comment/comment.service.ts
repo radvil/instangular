@@ -28,6 +28,17 @@ export class CommentService {
     return request$.pipe(map(res => res.data));
   }
 
+  public getCommentById(commentId: string): Observable<Comment> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('includingReplies', 'true');
+
+    const request$ = this._http.get<ApiRes<Comment>>(
+      `${env.be.url}/comments/${commentId}`,
+      { params: httpParams }
+    );
+    return request$.pipe(map(res => res.data));
+  }
+
   public getRepliesByCommentId(
     getRepliesByCommentIdDto: GetRepliesByCommentIdDto
   ): Observable<Comment[]> {
@@ -38,7 +49,7 @@ export class CommentService {
     if (limit) httpParams = httpParams.set('limit', limit.toString());
 
     const request$ = this._http.get<ApiRes<Comment[]>>(
-      `${env.be.url}/comments/${commentId}`,
+      `${env.be.url}/comments/${commentId}/replies`,
       { params: httpParams }
     );
     return request$.pipe(map(res => res.data));

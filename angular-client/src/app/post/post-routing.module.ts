@@ -1,19 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CommentRepliesComponent } from './comment-replies/comment-replies.component';
-import { PostCommentsComponent } from './post-comments/post-comments.component';
+import { PostDetailComponent } from './post-detail/post-detail.component';
 
 const routes: Routes = [
   {
     path: ':postId',
-    component: PostCommentsComponent,
-    data: { title: 'Post Comments' },
+    component: PostDetailComponent,
+    data: { title: 'Post Detail' },
   },
-  {
-    path: 'comment/:commentId',
-    component: CommentRepliesComponent,
-    data: { title: 'Comment Replies' },
-  }
 ];
 
 @NgModule({

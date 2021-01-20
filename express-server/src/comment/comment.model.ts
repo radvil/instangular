@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
-import { USER_POPULATE_SELECT } from '../var';
 import { User } from '../user';
+import { PostReaction } from '../reaction';
 
 export interface Comment extends Document {
   _id: string;
@@ -12,6 +12,7 @@ export interface Comment extends Document {
   createdAt: string;
   likes?: any[];
   likesCount?: number;
+  findMyReaction: any;
 }
 
 export class CreateCommentDto {
@@ -30,7 +31,6 @@ export class CreateCommentDto {
 
 const schemaOptions: SchemaOptions = {
   timestamps: true,
-  toObject: { virtuals: true, versionKey: false },
   toJSON: {
     virtuals: true,
     getters: true,
@@ -59,6 +59,17 @@ const schema = new Schema<Comment>({
   text: String,
 }, schemaOptions);
 
+schema.methods.findMyReaction = async function (postId: string, userId:string) {
+  const myReaction = await PostReaction.findOne({postId, reactedBy: userId});
+  return myReaction;
+}
+
+schema.virtual('reactions', {
+  ref: 'CommentReaction',
+  foreignField: 'commentId',
+  localField: '_id',
+});
+
 schema.virtual('reactionsCount', {
   ref: 'CommentReaction',
   foreignField: 'commentId',
@@ -70,13 +81,17 @@ schema.virtual('replies', {
   ref: 'Comment',
   foreignField: 'repliedTo',
   localField: '_id',
-  options: {
-    sort: { createdAt: -1 },
-    populate: {
-      path: 'commentedBy',
-      select: USER_POPULATE_SELECT,
-    }
-  }
 });
+
+schema.virtual('repliesCount', {
+  ref: 'Comment',
+  foreignField: 'repliedTo',
+  localField: '_id',
+  options: {
+    where: { repliedTo: { $ne: null } },
+  },
+  count: true,
+});
+
 
 export const Comment = model<Comment>('Comment', schema);

@@ -41,32 +41,80 @@ export class CommentController implements Controller {
     }
   }
 
-  private getCommentsByPostId = async (req: Req, res: Res) => {
+  private getCommentsByPostId = async (req: RequestUser, res: Res, next: Next) => {
     const querify = new Querify(req.query);
     const parentCommentsQuery = {
       postId: req.query.postId.toString(),
       repliedTo: { $eq: null },
     };
-    const foundComments = await this._commentModel
-      .find(parentCommentsQuery)
-      .limit(querify.limit)
-      .skip(querify.skip)
-      .select(querify.select)
-      .sort(querify.sort)
-      .populate({
-        path: 'commentedBy',
-        select: USER_POPULATE_SELECT
-      })
-      .populate('replies')
-      .populate('reactionsCount')
-    const jsonResponse: JsonHttpResponse<Comment[]> = {
-      status: 200,
-      message: 'Get comments by postId succeded!',
-      page: parseInt(req.query.page.toString()),
-      total: foundComments.length,
-      data: foundComments,
+    try {
+      const foundComments = await this._commentModel
+        .find(parentCommentsQuery)
+        .limit(querify.limit)
+        .skip(querify.skip)
+        .select(querify.select)
+        .sort(querify.sort)
+        .populate({
+          path: 'commentedBy',
+          select: USER_POPULATE_SELECT
+        })
+        .populate(<ModelPopulateOptions>{
+          path: 'replies',
+          options: {
+            where: {
+              repliedTo: { $ne: null },
+            },
+            sort: {
+              createdAt: -1,
+            },
+            limit: 5,
+            populate: [
+              {
+                path: 'commentedBy',
+                select: USER_POPULATE_SELECT,
+              },
+              {
+                path: 'reactions',
+                options: {
+                  sort: {
+                    createdAt: -1,
+                  },
+                  limit: 5,
+                  populate: {
+                    path: 'reactedBy',
+                    select: USER_POPULATE_SELECT,
+                  }
+                }
+              } as ModelPopulateOptions,
+              { path: 'reactionsCount' },
+            ]
+          }
+        })
+        .populate(<ModelPopulateOptions>{
+          path: 'reactions',
+          options: {
+            sort: {
+              createdAt: -1,
+            },
+            limit: 5,
+            populate: {
+              path: 'reactedBy',
+              select: USER_POPULATE_SELECT,
+            }
+          }
+        })
+        .populate('reactionsCount');
+      const jsonResponse: JsonHttpResponse<Comment[]> = {
+        status: 200,
+        message: 'Get comments by postId succeded!',
+        page: parseInt(req.query.page.toString()),
+        total: foundComments.length,
+        data: foundComments,
+      }
+      res.json(jsonResponse);
+    } catch (error) {
+      next(new INTERNAL_SERVER_EXCEPTION(error));
     }
-    res.json(jsonResponse);
   }
 
   private getCommentById = async (req: Req, res: Res, next: Next) => {
@@ -76,19 +124,61 @@ export class CommentController implements Controller {
         path: 'commentedBy',
         select: USER_POPULATE_SELECT
       })
+      .populate(<ModelPopulateOptions>{
+        path: 'reactions',
+        options: {
+          sort: {
+            createdAt: -1,
+          },
+          limit: 5,
+          populate: {
+            path: 'reactedBy',
+            select: USER_POPULATE_SELECT,
+          }
+        }
+      })
       .populate('reactionsCount');
     if (req.query.includingReplies === 'true') {
-      originalRequest.populate(<ModelPopulateOptions>{
-        path: 'replies',
-        populate: { path: 'reactionsCount' },
-        options: { limit: 5 },
-      })
+      originalRequest
+        .populate(<ModelPopulateOptions>{
+          path: 'replies',
+          options: {
+            where: {
+              repliedTo: { $ne: null },
+            },
+            sort: {
+              createdAt: -1,
+            },
+            limit: 5,
+            populate: [
+              {
+                path: 'commentedBy',
+                select: USER_POPULATE_SELECT,
+              },
+              {
+                path: 'reactions',
+                options: {
+                  sort: {
+                    createdAt: -1,
+                  },
+                  limit: 5,
+                  populate: {
+                    path: 'reactedBy',
+                    select: USER_POPULATE_SELECT,
+                  }
+                }
+              } as ModelPopulateOptions,
+              { path: 'reactionsCount' },
+            ]
+          }
+        })
+        .populate('repliesCount');
     }
     try {
       const foundComment = await originalRequest;
       res.json(<JsonHttpResponse<Comment>>{
         status: 200,
-        message: 'Get comments by id succeded!',
+        message: 'Get comment by id succeded!',
         data: foundComment,
       });
     } catch (error) {
@@ -99,7 +189,7 @@ export class CommentController implements Controller {
   private getCommentReplies = async (req: Req, res: Res, next: Next) => {
     const querify = new Querify(req.query);
     try {
-      const foundComment = await this._commentModel
+      const foundReplies = await this._commentModel
         .find({ repliedTo: req.params.commentId })
         .limit(querify.limit || 5)
         .skip(querify.skip)
@@ -108,11 +198,24 @@ export class CommentController implements Controller {
           path: 'commentedBy',
           select: USER_POPULATE_SELECT
         })
+        .populate(<ModelPopulateOptions>{
+          path: 'reactions',
+          options: {
+            sort: {
+              createdAt: -1,
+            },
+            limit: 5,
+            populate: {
+              path: 'reactedBy',
+              select: USER_POPULATE_SELECT,
+            }
+          }
+        })
         .populate('reactionsCount');
       res.json(<JsonHttpResponse<Comment[]>>{
         status: 200,
         message: 'GET comment replies succeded!',
-        data: foundComment,
+        data: foundReplies,
       });
     } catch (error) {
       next(new NOT_FOUND_EXCEPTION());

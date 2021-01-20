@@ -73,13 +73,58 @@ export class PostController implements Controller {
         path: 'postedBy',
         select: USER_POPULATE_SELECT,
       })
-      .populate('commentsCount')
-      .populate('reactionsCount')
     if (req.query.includeComments == 'true') {
-      originalRequest.populate('comments');
+      originalRequest
+        .populate(<ModelPopulateOptions>{
+          path: 'comments',
+          options: {
+            where: { repliedTo: { $eq: null } },
+            limit: 5,
+            sort: { createdAt: -1 },
+          },
+          populate: [
+            { path: 'reactionsCount' },
+            // { path: 'repliesCount' },
+            { path: 'commentedBy', select: USER_POPULATE_SELECT },
+            {
+              path: 'replies',
+              options: {
+                where: {
+                  repliedTo: {
+                    $ne: null
+                  },
+                },
+                sort: {
+                  createdAt: -1,
+                },
+                limit: 5,
+                populate: {
+                  path: 'commentedBy',
+                  select: USER_POPULATE_SELECT,
+                }
+              }
+            },
+          ]
+        })
+        .populate('commentsAsParentCount')
+        .populate('commentsCount')
     }
     if (req.query.includeReactions == 'true') {
-      originalRequest.populate('reactions');
+      originalRequest
+        .populate(<ModelPopulateOptions>{
+          path: 'reactions',
+          options: {
+            sort: {
+              createdAt: -1
+            },
+            limit: 5,
+            populate: {
+              path: 'reactedBy',
+              select: USER_POPULATE_SELECT
+            },
+          },
+        })
+        .populate('reactionsCount')
     }
     try {
       const foundPosts = await originalRequest;
@@ -94,28 +139,82 @@ export class PostController implements Controller {
     }
   }
 
-  private getPostById = async (req: Req, res: Res, next: Next) => {
+  private getPostById = async (req: RequestUser, res: Res, next: Next) => {
     const requestedPostId = req.params.id;
     const originalRequest = this._postModel
       .findById(requestedPostId)
       .populate({
         path: 'postedBy',
         select: USER_POPULATE_SELECT,
-      })
-      .populate('commentsCount')
-      .populate('commentsAsParentCount')
-      .populate('reactionsCount');
-    if (req.query.includeComments === 'true') {
-      originalRequest.populate(<ModelPopulateOptions>{
-        path: 'comments',
-        populate: {
-          path: 'replies',
-          options: { limit: 3 }
-        }
       });
+    if (req.query.includeComments === 'true') {
+      originalRequest
+        .populate(<ModelPopulateOptions>{
+          path: 'comments',
+          options: {
+            where: { repliedTo: { $eq: null } },
+            limit: 5,
+            sort: { createdAt: -1 },
+          },
+          populate: [
+            { path: 'reactionsCount' },
+            { path: 'repliesCount' },
+            { path: 'commentedBy', select: USER_POPULATE_SELECT },
+            {
+              path: 'replies',
+              options: {
+                where: {
+                  repliedTo: {
+                    $ne: null
+                  },
+                },
+                sort: {
+                  createdAt: -1,
+                },
+                limit: 5,
+                populate: [
+                  {
+                    path: 'commentedBy',
+                    select: USER_POPULATE_SELECT,
+                  },
+                  {
+                    path: 'reactions',
+                    options: {
+                      sort: {
+                        createdAt: -1,
+                      },
+                      limit: 5,
+                      populate: {
+                        path: 'reactedBy',
+                        select: USER_POPULATE_SELECT,
+                      }
+                    }
+                  } as ModelPopulateOptions,
+                  { path: 'reactionsCount' },
+                ]
+              }
+            },
+          ]
+        })
+        .populate('commentsAsParentCount')
+        .populate('commentsCount')
     }
     if (req.query.includeReactions === 'true') {
-      originalRequest.populate('reactions');
+      originalRequest
+        .populate(<ModelPopulateOptions>{
+          path: 'reactions',
+          options: {
+            sort: {
+              createdAt: -1
+            },
+            limit: 5,
+            populate: {
+              path: 'reactedBy',
+              select: USER_POPULATE_SELECT
+            },
+          },
+        })
+        .populate('reactionsCount');
     }
     try {
       const foundPost = await originalRequest;

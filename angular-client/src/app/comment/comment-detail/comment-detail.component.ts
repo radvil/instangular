@@ -4,15 +4,15 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { $_comment, Comment } from 'src/app/comment';
-import { GetReplies } from 'src/app/comment/store/comment.actions';
+import { GetCommentById, GetReplies } from 'src/app/comment/store/comment.actions';
 import { CommentState } from 'src/app/comment/store/comment.state';
 
 @Component({
-  selector: 'app-comment-replies',
-  templateUrl: './comment-replies.component.html',
-  styleUrls: ['./comment-replies.component.scss']
+  selector: 'app-comment-detail',
+  templateUrl: './comment-detail.component.html',
+  styleUrls: ['./comment-detail.component.scss']
 })
-export class CommentRepliesComponent implements OnInit {
+export class CommentDetailComponent implements OnInit {
 
   private _subscription = new Subscription();
   public commentId: string;
@@ -35,14 +35,19 @@ export class CommentRepliesComponent implements OnInit {
         .subscribe(commentId => {
           this.commentId = commentId;
           if (this.commentId) {
-            this.loadComment(this.commentId);
+            this.loadCommentDetail(this.commentId);
           }
         })
     );
     this.comment$ = this._store.select($_comment);
   }
 
-  private loadComment(commentId: string): void {
+  private loadCommentDetail(commentId: string): void {
+    this._store.dispatch(GetCommentById({ commentId }));
+    this.pageNumber += 1;
+  }
+
+  public viewNextReplies(commentId: string) {
     const dto = {
       commentId: commentId,
       pageNumber: this.pageNumber,

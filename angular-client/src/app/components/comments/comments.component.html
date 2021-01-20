@@ -6,12 +6,12 @@
       *ngIf="commentsHasNextPage"
       (click)="viewPostComments(post._id)"
     >
-      view previous comments
+      View previous comments
     </p>
   </div>
   <div class="comments__list" *ngIf="post.commentsCount">
     <!-- loading ph -->
-    <div *ngIf="isCommentsLoading" class="commentsPlaceholder">🎵 🎵</div>
+    <div *ngIf="isCommentsLoading" class="loading--ph">🎵 🎵</div>
 
     <!-- comment row -->
     <ng-container *ngFor="let comment of comments">
@@ -42,7 +42,9 @@
               </div>
               <div class="react">React</div>
               <div class="reply">Reply</div>
-              <div class="reactions__count">❤ 9</div>
+              <div class="reactions__count" *ngIf="comment.reactionsCount">
+                ❤ {{ comment.reactionsCount }}
+              </div>
             </div>
           </div>
           <!-- comment__replies -->
@@ -50,13 +52,17 @@
             <div
               class="view__prev"
               (click)="viewCommentReplies(comment._id)"
-              *ngIf="comment.replies.length > 3"
+              *ngIf="comment.replies.length > 2"
             >
-              View previous {{ comment.replies.length - 3 }} replies
+              View previous
+              {{ comment.repliesCount - 2 }} replies
             </div>
             <ul class="replies__list">
               <li
-                *ngFor="let reply of comment.replies"
+                *ngFor="
+                  let reply of comment.replies | slice: 0:2;
+                  let i = index
+                "
                 (click)="viewCommentReplies(comment._id)"
               >
                 <img

@@ -1,0 +1,15 @@
+<div *ngIf="comment$ | async as comment" class="replies__container">
+  <div *ngIf="comment.replies?.length" class="replies">
+    <p
+      *ngIf="comment.replies.length < comment.repliesCount"
+      (click)="viewNextReplies(comment._id)"
+    >
+      View next replies
+    </p>
+    <ul>
+      <li *ngFor="let reply of comment.replies">
+        <pre>{{ reply | json }}</pre>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -23,6 +23,11 @@ const routes: Routes = [
     loadChildren: () => import('./post/post.module').then(m => m.PostModule)
   },
   {
+    path: 'comment',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./comment/comment.module').then(m => m.CommentModule)
+  },
+  {
     path: 'home',
     // canActivate: [AuthGuard],
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule),

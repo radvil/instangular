@@ -22,20 +22,6 @@ export const $_postSelectedId = createSelector(
   (state: PostState) => state.selectedId
 );
 export const $_posts = createSelector($_postState, selectAll);
-export const $_postsWithLastTwoComments = createSelector(
-  $_posts,
-  (state) => {
-    if (!state) return [];
-    return state.map(post => {
-      const comments = [];
-      if (post.comments)
-        for (let x = 1; x >= 0; x--)
-          if (post.comments[x])
-            comments.push(post.comments[x]);
-      return { ...post, comments };
-    })
-  }
-)
 export const $_postEntities = createSelector($_postState, selectEntities);
 export const $_postsOfUser = createSelector(
   $_posts,

@@ -29,6 +29,14 @@ export class CommentEffects {
     ))
   ))
 
+  getCommentById$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.GetCommentById),
+    exhaustMap(({ commentId }) => this._commentService.getCommentById(commentId).pipe(
+      map(comment => commentActions.GetCommentByIdSuccess({ comment })),
+      catchError(error => of(commentActions.GetCommentByIdFailure({ error })))
+    ))
+  ))
+
   getCommentReplies$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetReplies),
     exhaustMap(({ dto }) => this._commentService.getRepliesByCommentId({
@@ -36,8 +44,10 @@ export class CommentEffects {
       pageNumber: dto.pageNumber,
       limit: 5
     }).pipe(
-      withLatestFrom(this._store.select($_commentSelectedId)),
-      map(([replies, commentId]) => commentActions.GetRepliesSuccess({ commentId, replies })),
+      map(replies => commentActions.GetRepliesSuccess({
+        commentId: replies[0].repliedTo,
+        replies
+      })),
       catchError(error => of(commentActions.GetRepliesFailure({ error })))
     ))
   ))

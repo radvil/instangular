@@ -44,11 +44,14 @@
       <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
     </div>
     <ng-container *ngFor="let reaction of post.reactions; index as idx">
-      <span class="username pointer">{{ reaction.reactedBy.username }}</span>
-      {{ (idx == post.reactions?.length - 1) ? ' ' : ', ' }}
+      <span class="username pointer">
+        {{ reaction.reactedBy.username }}
+      </span>
     </ng-container>
-    <div *ngIf="false">
-      &nbsp;and <span class="count pointer">hundreds of others</span>
+    <div *ngIf="post.reactionsCount > 1">
+      &nbsp;and <span class="count pointer">
+        {{ post.reactionsCount - 1 }} others
+      </span>
     </div>
     <span class="count" *ngIf="reactionsCount > 2">
       &nbsp;and <b>{{ reactionsCount - 1 }} others</b>

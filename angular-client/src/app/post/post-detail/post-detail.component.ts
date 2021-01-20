@@ -13,11 +13,11 @@ import { User } from 'src/app/user';
 import { Post } from '../post.interface';
 
 @Component({
-  selector: 'app-post-comments',
-  templateUrl: './post-comments.component.html',
-  styleUrls: ['./post-comments.component.scss']
+  selector: 'app-post-detail',
+  templateUrl: './post-detail.component.html',
+  styleUrls: ['./post-detail.component.scss']
 })
-export class PostCommentsComponent implements OnInit, OnDestroy {
+export class PostDetailComponent implements OnInit, OnDestroy {
 
   private pageNumber = 1;
   private _subscription = new Subscription();
@@ -29,6 +29,7 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
   public post$: Observable<Post>;
   public comments$: Observable<Comment[]>;
   public postCommentsHasNext$: Observable<boolean>;
+  public pageHeaderTitle = "Post Detail";
 
   private initValues(): void {
     this._subscription.add(
@@ -44,7 +45,14 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
     );
 
     this.authUser$ = this._store.select($_authUser);
-    this.post$ = this._store.select($_post);
+    this.post$ = this._store.select($_post).pipe(
+      filter(post => !!post),
+      tap(post => {
+        if (post.postedBy.username) {
+          this.pageHeaderTitle = post.postedBy.username + "'s post";
+        }
+      })
+    );
     this.comments$ = this._store.select($_commentsByPostId);
     this.postCommentsHasNext$ = this._store.select($_commentsByPostIdHasNextPage);
     this.isPostLoading$ = this._store.select($_postLoading);
@@ -65,7 +73,7 @@ export class PostCommentsComponent implements OnInit, OnDestroy {
   public viewCommentReplies(commentIdEvent: string) {
     // Get Comment By Id and includingReplies = 'true'
     // queryOpts: includingReplies, limit, page, sort;
-    this._router.navigate(['post', 'comment', commentIdEvent]);
+    this._router.navigate(['comment', commentIdEvent]);
   }
 
   public viewUserProfile(usernameEvent: string) {
