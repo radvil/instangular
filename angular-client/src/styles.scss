@@ -151,6 +151,9 @@ input {
     display: none;
   }
 }
+.container .mat-dialog-container {
+  padding: 1rem;
+}
 // notifications overlay
 .error-notification-overlay {
   color: #eeeeee;

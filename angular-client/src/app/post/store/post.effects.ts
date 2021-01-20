@@ -47,12 +47,26 @@ export class PostEffects {
     ))
   ))
 
+  deletePostById$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.DeletePostById),
+    switchMap(({ postId }) => this._postService.deletePostById(postId).pipe(
+      map(_ => postActions.DeletePostByIdSuccess({ postId })),
+      catchError(error => of(postActions.DeletePostByIdFailure({ error })))
+    ))
+  ))
+
   doneActions$ = createEffect(() => this._actions$.pipe(
-    ofType(postActions.UpdatePostByIdSuccess),
+    ofType(
+      postActions.UpdatePostByIdSuccess,
+      postActions.DeletePostByIdSuccess,
+    ),
     tap((action) => {
       switch (action.type) {
         case postActions.PostActionTypes.UPDATE_POST_BY_ID_SUCCESS:
           this._notificationService.success('Post updated');
+          break;
+        case postActions.PostActionTypes.DELETE_POST_BY_ID_SUCCESS:
+          this._notificationService.success('Post deleted');
           break;
         default:
           this._notificationService.error('Failed');

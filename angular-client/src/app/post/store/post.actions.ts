@@ -21,6 +21,10 @@ export enum PostActionTypes {
   UPDATE_POST_BY_ID_SUCCESS = '[Post/API] Update Post By Id Success',
   UPDATE_POST_BY_ID_FAILURE = '[Post/API] Update Post By Id Failure',
 
+  DELETE_POST_BY_ID = '[Post/API] Delete Post By Id',
+  DELETE_POST_BY_ID_SUCCESS = '[Post/API] Delete Post By Id Success',
+  DELETE_POST_BY_ID_FAILURE = '[Post/API] Delete Post By Id Failure',
+
 }
 
 export const GetPosts = createAction(PostActionTypes.GET_POSTS);
@@ -63,3 +67,16 @@ export const UpdatePostByIdFailure = createAction(
   PostActionTypes.UPDATE_POST_BY_ID_FAILURE,
   props<{ error: Error }>()
 )
+
+export const DeletePostById = createAction(
+  PostActionTypes.DELETE_POST_BY_ID,
+  props<{ postId: string }>()
+);
+export const DeletePostByIdSuccess = createAction(
+  PostActionTypes.DELETE_POST_BY_ID_SUCCESS,
+  props<{ postId: string }>()
+);
+export const DeletePostByIdFailure = createAction(
+  PostActionTypes.DELETE_POST_BY_ID_FAILURE,
+  props<{ error: Error }>()
+);

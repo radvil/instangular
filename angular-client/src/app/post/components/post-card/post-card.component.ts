@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import { CreateCommentDto } from 'src/app/comment/interfaces';
 import { AddComment } from 'src/app/comment/store/actions';
 import { CreatePostDto, Post } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
-import { UpdatePostById } from '../../store/post.actions';
+import { ConfirmDialogComponent } from 'src/app/_shared/components';
+import { DeletePostById, UpdatePostById } from '../../store/post.actions';
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
 
 
@@ -27,11 +27,11 @@ export class PostCardComponent implements OnDestroy {
   @Output() onCommentClicked = new EventEmitter<string>();
 
   public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
+  public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
   private _subscription = new Subscription();
 
   constructor(
     private _dialog: MatDialog,
-    private _snackBar: MatSnackBar,
     private _store: Store,
     private _router: Router,
   ) { }
@@ -77,8 +77,22 @@ export class PostCardComponent implements OnDestroy {
     this._subscription.add(updateAndCloseDialog$.subscribe());
   }
 
-  selectMenuDelete(postIdEvent: string) {
-    // TODO: //delete popup
+  openDeletePostDialog(postIdEvent: string) {
+    this.deleteDialogRef = this._dialog.open(ConfirmDialogComponent, {
+      width: '333px',
+      panelClass: 'container',
+      data: { message: "Delete this post ?" }
+    });
+
+    const deleteAndCloseDialog$ = this.deleteDialogRef.beforeClosed().pipe(
+      tap(confirmed => {
+        if (confirmed) {
+          this._store.dispatch(DeletePostById({ postId: postIdEvent }))
+        }
+      })
+    )
+
+    this._subscription.add(deleteAndCloseDialog$.subscribe());
   }
 
   clickReact(postId: string) {
