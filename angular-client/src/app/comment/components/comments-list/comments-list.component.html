@@ -16,14 +16,14 @@
 
     <!-- comment row -->
     <ng-container *ngFor="let comment of comments">
-      <nsg-comment-row
-        (contextmenu)="onContextMenu($event, comment)"
+      <app-comment-row
         [comment]="comment"
         [bgClass]="getCommentClass(comment.commentedBy.username)"
-        (onUsernameClicked)="viewUserProfile($event)"
-        (onReactClicked)="openReactionDialog($event)"
-        (onReplyClicked)="clickComment($event)"
-        (onReactionsCountClicked)="viewCommentReactions($event)"
+        (contextmenu)="onContextMenu($event, comment)"
+        (clickUsername)="viewUserProfile($event)"
+        (clickReact)="openReactionDialog($event)"
+        (clickReply)="clickComment($event)"
+        (clickReactionsCount)="viewCommentReactions($event)"
       >
         <!-- comment__replies -->
         <ng-container *ngIf="comment.replies && comment.replies.length">
@@ -35,7 +35,7 @@
           >
           </nsg-replies-preview>
         </ng-container>
-      </nsg-comment-row>
+      </app-comment-row>
     </ng-container>
 
     <!-- contextMenu -->
@@ -50,11 +50,7 @@
         <button mat-menu-item (click)="onContextMenuEditAction(item)">
           Edit
         </button>
-        <button
-          mat-menu-item
-          *ngIf="compareAuthor(item?.commentedBy?._id)"
-          (click)="onContextMenuDeleteAction(item)"
-        >
+        <button mat-menu-item (click)="onContextMenuDeleteAction(item)">
           Delete
         </button>
       </ng-template>

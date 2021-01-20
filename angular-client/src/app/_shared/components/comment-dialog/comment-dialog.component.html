@@ -1,0 +1,14 @@
+<div class="dialog__container">
+  <app-user-avatar [user]="user"> </app-user-avatar>
+
+  <form (ngSubmit)="submit()">
+    <input
+      [(ngModel)]="commentText"
+      [ngModelOptions]="{ standalone: true }"
+      type="text"
+    />
+    <button mat-icon-button>
+      <mat-icon>send</mat-icon>
+    </button>
+  </form>
+</div>

@@ -9,6 +9,7 @@ import {
   CreatePostCommentDto,
   GetPostCommentsDto,
   GetCommentRepliesDto,
+  EditCommentDto,
 } from '../interfaces';
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from 'src/app/_core';
@@ -67,6 +68,10 @@ export class CommentService {
       createCommentDto
     );
     return request$.pipe(map((res) => res.data));
+  }
+
+  public editComment(dto: EditCommentDto): Observable<any> {
+    return this._http.patch(`${env.be.url}/comments/${dto.commentId}`, dto);
   }
 
   public reactComment(dto: CommentReaction): Observable<any> {

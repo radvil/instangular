@@ -1,15 +1,15 @@
 <div class="container">
-  <div class="photo__container" *ngIf="authUser$ | async as authUser">
+  <div class="photo__container" *ngIf="user">
     <img
-      [lazyLoad]="authUser.photo"
+      [lazyLoad]="user.photo"
       [defaultImage]="'assets/images/portrait.jpg'"
       [errorImage]="'assets/images/portrait.jpg'"
-      [alt]="authUser.username"
+      [alt]="user.username"
       height="40"
       width="40"
     />
   </div>
-  <form (ngSubmit)="confirmInput()">
+  <form (ngSubmit)="onSubmitInput()">
     <input
       [(ngModel)]="commentInputText"
       [placeholder]="placeholder"

@@ -8,14 +8,19 @@ import { RouterModule } from '@angular/router';
 
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { InstAngularPipesModule } from 'src/app/_shared/pipes';
-import { ConfirmDialogModule, FormFieldModule, MenuActionsModule, ReactionsDialogModule } from 'src/app/_shared/components';
+import {
+  CommentDialogModule,
+  ConfirmDialogModule,
+  FormFieldModule,
+  MenuActionsModule,
+  ReactionsDialogModule,
+} from 'src/app/_shared/components';
 import { PostCardComponent } from './post-card.component';
 import { PostCardHeaderComponent } from './post-card-header/post-card-header.component';
 import { PostCardButtonsComponent } from './post-card-buttons/post-card-buttons.component';
 import { PostStoreModule } from '../../store/post-store.module';
 import { CommentStoreModule } from 'src/app/comment/store/comment-store.module';
 import { PostEditDialogModule } from '../post-edit-dialog/post-edit-dialog.module';
-
 
 @NgModule({
   declarations: [
@@ -40,6 +45,7 @@ import { PostEditDialogModule } from '../post-edit-dialog/post-edit-dialog.modul
     PostEditDialogModule,
     ConfirmDialogModule,
     ReactionsDialogModule,
+    CommentDialogModule,
   ],
   exports: [
     PostCardComponent,
@@ -47,4 +53,4 @@ import { PostEditDialogModule } from '../post-edit-dialog/post-edit-dialog.modul
     PostCardButtonsComponent,
   ],
 })
-export class PostCardModule { }
+export class PostCardModule {}

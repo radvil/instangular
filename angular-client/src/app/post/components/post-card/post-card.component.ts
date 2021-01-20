@@ -1,18 +1,32 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { ConfirmDialogComponent, ReactionsDialogComponent } from 'src/app/_shared/components';
+import {
+  CommentDialogComponent,
+  ConfirmDialogComponent,
+  ReactionsDialogComponent,
+} from 'src/app/_shared/components';
 import { AddComment } from 'src/app/comment/store/comment.actions';
 import { UpdatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
 import { CreatePostCommentDto } from 'src/app/comment/interfaces';
-import { DeletePostById, ReactPost, UpdatePostById } from '../../store/post.actions';
+import {
+  DeletePostById,
+  ReactPost,
+  UpdatePostById,
+} from '../../store/post.actions';
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
-
 
 @Component({
   selector: 'nsg-post-card',
@@ -29,16 +43,17 @@ export class PostCardComponent implements OnDestroy {
   public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
   public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
+  public commentDialogRef: MatDialogRef<CommentDialogComponent>;
   private _subscription = new Subscription();
 
   get sameAsAuthor(): boolean {
-    return this.authUser._id === this.post.postedBy._id;
+    return this.authUser?._id === this.post?.postedBy?._id;
   }
 
   constructor(
     private _dialog: MatDialog,
     private _store: Store,
-    private _router: Router,
+    private _router: Router
   ) { }
 
   ngOnDestroy() {
@@ -67,17 +82,19 @@ export class PostCardComponent implements OnDestroy {
       maxWidth: '95vw',
       maxHeight: '95vh',
       panelClass: 'updatePostDialog',
-      data: { postId: postIdEvent, currentPost: this.post }
+      data: { postId: postIdEvent, currentPost: this.post },
     });
 
     const updateAndCloseDialog$ = this.updateDialogRef.beforeClosed().pipe(
       tap((dto: UpdatePostDto) => {
         if (dto) {
           let changes = { description: dto.description };
-          this._store.dispatch(UpdatePostById({ postId: postIdEvent, changes }));
+          this._store.dispatch(
+            UpdatePostById({ postId: postIdEvent, changes })
+          );
         }
       })
-    )
+    );
 
     this._subscription.add(updateAndCloseDialog$.subscribe());
   }
@@ -86,16 +103,16 @@ export class PostCardComponent implements OnDestroy {
     this.deleteDialogRef = this._dialog.open(ConfirmDialogComponent, {
       width: '333px',
       panelClass: 'container',
-      data: { message: "Delete this post ?" }
+      data: { message: 'Delete this post ?' },
     });
 
     const deleteAndCloseDialog$ = this.deleteDialogRef.beforeClosed().pipe(
-      tap(confirmed => {
+      tap((confirmed) => {
         if (confirmed) {
-          this._store.dispatch(DeletePostById({ postId: postIdEvent }))
+          this._store.dispatch(DeletePostById({ postId: postIdEvent }));
         }
       })
-    )
+    );
 
     this._subscription.add(deleteAndCloseDialog$.subscribe());
   }
@@ -112,18 +129,39 @@ export class PostCardComponent implements OnDestroy {
           postId: postIdEvent,
           variant,
           reactedBy: this.authUser,
-        }
+        };
         this._store.dispatch(ReactPost({ dto }));
       })
-    )
+    );
 
     this._subscription.add(reactAndCloseDialog$.subscribe());
-
   }
 
   clickComment(postId: string) {
-    // this.onCommentClicked.emit(postId);
-    alert('TODO:// Autofocus to input');
+    this.commentDialogRef = this._dialog.open(CommentDialogComponent, {
+      data: { authUser: this.authUser },
+      panelClass: 'commentDialogPanel',
+      maxWidth: '95vw',
+      width: '666px',
+    });
+
+    this._subscription.add(
+      this.commentDialogRef
+        .beforeClosed()
+        .pipe(
+          tap((result: { actionType: string, data: string }) => {
+            if (!result) return;
+            if (result.actionType === 'ADD' && result.data) {
+              const dto = <CreatePostCommentDto>{
+                postId: postId,
+                text: result.data,
+              };
+              this._store.dispatch(AddComment({ dto }));
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 
   clickShare(postId: string) {
@@ -140,9 +178,8 @@ export class PostCardComponent implements OnDestroy {
         postId: this.post._id,
         text: text,
         commentedBy,
-      }
+      };
       this._store.dispatch(AddComment({ dto: createCommentDto }));
     }
   }
-
 }

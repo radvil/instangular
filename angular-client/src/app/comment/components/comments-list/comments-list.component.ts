@@ -12,17 +12,26 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { CreatePostCommentDto, PostComment } from 'src/app/comment/interfaces';
+import {
+  CreatePostCommentDto,
+  EditCommentDto,
+  PostComment,
+} from 'src/app/comment/interfaces';
 import { Post } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
 import {
   ConfirmDialogComponent,
   ReactionsDialogComponent,
+  CommentDialogComponent,
 } from 'src/app/_shared/components';
 import { compareToGetClass } from 'src/app/_shared/utils';
 import { CommentReaction } from '../../interfaces';
 import { State as CommentState } from '../../store/comment.state';
-import { DeleteComment, ReactComment } from '../../store/comment.actions';
+import {
+  DeleteComment,
+  EditComment,
+  ReactComment,
+} from '../../store/comment.actions';
 
 @Component({
   selector: 'nsg-comments-list',
@@ -37,11 +46,13 @@ export class CommentsListComponent {
   @Input() commentsHasNextPage: boolean;
   @Input() isCommentsLoading: boolean = false;
   @Input() isTruncatedTexts: boolean = false;
+
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onViewRepliesClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<CreatePostCommentDto>();
 
+  public commentDialogRef: MatDialogRef<CommentDialogComponent>;
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
   private _subscription = new Subscription();
@@ -49,21 +60,43 @@ export class CommentsListComponent {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
   public contextMenuPosition = { x: '0px', y: '0px' };
 
-  public compareAuthor(commentAuthorId: string): boolean {
+  public isPermitted(commentAuthorId: string): boolean {
     return this.authUser?._id === commentAuthorId;
   }
 
   onContextMenu(event: MouseEvent, comment: PostComment) {
-    event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
-    this.contextMenu.menuData = { item: comment };
-    this.contextMenu.menu.focusFirstItem('mouse');
-    this.contextMenu.openMenu();
+    if (this.isPermitted(comment.commentedBy._id)) {
+      event.preventDefault();
+      this.contextMenuPosition.x = event.clientX + 'px';
+      this.contextMenuPosition.y = event.clientY + 'px';
+      this.contextMenu.menuData = { item: comment };
+      this.contextMenu.menu.focusFirstItem('mouse');
+      this.contextMenu.openMenu();
+    }
   }
 
   onContextMenuEditAction(comment: PostComment) {
-    alert(`Click on Action 1 for ${comment._id}`);
+    this.commentDialogRef = this._dialog.open(CommentDialogComponent, {
+      data: { comment, authUser: this.authUser },
+      panelClass: 'commentDialogPanel',
+      maxWidth: '95vw',
+      width: '666px',
+    });
+
+    this._subscription.add(
+      this.commentDialogRef
+        .beforeClosed()
+        .pipe(
+          tap((result: { actionType: string, data: string }) => {
+            if (!result) return;
+            if (result.actionType === 'EDIT') {
+              const dto = <EditCommentDto>{ commentId: comment._id, text: result?.data };
+              this._store.dispatch(EditComment({ dto }));
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 
   onContextMenuDeleteAction(comment: PostComment) {
@@ -135,7 +168,7 @@ export class CommentsListComponent {
   constructor(
     private _dialog: MatDialog,
     private _store: Store<CommentState>
-  ) {}
+  ) { }
 
   ngOnDestroy() {
     this._subscription.unsubscribe();

@@ -14,7 +14,7 @@
     <!-- comment__box -->
     <div>
       <div [class]="bgClass">
-        <small (click)="clickUsername(comment.commentedBy.username)">
+        <small (click)="onClickUsername(comment.commentedBy.username)">
           {{ comment.commentedBy.username }}
         </small>
         <p>{{ comment.text }}</p>
@@ -25,7 +25,7 @@
         </div>
         <div
           *ngIf="!comment.myReaction; else reactionsList"
-          (click)="clickReact(comment._id)"
+          (click)="onClickReact(comment._id)"
           class="react"
         >
           React
@@ -33,50 +33,50 @@
         <ng-template #reactionsList>
           <div
             *ngIf="comment.myReaction?.variant === 'like'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react like"
           >
             👍🏻 like
           </div>
           <div
             *ngIf="comment.myReaction?.variant === 'love'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react love"
           >
             ❤ love
           </div>
           <div
             *ngIf="comment.myReaction?.variant === 'haha'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react haha"
           >
             😂 haha
           </div>
           <div
             *ngIf="comment.myReaction?.variant === 'huhu'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react huhu"
           >
             😢 huhu
           </div>
           <div
             *ngIf="comment.myReaction?.variant === 'angry'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react angry"
           >
             💢 angry
           </div>
           <div
             *ngIf="comment.myReaction?.variant === 'care'"
-            (click)="clickReact(comment._id)"
+            (click)="onClickReact(comment._id)"
             class="react care"
           >
             🥴 care
           </div>
         </ng-template>
-        <div (click)="clickReply(comment._id)" class="reply">Reply</div>
+        <div (click)="onClickReply(comment._id)" class="reply">Reply</div>
         <div
-          (click)="clickReactionsCount(comment._id)"
+          (click)="onClickReactionsCount(comment._id)"
           class="reactions__count"
           *ngIf="comment.reactionsCount"
         >

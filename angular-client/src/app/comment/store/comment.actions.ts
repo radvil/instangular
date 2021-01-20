@@ -3,6 +3,7 @@ import { PostComment } from 'src/app/comment';
 import {
   CommentReaction,
   CreatePostCommentDto,
+  EditCommentDto,
   GetCommentRepliesDto,
   GetPostCommentsDto,
 } from '../interfaces';
@@ -18,6 +19,10 @@ export enum CommentActionTypes {
   ADD_COMMENT = '[Comment/Api] Add Comment',
   ADD_COMMENT_SUCCESS = '[Comment/Api] Add Comment Success',
   ADD_COMMENT_FAILURE = '[Comment/Api] Add Comment Failure',
+
+  EDIT_COMMENT = '[Comment/Api] Edit Comment',
+  EDIT_COMMENT_SUCCESS = '[Comment/Api] Edit Comment Success',
+  EDIT_COMMENT_FAILURE = '[Comment/Api] Edit Comment Failure',
 
   GET_COMMENT_BY_ID = '[Comment/Api] Get Comment By Id',
   GET_COMMENT_BY_ID_SUCCESS = '[Comment/Api] Get Comment By Id Success',
@@ -65,6 +70,19 @@ export const AddCommentSuccess = createAction(
 )
 export const AddCommentFailure = createAction(
   CommentActionTypes.ADD_COMMENT_FAILURE,
+  props<{ error: Error }>()
+)
+
+export const EditComment = createAction(
+  CommentActionTypes.EDIT_COMMENT,
+  props<{ dto: EditCommentDto }>()
+);
+export const EditCommentSuccess = createAction(
+  CommentActionTypes.EDIT_COMMENT_SUCCESS,
+  props<{ dto: EditCommentDto }>()
+)
+export const EditCommentFailure = createAction(
+  CommentActionTypes.EDIT_COMMENT_FAILURE,
   props<{ error: Error }>()
 )
 

@@ -38,13 +38,11 @@ export const commentReducer = createReducer(
     ...state,
     isLoaded: false,
     isLoading: true,
-    updating: true,
   })),
   on(CommentActions.AddCommentFailure, (state, { error }) => ({
     ...state,
     isLoaded: false,
     isLoading: false,
-    updating: false,
     error,
   })),
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
@@ -52,9 +50,29 @@ export const commentReducer = createReducer(
       ...state,
       isLoaded: true,
       isLoading: false,
-      updating: false,
     })
   )),
+
+  on(CommentActions.EditComment, (state, { dto }) => ({
+    ...state,
+    isLoaded: false,
+    isLoading: true,
+    selectedId: dto.commentId
+  })),
+  on(CommentActions.EditCommentFailure, (state, { error }) => ({
+    ...state,
+    isLoaded: false,
+    isLoading: false,
+    error,
+  })),
+  on(CommentActions.EditCommentSuccess, (state, { dto }) => {
+    let { commentId: id, ...changes } = dto;
+    return adapter.updateOne({ id, changes }, {
+      ...state,
+      isLoaded: true,
+      isLoading: false,
+    })
+  }),
 
   on(CommentActions.GetCommentById, (state, { commentId }) => {
     return {
@@ -121,7 +139,7 @@ export const commentReducer = createReducer(
         id,
         changes: {
           reactionsCount: alreadyReacted
-            ? entity.reactionsCount > 0 
+            ? entity.reactionsCount > 0
               ? entity.reactionsCount - 1
               : entity.reactionsCount
             : entity.reactionsCount + 1,

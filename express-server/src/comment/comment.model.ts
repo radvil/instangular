@@ -7,7 +7,7 @@ import { User } from '../user';
 export interface Comment extends Document {
   _id: string;
   postId: string;
-  commentedBy: User;
+  commentedBy: User | string;
   text: string;
   repliedTo: string;
   createdAt: string;

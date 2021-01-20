@@ -4,6 +4,11 @@ export class CreatePostCommentDto {
   repliedTo?: string;
 }
 
+export class EditCommentDto {
+  commentId: string;
+  text: string;
+}
+
 export class GetPostCommentsDto {
   postId: string;
   pageNumber: number;

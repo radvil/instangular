@@ -16,6 +16,7 @@ export class CommentController implements Controller {
     this.router.post(this.path, authorizeAccess(), validationMiddleware(CreateCommentDto, true), this.createNewComment);
     this.router.get(this.path, authorizeAccess(), this.getCommentsByPostId);
     this.router.get(`${this.path}/:commentId`, authorizeAccess(), this.getCommentById);
+    this.router.patch(`${this.path}/:commentId`, authorizeAccess(), this.patchComment);
     this.router.get(`${this.path}/:commentId/replies`, authorizeAccess(), this.getCommentReplies);
     this.router.delete(`${this.path}/:commentId`, authorizeAccess(), this.deleteComment);
   }
@@ -35,6 +36,23 @@ export class CommentController implements Controller {
         status: 200,
         message: 'Create new comment succeed',
         data: savedComment
+      })
+    } catch (error) {
+      next(new INTERNAL_SERVER_EXCEPTION());
+    }
+  }
+
+  private patchComment = async (req: RequestUser, res: Res, next: Next) => {
+    try {
+      const foundComment = await this._commentModel.findById(req.params.commentId);
+      if (foundComment.commentedBy.toString() !== req.user._id.toString()) {
+        return next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
+      }
+      foundComment.text = req.body.text;
+      await foundComment.save();
+      res.json(<JsonHttpResponse<any>>{
+        status: 200,
+        message: 'Comment updated',
       })
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION());

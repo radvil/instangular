@@ -79,8 +79,9 @@
     [ngClass]="textInputClass"
   >
     <app-form-field
+      [user]="authUser"
       [placeholder]="'Add Comment..'"
-      (onInputConfirmed)="commentToPost($event, authUser.username)"
+      (submitInput)="commentToPost($event, authUser.username)"
     ></app-form-field>
   </div>
 </div>

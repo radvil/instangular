@@ -107,7 +107,7 @@ input {
     width: 100% !important;
   }
   .sidebar > * {
-    padding: .7rem !important;
+    padding: 0.7rem !important;
     flex: 1 !important;
   }
   .sidebar__header {
@@ -154,6 +154,11 @@ input {
 .container .mat-dialog-container {
   padding: 1rem;
 }
+.commentDialogPanel {
+  .mat-dialog-container {
+    padding: 1rem;
+  }
+}
 // notifications overlay
 .error-notification-overlay {
   color: #eeeeee;
@@ -167,7 +172,7 @@ input {
 
 .success-notification-overlay {
   color: #eeeeee;
-  background-color:#23813b;
+  background-color: #23813b;
 }
 
 .warning-notification-overlay {

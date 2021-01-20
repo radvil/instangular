@@ -1,9 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-
-import { AuthState } from 'src/app/auth/interfaces';
-import { $_authUser } from 'src/app/auth/store/auth.selectors';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/user';
 
 @Component({
@@ -13,20 +8,15 @@ import { User } from 'src/app/user';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldComponent {
-
   public commentInputText: string;
-  public authUser$: Observable<User>;
 
+  @Input() user: User;
   @Input() placeholder: string;
-  @Output() onInputConfirmed = new EventEmitter<string>();
+  @Output() submitInput = new EventEmitter<string>();
 
-  constructor(private _store: Store<AuthState>) {
-    this.authUser$ = this._store.select($_authUser);
-  }
-
-  confirmInput(): void {
+  onSubmitInput(): void {
     if (this.commentInputText) {
-      this.onInputConfirmed.emit(this.commentInputText);
+      this.submitInput.emit(this.commentInputText);
       this.commentInputText = "";
     }
   }

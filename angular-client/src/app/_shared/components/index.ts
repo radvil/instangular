@@ -12,3 +12,7 @@ export * from './upload-profile-picture/upload-profile-picture.module';
 export * from './upload-profile-picture/upload-profile-picture.component';
 export * from './edit-basics-profile/edit-basics-profile.module';
 export * from './edit-basics-profile/edit-basics-profile.component';
+export * from './comment-dialog/comment-dialog.module';
+export * from './comment-dialog/comment-dialog.component';
+export * from './user-avatar/user-avatar.module';
+export * from './user-avatar/user-avatar.component';

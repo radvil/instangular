@@ -1,0 +1,19 @@
+.dialog__container {
+  display: flex;
+  align-items: center;
+}
+form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+input {
+  width: -webkit-fill-available;
+  background-color: #f1f1f1;
+  padding: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 2rem;
+  margin-right: 1rem;
+  
+}

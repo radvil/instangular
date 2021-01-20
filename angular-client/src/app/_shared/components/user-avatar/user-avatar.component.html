@@ -1,0 +1,15 @@
+<div
+  class="photo__container"
+  *ngIf="user"
+  (click)="onClickUser(user)"
+  [ngStyle]="imageContainerStyle"
+>
+  <img
+    [lazyLoad]="user.photo"
+    [defaultImage]="'assets/images/portrait.jpg'"
+    [errorImage]="'assets/images/portrait.jpg'"
+    [alt]="user.username"
+    [height]="imageHeight"
+    [width]="imageWidth"
+  />
+</div>

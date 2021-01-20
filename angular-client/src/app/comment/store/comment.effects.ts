@@ -35,12 +35,13 @@ export class CommentEffects {
     ))
   ))
 
-  onAddCommentSuccess$ = createEffect(() => this._actions$.pipe(
-    ofType(commentActions.AddCommentSuccess),
-    tap(() => {
-      this._notificationService.success('Comment added');
-    })
-  ), { dispatch: false })
+  editComment$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.EditComment),
+    switchMap(({ dto }) => this._commentService.editComment(dto).pipe(
+      map(() => commentActions.EditCommentSuccess({ dto })),
+      catchError(error => of(commentActions.EditCommentFailure({ error })))
+    ))
+  ))
 
   getCommentById$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentById),
@@ -76,6 +77,28 @@ export class CommentEffects {
       catchError(error => of(commentActions.DeleteCommentFailure({ error })))
     ))
   ))
+
+  onActionDone = createEffect(() => this._actions$.pipe(
+    ofType(
+      commentActions.AddCommentSuccess,
+      commentActions.EditCommentSuccess,
+      commentActions.DeleteCommentSuccess,
+    ),
+    tap(({ type }) => {
+      switch (type) {
+        case commentActions.CommentActionTypes.ADD_COMMENT_SUCCESS:
+          this._notificationService.success('Comment added');
+          break;
+        case commentActions.CommentActionTypes.EDIT_COMMENT_SUCCESS:
+          this._notificationService.info('Comment updated');
+          break;
+        case commentActions.CommentActionTypes.DELETE_COMMENT_SUCCESS:
+          this._notificationService.default('Comment deleted');
+          break;
+        default: break;
+      }
+    })
+  ), { dispatch: false })
 
   constructor(
     private _actions$: Actions,

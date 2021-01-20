@@ -8,14 +8,14 @@
 
 <!-- comment rows -->
 <div class="container" *ngIf="comment">
-  <nsg-comment-row
+  <app-comment-row
     [comment]="comment"
-    (onUsernameClicked)="viewUserProfile($event)"
-    (onReactClicked)="openReactionDialog($event, 'COMMENT')"
-    (onReplyClicked)="replyToComment($event)"
-    (onReactionsCountClicked)="showCommentReactions($event)"
+    (clikUsername)="viewUserProfile($event)"
+    (clickReact)="openReactionDialog($event, 'COMMENT')"
+    (clickReply)="replyToComment($event)"
+    (clickReactionsCount)="showCommentReactions($event)"
   >
-  </nsg-comment-row>
+  </app-comment-row>
 
   <!-- replies list -->
   <div class="replies__list" *ngIf="comment.replies.length">
@@ -32,21 +32,22 @@
     </div>
     <!-- reply row item -->
     <ng-container *ngFor="let reply of replies">
-      <nsg-comment-row
+      <app-comment-row
         [comment]="reply"
         [bgClass]="getCommentClassByUsername(reply.commentedBy.username)"
-        (onUsernameClicked)="viewUserProfile($event)"
-        (onReactClicked)="openReactionDialog($event, 'REPLY')"
-        (onReplyClicked)="replyToComment($event)"
-        (onReactionsCountClicked)="showCommentReactions($event)"
+        (clickUsername)="viewUserProfile($event)"
+        (clickReact)="openReactionDialog($event, 'REPLY')"
+        (clickReply)="replyToComment($event)"
+        (clickReactionsCount)="showCommentReactions($event)"
       >
-      </nsg-comment-row>
+      </app-comment-row>
     </ng-container>
   </div>
 
   <!-- addComment form -->
   <app-form-field
+    [user]="authUser"
     [placeholder]="'Write your reply..'"
-    (onInputConfirmed)="addNewReply($event)"
+    (submitInput)="addNewReply($event)"
   ></app-form-field>
 </div>

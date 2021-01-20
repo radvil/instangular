@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { FormFieldComponent } from './form-field.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { CommentStoreModule } from 'src/app/comment/store/comment-store.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -15,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FormsModule,
     LazyLoadImageModule,
-    CommentStoreModule,
     MatButtonModule,
     MatIconModule,
   ],

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 @Component({
-  selector: 'nsg-comment-row',
+  selector: 'app-comment-row',
   templateUrl: './comment-row.component.html',
   styleUrls: ['./comment-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,25 +10,25 @@ export class CommentRowComponent {
 
   @Input() comment: Comment;
   @Input() bgClass: string = "comment__box";
-  @Output() onUsernameClicked = new EventEmitter<string>();
-  @Output() onReactClicked = new EventEmitter<string>();
-  @Output() onReplyClicked = new EventEmitter<string>();
-  @Output() onReactionsCountClicked = new EventEmitter<string>();
+  @Output() clickUsername = new EventEmitter<string>();
+  @Output() clickReact = new EventEmitter<string>();
+  @Output() clickReply = new EventEmitter<string>();
+  @Output() clickReactionsCount = new EventEmitter<string>();
 
-  public clickUsername(username: string): void {
-    this.onUsernameClicked.emit(username);
+  public onClickUsername(username: string): void {
+    this.clickUsername.emit(username);
   }
 
-  public clickReact(commentId: string): void {
-    this.onReactClicked.emit(commentId);
+  public onClickReact(commentId: string): void {
+    this.clickReact.emit(commentId);
   }
 
-  public clickReply(commentId: string): void {
-    this.onReplyClicked.emit(commentId);
+  public onClickReply(commentId: string): void {
+    this.clickReply.emit(commentId);
   }
 
-  public clickReactionsCount(commentId: string): void {
-    this.onReactionsCountClicked.emit(commentId);
+  public onClickReactionsCount(commentId: string): void {
+    this.clickReactionsCount.emit(commentId);
   }
 
 }
