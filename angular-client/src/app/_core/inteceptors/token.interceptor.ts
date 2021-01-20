@@ -30,7 +30,9 @@ import { Logout } from 'src/app/auth/store/auth.actions';
       catchError((err) => {
         // if expired
         if (err instanceof HttpErrorResponse && err.status === 401) {
-          if (!!this.token) return this.refreshToken(request, next);
+          if (this.token || this.token !== undefined) {
+            return this.refreshToken(request, next);
+          }
         }
         // if 403 (refresh token req unauthorized)
         else if (err instanceof HttpErrorResponse && err.status === 403) {

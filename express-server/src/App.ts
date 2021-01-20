@@ -36,7 +36,8 @@ class App {
   private initMiddlewares(): void {
     this._app.use(morgan('dev'));
     // this._app.use(helmet());
-    this._app.use(cors({ origin: '*', credentials: true }));
+    // this._app.use(cors({ origin: '*', credentials: true }));
+    this.app.use(cors({ origin: (_origin, cb) => cb(null, true), credentials: true }));
     this._app.use(cookieParser());
     this._app.use(express.json());
     // this._app.use(express.urlencoded({ extended: true }));
@@ -64,10 +65,9 @@ class App {
     };
 
     connect(connectionPath, connectionOpts, (err: Error) => {
-      if (err) {
-        this._logger.error(`Failed to connect to database`, err.stack);
-      }
-      return this._logger.info(`Database connected to ${connectionPath}`)
+      return err
+        ? this._logger.error(`Failed to connect to database`, err.stack)
+        : this._logger.info(`Database connected to ${connectionPath}`);
     });
   }
 }

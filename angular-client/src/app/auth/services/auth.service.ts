@@ -1,13 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { catchError, map, tap } from "rxjs/operators";
 
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from "src/app/_core/interfaces";
 import { LocalStorageService } from "src/app/_shared/services";
 import { User } from "src/app/user/interfaces";
-import { LoginDto, LoginRes } from "../interfaces";
+import { LoginDto, LoginRes, UserRegistrationDto } from "../interfaces";
 
 type TokenRes = ApiRes<LoginRes>;
 type AuthUserRes = ApiRes<User>;
@@ -25,15 +25,22 @@ export class AuthService {
     const request$ = this._http.post<TokenRes>(
       `${this._authUrl}/login`,
       loginDto,
-      // { withCredentials: true }
+      { withCredentials: true }
     );
     return request$.pipe(map(res => res.data.accessToken))
+  }
+
+  public register(dto: UserRegistrationDto): Observable<any> {
+    return this._http.post<ApiRes<any>>(`${this._authUrl}/register`, dto)
+      .pipe(
+        map(res => res.status),
+        catchError(error => of(error))
+      );
   }
 
   public requestAuthUser(): Observable<User> {
     const request$ = this._http.get<AuthUserRes>(
       `${this._authUrl}/request-auth-user`,
-      // { withCredentials: true }
     );
     return request$.pipe(map(res => res.data));
   }

@@ -34,7 +34,10 @@ export class AuthEffects {
 
   getAuthUser$ = createEffect(() => this._actions$.pipe(
     ofType(AuthActions.GetAuthUser),
-    map(() => this._localStorageService.getItem('accessToken') as string),
+    map(() => {
+      let token = this._localStorageService.getItem('accessToken') as string;
+      return token ? token : "";
+    }),
     switchMap(accessToken => {
       return this._authService.requestAuthUser().pipe(
         map((user) => AuthActions.GetAuthUserSuccess({ user, accessToken })),

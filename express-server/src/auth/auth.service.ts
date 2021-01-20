@@ -1,4 +1,4 @@
-import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
+import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
 import { CreateUserDto, User } from '../user';
 import { AuthDto, AuthResponse } from './auth.model';
 import { RefreshToken } from './refresh-token.model';
@@ -60,7 +60,7 @@ export class AuthService {
       }
       return <AuthResponse>{ refreshToken, accessToken };
     } catch (error) {
-      throw new INTERNAL_SERVER_EXCEPTION(error);
+      throw new UNAUTHORIZED_EXCEPTION(error);
     }
   }
 

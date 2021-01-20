@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+}
+form {
+  max-width: 25rem;
+  &.form__card {
+    padding: 2rem;
+    box-shadow: -1px 8px 20px 0px #00000033;
+    border-radius: 1rem;
+  }
+}
+mat-form-field {
+  width: 100%;
+}
+.form__buttons-group {
+  margin-top: .5rem;
+  button {
+    padding: .5rem;
+    width: 50%;
+    font-weight: bold;
+  }
+}

@@ -7,7 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { PageHeaderModule } from 'src/app/_shared/components';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -43,8 +45,11 @@ export class AuthRoutingModule { }
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatIconModule,
-    AuthRoutingModule
+    
+    AuthRoutingModule,
+    PageHeaderModule,
   ]
 })
 export class AuthModule { }

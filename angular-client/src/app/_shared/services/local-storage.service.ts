@@ -40,27 +40,20 @@ export class LocalStorageService {
   }
 
   public setItem(key: string, value: any): void {
-    try {
-      localStorage.setItem(`${env.appName}-${key}`, JSON.stringify(value));
-    } catch (error) {
-      console.error('Failed while saving token to local storage!!', error);
-    }
+    localStorage.setItem(`${env.appName}-${key}`, JSON.stringify(value));
   }
 
   public getItem(key: string): any {
-    try {
-      return JSON.parse(localStorage.getItem(`${env.appName}-${key}`));
-    } catch (error) {
-      console.error('Failed while getting token from localStrorage', error);
+    let itemFromLS = localStorage.getItem(`${env.appName}-${key}`);
+    if (itemFromLS) {
+      return JSON.parse(itemFromLS);
+    } else {
+      return null;
     }
   }
 
   public removeItem(key: string): void {
-    try {
-      localStorage.removeItem(`${env.appName}-${key}`);
-    } catch (error) {
-      console.error('Failed while removing token from local storage!!', error);
-    }
+    localStorage.removeItem(`${env.appName}-${key}`);
   }
 
   /** Tests that localStorage exists, can be written to, and read from. */

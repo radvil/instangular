@@ -2,3 +2,5 @@
 ✔️ merge CommentState & ReplyState
 🥴 fixing imports errors & components logic after CommentState being 
 ✔️ Merge CommentState & ReplyState finish
+
+📖 Setup UserRegistration form & functionality

@@ -1,1 +1,44 @@
-<p>register works!</p>
+<app-page-header
+  [title]="'Register'"
+  [icon]="'code'"
+></app-page-header>
+
+<div class="container">
+  <form class="form__card" [formGroup]="form" (ngSubmit)="submitForm()">
+    <!-- name -->
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput type="name" placeholder="Enter your name" formControlName="name" />
+      <mat-error *ngIf="name.invalid">{{ nameErrorMessage }}!</mat-error>
+    </mat-form-field>
+
+    <!-- username -->
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input matInput type="name" placeholder="Enter your unique username" formControlName="username" />
+      <mat-error *ngIf="username.invalid">{{ usernameErrorMessage }}!</mat-error>
+    </mat-form-field>
+
+    <!-- email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="Enter your email" formControlName="email" />
+      <mat-error *ngIf="email.invalid">{{ emailErrorMessage }}!</mat-error>
+    </mat-form-field>
+
+    <!-- password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" placeholder="Enter your password" formControlName="password" />
+      <mat-error *ngIf="password.invalid">{{ passwordErrorMessage}}!</mat-error>
+    </mat-form-field>
+
+    <!-- buttons group -->
+    <div class="form__buttons-group">
+      <button type="submit" mat-flat-button color="accent">
+        <mat-icon>fingerprint</mat-icon>&nbsp;
+        Login
+      </button>
+    </div>
+  </form>
+</div>
