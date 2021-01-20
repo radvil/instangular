@@ -12,21 +12,23 @@ export const replyAdapter = createEntityAdapter<Reply>({
 });
 
 export interface ReplyState extends EntityState<Reply> {
+  selectedId: string;
+  selectedPostId: string;
+  selectedCommentId: string;
+
   loaded: boolean;
   loading: boolean;
   modifying?: boolean;
-  selectedId?: string;
-  selectedPostId?: string;
-  selectedCommentId?: string;
   error?: Error;
 }
 
 export const initialReplyState: ReplyState = replyAdapter.getInitialState({
-  loaded: false,
-  loading: false,
-  modifying: false,
   selectedId: null,
   selectedPostId: null,
   selectedCommentId: null,
+
+  loaded: false,
+  loading: false,
+  modifying: false,
   error: null
 })

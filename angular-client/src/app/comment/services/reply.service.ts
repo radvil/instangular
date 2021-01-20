@@ -5,7 +5,7 @@ import { map } from "rxjs/operators";
 
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from "src/app/_core/interfaces";
-import { GetRepliesDto, Reply } from "../interfaces";
+import { CreateReplyDto, GetRepliesDto, Reply } from "../interfaces";
 
 @Injectable({ providedIn: 'root' })
 export class ReplyService {
@@ -25,5 +25,10 @@ export class ReplyService {
       { params: httpParams }
     );
     return request$.pipe(map((res) => res.data));
+  }
+
+  public createNewReply(dto: CreateReplyDto): Observable<Reply> {
+    const request$ = this._http.post<ApiRes<Reply>>(`${env.be.url}/comments`, dto);
+    return request$.pipe(map(res => res.data));
   }
 }

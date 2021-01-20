@@ -3,7 +3,7 @@
   [style]="'sticky'"
   [fontSize]="'1rem'"
 ></app-page-header>
-
+<!-- comment detail -->
 <div class="container" *ngIf="comment">
   <nsg-comment-row
     [comment]="comment"
@@ -23,7 +23,8 @@
         *ngIf="replies.length < comment.repliesCount"
         (click)="viewPreviousReplies(comment._id)"
       >
-        View previous {{ comment.repliesCount - comment.replies.length }} replies
+        View previous
+        {{ comment.repliesCount - comment.replies.length }} replies
       </p>
     </div>
     <!-- reply row item -->
@@ -39,4 +40,10 @@
       </nsg-comment-row>
     </ng-container>
   </div>
+
+  <!-- addComment form -->
+  <app-form-field
+    [placeholder]="'Write your reply..'"
+    (onInputConfirmed)="addNewReply($event)"
+  ></app-form-field>
 </div>

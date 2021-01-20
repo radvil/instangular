@@ -1,19 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { compareToGetClass } from 'src/app/_shared';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
-import { Comment, GetRepliesDto, Reply } from '../../interfaces';
+import { Comment, CreateReplyDto, GetRepliesDto, Reply } from '../../interfaces';
 import { CommentState } from '../../store/states/comment.state';
-import { GetRepliesByCommentId } from '../../store/actions/reply.actions';
+import { AddNewReply, GetRepliesByCommentId } from '../../store/actions/reply.actions';
 import { GetCommentById } from '../../store/actions'
 import { $_comment } from '../../store/selectors';
 import { $_repliesByCommentId } from '../../store/selectors/reply.selectors';
-import { $_post } from 'src/app/post/store/post.selectors';
 
 @Component({
   selector: 'app-comment-detail',
@@ -71,7 +70,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     this.pageNumber += 1;
   }
 
-  public viewPreviousReplies(commentId: string) {
+  viewPreviousReplies(commentId: string) {
     const dto = <GetRepliesDto>{
       commentId: commentId,
       pageNumber: this.pageNumber,
@@ -97,8 +96,20 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     alert('TODO:// showCommentReactions / showCommentReplyReactions');
   }
 
-  public getCommentClassByUsername(username: string) {
+  getCommentClassByUsername(username: string) {
     return compareToGetClass(this.authUser.username, username);
+  }
+
+  addNewReply(textInput: string): void {
+    if (this.comment) {
+      console.log('addNewReply(textInput) >> ' + textInput);
+      const replyDto = <CreateReplyDto>{
+        postId: this.comment.postId,
+        repliedTo: this.commentId,
+        text: textInput,
+      }
+      this._store.dispatch(AddNewReply({ dto: replyDto }));
+    }
   }
 
   constructor(

@@ -57,7 +57,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this._subscription.add(
       this._store.select($_post).subscribe((post) => {
         this.post = post;
-        if (post.postedBy.username) {
+        if (post) {
           this.pageHeaderTitle = post.postedBy.username + "'s post";
         }
       })

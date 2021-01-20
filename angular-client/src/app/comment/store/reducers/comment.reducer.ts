@@ -69,6 +69,8 @@ export const commentReducer = createReducer(
       ...state,
       loaded: true,
       loading: false,
+      selectedPostId: comment.postId,
+      selectedId: comment._id,
     })
   )),
 )

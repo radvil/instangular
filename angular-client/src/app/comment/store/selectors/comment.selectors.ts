@@ -48,7 +48,6 @@ export const $_commentsByPostIdHasNextPage = createSelector(
     if (comments.length && post.commentsAsParentCount) {
       const commentsHasNextPage = comments.length < post.commentsAsParentCount;
       console.log('_commentsByPostIdHasNextPage', commentsHasNextPage);
-      console.log(comments.length, post.commentsAsParentCount);
       return commentsHasNextPage;
     }
   }
