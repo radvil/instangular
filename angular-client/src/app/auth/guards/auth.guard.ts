@@ -7,10 +7,9 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
 
-import { LocalStorageService, NotificationService } from 'src/app/_shared/services';
+import { NotificationService } from 'src/app/_shared/services';
+import { AuthService } from '../services/auth.service';
 
 type canActivateTypes =
   | Observable<boolean | UrlTree>
@@ -21,13 +20,13 @@ type canActivateTypes =
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
-    private router: Router,
-    private notificationSrv: NotificationService,
-    private localStorageService: LocalStorageService,
+    private _router: Router,
+    private _notificationSrv: NotificationService,
+    private _authService: AuthService,
   ) { }
 
   canActivate(route: ActiveSnapshot, state: RouterSnapshot): canActivateTypes {
-    const accessToken = this.localStorageService.getItem('accessToken');
+    const accessToken = this._authService.accessToken;
     if (!accessToken) {
       this.redirectUrl(state);
       return false;
@@ -37,8 +36,8 @@ export class AuthGuard implements CanActivate {
   }
 
   private redirectUrl(state: RouterSnapshot) {
-    this.notificationSrv.warn('Please login first!');
-    this.router.navigate(['auth', 'login'], {
+    this._notificationSrv.warn('Please login first!');
+    this._router.navigate(['auth', 'login'], {
       queryParams: { returnUrl: state.url }
     });
   }

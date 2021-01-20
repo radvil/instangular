@@ -8,3 +8,5 @@ export * from './reactions-dialog/reactions-dialog.module';
 export * from './reactions-dialog/reactions-dialog.component';
 export * from './loading-dialog/loading-dialog.module';
 export * from './loading-dialog/loading-dialog.component';
+export * from './upload-profile-picture/upload-profile-picture.module';
+export * from './upload-profile-picture/upload-profile-picture.component';

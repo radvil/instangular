@@ -9,14 +9,34 @@ const reducer = createReducer(
 
   on(AuthActions.Login, state => ({
     ...state,
-    isLoading: true
+    isLoading: true,
+    isLoaded: false,
   })),
   on(AuthActions.LoginSuccess, (state, { accessToken }) => ({
     ...state,
     isLoading: false,
-    accessToken
+    isLoaded: true,
+    accessToken,
   })),
   on(AuthActions.LoginFailure, (state, action) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error: action.error,
+  })),
+
+  on(AuthActions.RegisterUser, state => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+  })),
+  on(AuthActions.RegisterUserSuccess, (state, { accessToken }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: true,
+    accessToken,
+  })),
+  on(AuthActions.RegisterUserFailure, (state, action) => ({
     ...state,
     isLoading: false,
     error: action.error

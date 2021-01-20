@@ -1,0 +1,57 @@
+<app-page-header
+  [style]="'sticky'"
+  [fontSize]="'1.5rem'"
+  [textAlign]="'center'"
+  [title]="'Upload profile image'"
+>
+</app-page-header>
+
+<div class="container" *ngIf="!(isLoading$ | async); else isLoadingTemplate">
+  <!-- hidden input -->
+  <input
+    #fileInput
+    type="file"
+    style="display: none"
+    (change)="onFileSelected($event)"
+  />
+
+  <!-- select button -->
+  <button
+    (click)="fileInput.click()"
+    *ngIf="!imagePreviewPath"
+    type="button"
+    class="select__button"
+    mat-flat-button
+    color="accent"
+  >
+    <mat-icon>photo</mat-icon>
+  </button>
+
+  <!-- preview image -->
+  <div
+    class="image__preview"
+    *ngIf="imagePreviewPath && imagePreviewPath !== null"
+  >
+    <img
+      [src]="imagePreviewPath"
+      alt="photo preview"
+      (click)="fileInput.click()"
+    />
+  </div>
+
+  <!-- submit button -->
+  <button
+    (click)="submitUpload()"
+    [disabled]="!selectedImage"
+    mat-stroked-button
+    color="accent"
+    class="upload__button"
+    type="button"
+  >
+    Upload now
+  </button>
+</div>
+
+<ng-template #isLoadingTemplate>
+  <h3>🎵🎵 Uploading image 🎵🎵</h3>
+</ng-template>

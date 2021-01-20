@@ -1,5 +1,11 @@
 <div [class]="'page__header ' + style">
-  <div class="header--text" [style.fontSize]="fontSize">{{ title }}</div>
+  <div
+    class="header--text"
+    [style.fontSize]="fontSize"
+    [ngClass]="textAlign"
+  >
+    {{ title }}
+  </div>
   <button
     *ngIf="icon"
     (click)="emitIconClick()"

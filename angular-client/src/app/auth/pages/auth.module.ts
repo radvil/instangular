@@ -12,6 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PageHeaderModule } from 'src/app/_shared/components';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { AuthGuard } from '../guards';
 
 const routes: Routes = [
   {
@@ -28,7 +29,13 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
     data: { title: 'Registration' }
-  }
+  },
+  {
+    path: 'post-registered',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./post-registered/post-registered.module')
+      .then(m => m.PostRegisteredModule),
+  },
 ];
 
 @NgModule({
@@ -47,7 +54,7 @@ export class AuthRoutingModule { }
     MatButtonModule,
     MatSnackBarModule,
     MatIconModule,
-    
+
     AuthRoutingModule,
     PageHeaderModule,
   ]

@@ -30,13 +30,21 @@ export class AuthController implements Controller {
 
   register = async (req: Req, res: Res, next: Next): Promise<void> => {
     try {
-      const registeredUser = await this._authSrv.register(<CreateUserDto>req.body);
-      const jsonResponse: JsonHttpResponse<User> = {
+      await this._authSrv.register(<CreateUserDto>req.body);
+
+      const { accessToken, refreshToken } = await this._authSrv.login(<AuthDto>{
+        username: req.body.username,
+        password: req.body.password,
+      });
+      this.setRefreshTokenCookie(res, refreshToken);
+      res.send(<JsonHttpResponse<AuthResponse>>{
         status: 200,
         message: "Registration succeed",
-        data: registeredUser
-      }
-      res.send(jsonResponse);
+        data: {
+          accessToken,
+          refreshToken,
+        }
+      });
     } catch (error) {
       next(error);
     }

@@ -3,10 +3,12 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { NotificationService } from 'src/app/_shared/services';
 import { AuthState, UserRegistrationDto } from '../../interfaces';
-import { AuthService } from '../../services';
+import { RegisterUser } from '../../store/auth.actions';
+import { $_isLoading } from '../../store/auth.selectors';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +17,6 @@ import { AuthService } from '../../services';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public form: FormGroup;
-  public isLoading = false;
   private _subscription = new Subscription();
 
   get name(): AbstractControl {
@@ -71,25 +72,39 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   public submitForm(): void {
-    const req$ = this._authService.register(<UserRegistrationDto>this.form.value);
-    this.isLoading = true;
-    this._subscription.add(req$.subscribe(status => {
-      if (status === 200) {
-        this._notificationService.success('Success');
-        this._router.navigateByUrl('/auth/login');
-      }
-      this.isLoading = false;
-    }))
+    const dto = <UserRegistrationDto>this.form.value;
+    this._store.dispatch(RegisterUser({ dto }));
+  }
+
+  private setLoadingState(): void {
+    const isLoading$ = this._store.select($_isLoading).pipe(
+      tap(loading => {
+        if (loading) {
+          this.form.disable();
+        }
+      })
+    );
+    const isLoaded$ = this._store.select($_isLoading).pipe(
+      tap(loaded => {
+        if (loaded) {
+          this._notificationService.success('Registration Success');
+          this._router.navigateByUrl('/auth/login');
+        }
+      })
+    );
+    this._subscription.add(isLoading$.subscribe());
+    this._subscription.add(isLoaded$.subscribe());
   }
 
   constructor(
-    private _authService: AuthService,
     private _notificationService: NotificationService,
     private _router: Router,
+    private _store: Store<AuthState>
   ) { }
 
   ngOnInit(): void {
     this.setUpForm();
+    this.setLoadingState();
   }
 
   ngOnDestroy(): void {

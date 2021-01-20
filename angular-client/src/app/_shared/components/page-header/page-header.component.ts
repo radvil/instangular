@@ -10,6 +10,7 @@ export class PageHeaderComponent {
   @Input() style: string; // sticky | default;
   @Input() fontSize: string;
   @Input() title: string;
+  @Input() textAlign: string;
   @Input() icon: string;
   @Output() onIconClicked = new EventEmitter<any>();
 
