@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { of, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+
 import { LoadingDialogComponent } from 'src/app/_shared';
 import { AddPost } from '../../store/post.actions';
 import { $_postLoaded } from '../../store/post.selectors';

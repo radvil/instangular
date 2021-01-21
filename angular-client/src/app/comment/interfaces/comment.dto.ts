@@ -5,8 +5,13 @@ export class CreatePostCommentDto {
 }
 
 export class GetPostCommentsDto {
-  postId?: string;
-  commentId?: string;
+  postId: string;
+  pageNumber: number;
+  limit?: number;
+}
+
+export class GetCommentRepliesDto {
+  commentId: string;
   pageNumber: number;
   limit?: number;
 }

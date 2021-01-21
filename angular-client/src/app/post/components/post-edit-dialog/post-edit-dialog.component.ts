@@ -4,7 +4,7 @@ import {
   Inject
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UpdatePostDto, Post } from 'src/app/post';
+import { UpdatePostDto, Post } from 'src/app/post/interfaces';
 
 
 @Component({

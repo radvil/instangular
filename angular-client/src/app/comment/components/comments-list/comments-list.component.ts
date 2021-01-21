@@ -10,8 +10,8 @@ import { User } from 'src/app/user';
 import { ReactionsDialogComponent } from 'src/app/_shared/components';
 import { compareToGetClass } from 'src/app/_shared/utils';
 import { CommentReaction } from '../../interfaces';
-import { ReactComment } from '../../store/actions';
-import { State, ReplyState } from '../../store/states';
+import { State as CommentState } from '../../store/comment.state';
+import { ReactComment } from '../../store/comment.actions';
 
 @Component({
   selector: 'nsg-comments-list',
@@ -37,7 +37,7 @@ export class CommentsListComponent {
 
   constructor(
     private _dialog: MatDialog,
-    private _store: Store<State | ReplyState>,
+    private _store: Store<CommentState>,
   ) { }
 
   ngOnDestroy() {
@@ -89,15 +89,4 @@ export class CommentsListComponent {
   getCommentClass(authorUsername: string): string {
     return compareToGetClass(this.authUser.username, authorUsername);
   }
-
-  // public emitAddComment(inputText: string): void {
-  //   if (this.post && inputText) {
-  //     const comment = <CreateCommentDto>{
-  //       postId: this.post._id,
-  //       text: inputText,
-  //       commentedBy: this.authUser._id,
-  //     };
-  //     this.onAddCommentClicked.emit(comment);
-  //   }
-  // }
 }

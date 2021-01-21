@@ -10,12 +10,12 @@ import {
   CreatePostCommentDto,
   GetPostCommentsDto
 } from 'src/app/comment/interfaces';
-import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/actions';
+import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/comment.actions';
 import {
-  $_commentLoading,
-  $_commentsByPostId,
-  $_commentsByPostIdHasNextPage,
-} from 'src/app/comment/store/selectors';
+  $__commentIsLoading,
+  $_commentsAsParentsByPostId,
+  $_commentsAsParentsByPostIdHasNextPage,
+} from 'src/app/comment/store/comment.selectors';
 import { User } from 'src/app/user';
 import { Post } from '../../interfaces';
 import { GetPostById } from '../../store/post.actions';
@@ -63,12 +63,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         }
       })
     );
-    this.comments$ = this._store.select($_commentsByPostId);
+    this.comments$ = this._store.select($_commentsAsParentsByPostId);
     this.postCommentsHasNext$ = this._store.select(
-      $_commentsByPostIdHasNextPage
+      $_commentsAsParentsByPostIdHasNextPage
     );
     this.isPostLoading$ = this._store.select($_postLoading);
-    this.isCommentsLoading$ = this._store.select($_commentLoading);
+    this.isCommentsLoading$ = this._store.select($__commentIsLoading);
   }
 
   openEditPostDialog() {
@@ -106,8 +106,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   commentToPost(text: string, postId: string) {
     if (this.post && text) {
-      const createCommentDto = <CreatePostCommentDto>{ postId, text };
-      this._store.dispatch(AddComment({ createCommentDto }));
+      this._store.dispatch(AddComment({ dto: <CreatePostCommentDto>{ postId, text } }));
     }
   }
 

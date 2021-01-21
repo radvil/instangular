@@ -3,6 +3,7 @@ import { PostComment } from 'src/app/comment';
 import {
   CommentReaction,
   CreatePostCommentDto,
+  GetCommentRepliesDto,
   GetPostCommentsDto,
 } from '../interfaces';
 
@@ -22,9 +23,9 @@ export enum CommentActionTypes {
   GET_COMMENT_BY_ID_SUCCESS = '[Comment/Api] Get Comment By Id Success',
   GET_COMMENT_BY_ID_FAILURE = '[Comment/Api] Get Comment By Id Failure',
 
-  GET_REPLIES = '[Comment/Api] Get Replies',
-  GET_REPLIES_SUCCESS = '[Comment/Api] Get Replies Success',
-  GET_REPLIES_FAILURE = '[Comment/Api] Get Replies Failure',
+  GET_COMMENT_REPLIES = '[Comment/Api] Get Comment Replies',
+  GET_COMMENT_REPLIES_SUCCESS = '[Comment/Api] Get Comment Replies Success',
+  GET_COMMENT_REPLIES_FAILURE = '[Comment/Api] Get Comment Replies Failure',
   
   REACT_COMMENT = '[Post/API] React Comment',
   REACT_COMMENT_SUCCESS = '[Post/API] React Comment Success',
@@ -52,7 +53,7 @@ export const PushManyComments = createAction(
 
 export const AddComment = createAction(
   CommentActionTypes.ADD_COMMENT,
-  props<{ createCommentDto: CreatePostCommentDto }>()
+  props<{ dto: CreatePostCommentDto }>()
 );
 export const AddCommentSuccess = createAction(
   CommentActionTypes.ADD_COMMENT_SUCCESS,
@@ -74,6 +75,19 @@ export const GetCommentByIdSuccess = createAction(
 export const GetCommentByIdFailure = createAction(
   CommentActionTypes.GET_COMMENT_BY_ID_FAILURE,
   props<{ error: Error }>()
+)
+
+export const GetCommentReplies = createAction(
+  CommentActionTypes.GET_COMMENT_REPLIES,
+  props<{ dto: GetCommentRepliesDto }>(),
+);
+export const GetCommentRepliesSuccess = createAction(
+  CommentActionTypes.GET_COMMENT_REPLIES_SUCCESS,
+  props<{ replies: PostComment[] }>(),
+)
+export const GetCommentRepliesFailure = createAction(
+  CommentActionTypes.GET_COMMENT_REPLIES_FAILURE,
+  props<{ error: Error }>(),
 )
 
 export const ReactComment = createAction(

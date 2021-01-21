@@ -24,7 +24,7 @@
       <p
         class="paginator__text"
         *ngIf="replies.length < comment.repliesCount"
-        (click)="viewPreviousReplies(comment._id)"
+        (click)="viewPreviousCommentReplies(comment._id)"
       >
         View previous
         {{ comment.repliesCount - comment.replies.length }} replies

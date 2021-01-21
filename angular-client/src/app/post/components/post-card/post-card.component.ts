@@ -5,11 +5,11 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { CreatePostCommentDto } from 'src/app/comment/interfaces';
-import { AddComment } from 'src/app/comment/store/actions';
+import { ConfirmDialogComponent, ReactionsDialogComponent } from 'src/app/_shared/components';
+import { AddComment } from 'src/app/comment/store/comment.actions';
 import { UpdatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
-import { ConfirmDialogComponent, ReactionsDialogComponent } from 'src/app/_shared/components';
+import { CreatePostCommentDto } from 'src/app/comment/interfaces';
 import { DeletePostById, ReactPost, UpdatePostById } from '../../store/post.actions';
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
 
@@ -137,7 +137,7 @@ export class PostCardComponent implements OnDestroy {
         text: text,
         commentedBy,
       }
-      this._store.dispatch(AddComment({ createCommentDto }));
+      this._store.dispatch(AddComment({ dto: createCommentDto }));
     }
   }
 

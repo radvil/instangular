@@ -5,37 +5,38 @@ import { $_post, $_postSelectedId } from 'src/app/post/store/post.selectors';
 
 const { selectAll, selectEntities } = adapter.getSelectors();
 
-export const $_isLoading = createSelector(
+export const $__commentIsLoading = createSelector(
   $_state,
   state => state.isLoading
 );
-export const $_isLoaded = createSelector(
+export const $__commentIsLoaded = createSelector(
   $_state,
   state => state.isLoaded
 );
-export const $_error = createSelector(
+export const $__commentError = createSelector(
   $_state,
   state => state.error
 );
-export const $_selectedId = createSelector(
+export const $__commentSelectedId = createSelector(
   $_state,
   state => state.selectedId
 );
-export const $comments = createSelector($_state, selectAll);
-export const $commentsEntities = createSelector($_state, selectEntities);
+export const $__commentSelectedPostId = createSelector(
+  $_state,
+  state => state.selectedPostId,
+);
 
-export const $commentsAsParents = createSelector(
-  $comments,
+
+export const $_comments = createSelector($_state, selectAll);
+export const $_commentsEntities = createSelector($_state, selectEntities);
+
+export const $_commentsAsParents = createSelector(
+  $_comments,
   (comments) => comments.filter(comment => !comment.repliedTo),
 )
 
-export const $commentsAsReplies = createSelector(
-  $comments,
-  (comments) => comments.filter(comment => !!comment.repliedTo),
-)
-
-export const $commentsAsParentsByPostId = createSelector(
-  $comments,
+export const $_commentsAsParentsByPostId = createSelector(
+  $_comments,
   $_postSelectedId,
   (comments, postId) =>  {
     if (postId) {
@@ -46,8 +47,13 @@ export const $commentsAsParentsByPostId = createSelector(
   }
 )
 
-export const $commentsAsRepliesByPostId = createSelector(
-  $comments,
+export const $_commentsAsReplies = createSelector(
+  $_comments,
+  (comments) => comments.filter(comment => !!comment.repliedTo),
+)
+
+export const $_commentsAsRepliesByPostId = createSelector(
+  $_comments,
   $_postSelectedId,
   (comments, postId) =>  {
     if (postId) {
@@ -58,8 +64,20 @@ export const $commentsAsRepliesByPostId = createSelector(
   }
 )
 
-export const $commentsAsParentsByPostIdHasNextPage = createSelector(
-  $commentsAsParentsByPostId,
+export const $_commentsAsRepliesByCommentId = createSelector(
+  $_comments,
+  $__commentSelectedId,
+  (comments, parentId) =>  {
+    if (parentId) {
+      return comments.filter(comment => comment.repliedTo == parentId);
+    } else {
+      return null;
+    }
+  }
+)
+
+export const $_commentsAsParentsByPostIdHasNextPage = createSelector(
+  $_commentsAsParentsByPostId,
   $_post,
   (comments, post) => {
     if (comments.length && post.commentsAsParentCount) {
@@ -69,8 +87,8 @@ export const $commentsAsParentsByPostIdHasNextPage = createSelector(
   }
 );
 
-export const $comment = createSelector(
-  $_selectedId,
-  $commentsEntities,
+export const $_comment = createSelector(
+  $__commentSelectedId,
+  $_commentsEntities,
   (id: string, entities) => id ? entities[id] : undefined
 );

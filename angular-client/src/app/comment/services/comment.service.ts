@@ -8,13 +8,14 @@ import {
   CommentReaction,
   CreatePostCommentDto,
   GetPostCommentsDto,
+  GetCommentRepliesDto,
 } from '../interfaces';
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from 'src/app/_core';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) { }
 
   public getCommentsByPostId(
     getCommentsByPostIdDto: GetPostCommentsDto
@@ -31,6 +32,22 @@ export class CommentService {
       { params: httpParams }
     );
     return request$.pipe(map((res) => res.data));
+  }
+
+  public getRepliesByCommentId(
+    dto: GetCommentRepliesDto,
+  ): Observable<PostComment[]> {
+    let httpParams = new HttpParams();
+    let url = `${env.be.url}/comments/${dto.commentId}/replies`;
+
+    if (dto.pageNumber) {
+      httpParams = httpParams.set('page', dto.pageNumber.toString());
+    }
+    if (dto.limit) {
+      httpParams = httpParams.set('limit', (dto.limit?.toString() || '5'));
+    }
+    return this._http.get<ApiRes<PostComment[]>>(url, { params: httpParams })
+      .pipe(map((res) => res.data));
   }
 
   public getCommentById(commentId: string): Observable<PostComment> {

@@ -7,12 +7,11 @@ import { filter, map, tap } from 'rxjs/operators';
 import { compareToGetClass, ReactionsDialogComponent } from 'src/app/_shared';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
-import { PostComment, CommentReaction, CreatePostCommentReplyDto, GetRepliesDto, PostCommentReply } from '../../interfaces';
-import { State } from '../../store/comment.state';
-import { AddNewReply, GetRepliesByCommentId, ReactReply } from '../../store/actions/reply.actions';
-import { GetCommentById, ReactComment } from '../../store/actions'
-import { $_comment } from '../../store/selectors';
-import { $_repliesByCommentId } from '../../store/selectors/reply.selectors';
+
+import { State as CommentState } from '../../store/comment.state';
+import { PostComment, CommentReaction, CreatePostCommentDto, GetCommentRepliesDto } from '../../interfaces';
+import { AddComment, GetCommentReplies, ReactComment, GetCommentById } from '../../store/comment.actions';
+import { $_comment, $_commentsAsRepliesByCommentId } from '../../store/comment.selectors';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -26,7 +25,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   public commentId: string;
   public pageNumber = 1;
   public comment: PostComment;
-  public replies: PostCommentReply[];
+  public replies: PostComment[];
   public authUser: User;
   public pageHeaderTitle = "Comment Replies";
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
@@ -36,7 +35,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     this._subscription.add(authUser.subscribe(user => this.authUser = user));
   }
 
-  private initComment() {
+  private initParentComment() {
     this._subscription.add(
       this._route.paramMap
         .pipe(map(param => param.get('commentId')))
@@ -61,9 +60,9 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     )
   }
 
-  private initReplies() {
+  private initChildrenComments() {
     this._subscription.add(
-      this._store.select($_repliesByCommentId).subscribe(replies => {
+      this._store.select($_commentsAsRepliesByCommentId).subscribe(replies => {
         this.replies = replies;
       })
     );
@@ -90,13 +89,13 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['post', postId]);
   }
 
-  viewPreviousReplies(commentId: string) {
-    const dto = <GetRepliesDto>{
+  viewPreviousCommentReplies(commentId: string) {
+    const dto = <GetCommentRepliesDto>{
       commentId: commentId,
       pageNumber: this.pageNumber,
       limit: 5,
     }
-    this._store.dispatch(GetRepliesByCommentId({ dto }));
+    this._store.dispatch(GetCommentReplies({ dto }));
     this.pageNumber += 1;
   }
 
@@ -120,7 +119,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
         if (type === 'REPLY') {
           this._store.dispatch(ReactComment({ dto }));
         } else {
-          this._store.dispatch(ReactReply({ dto }));
+          this._store.dispatch(ReactComment({ dto }));
         }
       })
     )
@@ -142,27 +141,26 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
 
   addNewReply(textInput: string): void {
     if (this.comment) {
-      console.log('addNewReply(textInput) >> ' + textInput);
-      const replyDto = <CreatePostCommentReplyDto>{
+      const dto = <CreatePostCommentDto> {
         postId: this.comment.postId,
         repliedTo: this.commentId,
         text: textInput,
       }
-      this._store.dispatch(AddNewReply({ dto: replyDto }));
+      this._store.dispatch(AddComment({ dto }));
     }
   }
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store<State>,
+    private _store: Store<CommentState>,
     private _dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.initAuthUser();
-    this.initComment();
-    this.initReplies();
+    this.initParentComment();
+    this.initChildrenComments();
   }
 
   ngOnDestroy() {

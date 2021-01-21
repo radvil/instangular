@@ -10,7 +10,7 @@ import { NotificationService } from "src/app/_shared/services";
 @Injectable()
 export class CommentEffects {
 
-  getApiComment$ = createEffect(() => this._actions$.pipe(
+  getParentCommentsByPostId$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentsByPostId),
     exhaustMap(({ dto }) => this._commentService.getCommentsByPostId(dto).pipe(
       map(comments => commentActions.GetCommentsByPostIdSuccess({ comments })),
@@ -18,9 +18,17 @@ export class CommentEffects {
     ))
   ));
 
-  addComment$ = createEffect(() => this._actions$.pipe(
+  getRepliesByCommentId$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.GetCommentReplies),
+    exhaustMap(({ dto }) => this._commentService.getRepliesByCommentId(dto).pipe(
+      map(replies => commentActions.GetCommentRepliesSuccess({ replies })),
+      catchError(error => of(commentActions.GetCommentsByPostIdFailure({ error })))
+    ))
+  ));
+
+  addNewComment$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.AddComment),
-    switchMap(({ createCommentDto }) => this._commentService.addComment(createCommentDto).pipe(
+    switchMap(({ dto }) => this._commentService.addComment(dto).pipe(
       map(comment => commentActions.AddCommentSuccess({ comment })),
       catchError(error => of(commentActions.AddCommentFailure({ error })))
     ))

@@ -78,6 +78,26 @@ export const commentReducer = createReducer(
     })
   )),
 
+  on(CommentActions.GetCommentReplies, (state, { dto }) => ({
+    ...state,
+    loading: true,
+    loaded: false,
+    selectedId: dto.commentId,
+  })),
+  on(CommentActions.GetCommentRepliesFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(CommentActions.GetCommentRepliesSuccess, (state, { replies }) => (
+    adapter.upsertMany(replies, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
+  )),
+
   on(CommentActions.ReactComment, (state) => ({
     ...state,
     loading: true,
