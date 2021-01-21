@@ -1,13 +1,14 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store';
-import { sortByDate } from 'src/app/_shared/utils';
 import { PostComment } from "../interfaces";
 
 export const featureName = 'postComments';
 
 export const adapter = createEntityAdapter<PostComment>({
-  selectId: (comment: PostComment): string => comment._id,
-  sortComparer: sortByDate,
+  selectId: (comment) => comment._id,
+  sortComparer: (x, y) => {
+    return x.createdAt.toString().localeCompare(y.createdAt.toString());
+  },
 });
 
 export interface State extends EntityState<PostComment> {

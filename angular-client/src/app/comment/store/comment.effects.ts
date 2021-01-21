@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, switchMap, catchError, exhaustMap, tap } from 'rxjs/operators';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as commentActions from './comment.actions';
 import { CommentService } from "../services/comment.service";
@@ -49,11 +50,13 @@ export class CommentEffects {
     ))
   ))
 
-  pushComments$ = createEffect(() => this._actions$.pipe(
+  pushCommentsReplies$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentByIdSuccess),
     tap(({ comment }) => {
       if (comment.replies.length) {
-        commentActions.PushManyComments({ comments: comment.replies });
+        this._store.dispatch(commentActions.PushManyComments({
+          comments: comment.replies
+        }))
       }
     })
   ), { dispatch: false })
@@ -70,6 +73,7 @@ export class CommentEffects {
     private _actions$: Actions,
     private _commentService: CommentService,
     private _notificationService: NotificationService,
+    private _store: Store<Comment>,
   ) { }
 
 }

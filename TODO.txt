@@ -1,4 +1,4 @@
 ✔️ restructure folders & delete unnecesary file/folders
 ✔️ merge CommentState & ReplyState
-🥴 fixing imports errors
-fixing components logic after CommentState being repaired
+🥴 fixing imports errors & components logic after CommentState being 
+✔️ Merge CommentState & ReplyState finish

@@ -7,72 +7,74 @@ export const commentReducer = createReducer(
 
   on(CommentActions.GetCommentsByPostId, (state, { dto }) => ({
     ...state,
-    loading: true,
-    loaded: false,
+    isLoading: true,
+    isLoaded: false,
     selectedPostId: dto.postId
   })),
   on(CommentActions.GetCommentsByPostIdFailure, (state, { error }) => ({
     ...state,
-    loading: false,
-    loaded: false,
+    isLoading: false,
+    isLoaded: false,
     error,
   })),
   on(CommentActions.GetCommentsByPostIdSuccess, (state, { comments }) => (
     adapter.addMany(comments, {
       ...state,
-      loading: false,
-      loaded: true,
+      isLoading: false,
+      isLoaded: true,
     })
   )),
 
   on(CommentActions.PushManyComments, (state, { comments }) => (
     adapter.addMany(comments, {
       ...state,
-      loaded: true,
-      loading: false,
+      isLoaded: true,
+      isLoading: false,
       selectedPostId: comments[0].postId,
     })
   )),
 
   on(CommentActions.AddComment, (state) => ({
     ...state,
-    loaded: false,
-    loading: true,
+    isLoaded: false,
+    isLoading: true,
     updating: true,
   })),
   on(CommentActions.AddCommentFailure, (state, { error }) => ({
     ...state,
-    loaded: false,
-    loading: false,
+    isLoaded: false,
+    isLoading: false,
     updating: false,
     error,
   })),
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
     adapter.addOne(comment, {
       ...state,
-      loaded: true,
-      loading: false,
+      isLoaded: true,
+      isLoading: false,
       updating: false,
     })
   )),
 
-  on(CommentActions.GetCommentById, (state, { commentId }) => ({
-    ...state,
-    loaded: false,
-    loading: true,
-    selectedId: commentId
-  })),
+  on(CommentActions.GetCommentById, (state, { commentId }) => {
+    return {
+      ...state,
+      isLoaded: false,
+      isLoading: true,
+      selectedId: commentId
+    }
+  }),
   on(CommentActions.GetCommentByIdFailure, (state, { error }) => ({
     ...state,
-    loaded: false,
-    loading: false,
+    isLoaded: false,
+    isLoading: false,
     error,
   })),
   on(CommentActions.GetCommentByIdSuccess, (state, { comment }) => (
     adapter.upsertOne(comment, {
       ...state,
-      loaded: true,
-      loading: false,
+      isLoaded: true,
+      isLoading: false,
       selectedPostId: comment.postId,
       selectedId: comment._id,
     })
@@ -80,33 +82,33 @@ export const commentReducer = createReducer(
 
   on(CommentActions.GetCommentReplies, (state, { dto }) => ({
     ...state,
-    loading: true,
-    loaded: false,
+    isLoading: true,
+    isLoaded: false,
     selectedId: dto.commentId,
   })),
   on(CommentActions.GetCommentRepliesFailure, (state, { error }) => ({
     ...state,
-    loading: false,
-    loaded: false,
+    isLoading: false,
+    isLoaded: false,
     error,
   })),
   on(CommentActions.GetCommentRepliesSuccess, (state, { replies }) => (
     adapter.upsertMany(replies, {
       ...state,
-      loading: false,
-      loaded: true,
+      isLoading: false,
+      isLoaded: true,
     })
   )),
 
   on(CommentActions.ReactComment, (state) => ({
     ...state,
-    loading: true,
-    loaded: false,
+    isLoading: true,
+    isLoaded: false,
   })),
   on(CommentActions.ReactCommentFailure, (state, { error }) => ({
     ...state,
-    loading: false,
-    loaded: false,
+    isLoading: false,
+    isLoaded: false,
     error,
   })),
   on(CommentActions.ReactCommentSuccess, (state, { data }) => {
@@ -118,7 +120,7 @@ export const commentReducer = createReducer(
       return adapter.updateOne({
         id,
         changes: {
-          reactionsCount: (alreadyReacted || hasSameReaction)
+          reactionsCount: alreadyReacted
             ? entity.reactionsCount > 0 
               ? entity.reactionsCount - 1
               : entity.reactionsCount
@@ -127,8 +129,8 @@ export const commentReducer = createReducer(
         }
       }, {
         ...state,
-        loading: false,
-        loaded: true,
+        isLoading: false,
+        isLoaded: true,
       });
     } else {
       return state

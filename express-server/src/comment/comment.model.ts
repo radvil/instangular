@@ -1,5 +1,7 @@
 import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
+
+import { sortByDate } from '../util/sort-by-date';
 import { User } from '../user';
 
 export interface Comment extends Document {
@@ -9,9 +11,11 @@ export interface Comment extends Document {
   text: string;
   repliedTo: string;
   createdAt: string;
-  likes?: any[];
-  likesCount?: number;
-  findMyReaction: any;
+
+  replies?: Comment[];
+  repliesCount?: number;
+  reactions?: any[];
+  reactionsCount?: number;
 }
 
 export class CreateCommentDto {
@@ -36,6 +40,10 @@ const schemaOptions: SchemaOptions = {
     transform: function (doc: Document, ret: Comment) {
       delete ret.__v;
       delete ret.id;
+
+      if (ret.replies?.length) {
+        ret.replies = ret.replies.sort((a, b) => sortByDate(a.createdAt, b.createdAt));
+      }
     }
   }
 }

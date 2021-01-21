@@ -1,5 +1,7 @@
 import { Schema, model, Document, SchemaOptions } from 'mongoose';
-import { PostReaction } from '../reaction';
+
+import { Comment } from '../comment/comment.model';
+import { sortByDate } from '../util/sort-by-date';
 
 export interface Post extends Document {
   postedBy: any;
@@ -30,6 +32,9 @@ const schemaOptions: SchemaOptions = {
       }
       if (ret.image) {
         ret.image = process.env.PUBLIC_IMAGE_PATH + ret.image;
+      }
+      if (ret.comments?.length) {
+        ret.comments = ret.comments.sort((a, b) => sortByDate(a.createdAt, b.createdAt));
       }
       delete ret.__v;
       delete ret.id;

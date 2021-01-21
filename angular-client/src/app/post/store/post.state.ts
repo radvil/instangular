@@ -2,12 +2,12 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store'
 import { Post } from "../interfaces";
 
-const selectId = (post: Post): string => post._id;
-const sortComparer = (postX: Post, postY: Post): number => {
-  return postY.createdAt?.toString().localeCompare(postX.createdAt?.toString())
-}
-
-export const postAdapter = createEntityAdapter<Post>({ selectId, sortComparer });
+export const postAdapter = createEntityAdapter<Post>({
+  selectId: (post) => post._id,
+  sortComparer: (x, y) => {
+    return y.createdAt.toString().localeCompare(x.createdAt.toString());
+  },
+});
 
 export interface PostState extends EntityState<Post> {
   loaded: boolean;

@@ -104,7 +104,7 @@ export const postReducer = createReducer(
               ? entity.reactions.filter(x => x.reactedBy.username != data.reactedBy.username)
               : entity.reactions
             : [...entity.reactions, data],
-          reactionsCount: (alreadyReacted || hasSameReaction)
+          reactionsCount: alreadyReacted
             ? entity.reactionsCount > 0
               ? entity.reactionsCount - 1
               : entity.reactionsCount
