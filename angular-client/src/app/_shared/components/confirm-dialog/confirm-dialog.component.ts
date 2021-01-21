@@ -10,7 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
         <h3 class="message">{{ messageText }}</h3>
         <br />
         <div class="fx-row">
-          <button (click)="onConfirmClicked()">
+          <button mat-raised-button (click)="onConfirmClicked()">
             {{ confirmText }}
           </button>
           <button (click)="onCancelClicked()">

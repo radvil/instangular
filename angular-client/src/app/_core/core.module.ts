@@ -1,6 +1,11 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+// 3rd parties
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { InstAngularPipesModule } from 'src/app/_shared/pipes';
 import { AppStateModule } from './reducers';
 import { AppErrorHandler } from './handlers';
@@ -17,6 +22,10 @@ const CUSTOM_PROVIDERS = [
     HttpClientModule,
     AppStateModule,
     InstAngularPipesModule,
+    // 3rd parties
+    LazyLoadImageModule,
+    MatSnackBarModule,
+    MatDialogModule,
   ],
   exports: [
     HttpClientModule,

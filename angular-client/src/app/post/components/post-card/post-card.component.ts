@@ -7,10 +7,10 @@ import { tap } from 'rxjs/operators';
 
 import { CreateCommentDto } from 'src/app/comment/interfaces';
 import { AddComment } from 'src/app/comment/store/actions';
-import { CreatePostDto, Post } from 'src/app/post/interfaces';
+import { CreatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
-import { ConfirmDialogComponent } from 'src/app/_shared/components';
-import { DeletePostById, UpdatePostById } from '../../store/post.actions';
+import { ConfirmDialogComponent, ReactionsDialogComponent } from 'src/app/_shared/components';
+import { DeletePostById, ReactPost, UpdatePostById } from '../../store/post.actions';
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
 
 
@@ -28,6 +28,7 @@ export class PostCardComponent implements OnDestroy {
 
   public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
   public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
+  public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   private _subscription = new Subscription();
 
   constructor(
@@ -95,9 +96,25 @@ export class PostCardComponent implements OnDestroy {
     this._subscription.add(deleteAndCloseDialog$.subscribe());
   }
 
-  clickReact(postId: string) {
-    console.log('PLEASE REWORK THOSE INPUTS OUPUTS')
-    alert('TODO:// openReactionsDialog(postId)');
+  openReactionsDialog(postIdEvent: string) {
+    this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
+      width: '666px',
+      panelClass: 'container',
+    });
+
+    const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(
+      tap((variant: string) => {
+        const dto = <PostReaction>{
+          postId: postIdEvent,
+          variant,
+          reactedBy: this.authUser,
+        }
+        this._store.dispatch(ReactPost({ dto }));
+      })
+    )
+
+    this._subscription.add(reactAndCloseDialog$.subscribe());
+
   }
 
   clickComment(postId: string) {

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CreatePostDto, Post } from '../interfaces';
+import { CreatePostDto, Post, PostReaction } from '../interfaces';
 
 export enum PostActionTypes {
 
@@ -24,7 +24,10 @@ export enum PostActionTypes {
   DELETE_POST_BY_ID = '[Post/API] Delete Post By Id',
   DELETE_POST_BY_ID_SUCCESS = '[Post/API] Delete Post By Id Success',
   DELETE_POST_BY_ID_FAILURE = '[Post/API] Delete Post By Id Failure',
-
+  
+  REACT_POST = '[Post/API] React Post',
+  REACT_POST_SUCCESS = '[Post/API] React Post Success',
+  REACT_POST_FAILURE = '[Post/API] React Post Failure',
 }
 
 export const GetPosts = createAction(PostActionTypes.GET_POSTS);
@@ -78,5 +81,20 @@ export const DeletePostByIdSuccess = createAction(
 );
 export const DeletePostByIdFailure = createAction(
   PostActionTypes.DELETE_POST_BY_ID_FAILURE,
+  props<{ error: Error }>()
+);
+
+export const ReactPost = createAction(
+  PostActionTypes.REACT_POST,
+  props<{ dto: PostReaction }>()
+);
+
+export const ReactPostSuccess = createAction(
+  PostActionTypes.REACT_POST_SUCCESS,
+  props<{ data: PostReaction }>()
+);
+
+export const ReactPostFailure = createAction(
+  PostActionTypes.REACT_POST_FAILURE,
   props<{ error: Error }>()
 );

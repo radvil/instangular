@@ -1,0 +1,30 @@
+.title {
+  text-align: center;
+}
+
+ul.reactionsList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 5rem;
+  height: 6rem;
+  img {
+    width: 4rem;
+    margin-bottom: .5rem;
+  }
+  small {
+    font-weight: bold;
+    color: #545454;
+  }
+}

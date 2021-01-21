@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { ConfirmDialogModule, FormFieldModule, InstAngularPipesModule, MenuActionsModule } from 'src/app/_shared';
+import { InstAngularPipesModule } from 'src/app/_shared/pipes';
+import { ConfirmDialogModule, FormFieldModule, MenuActionsModule, ReactionsDialogModule } from 'src/app/_shared/components';
 import { PostCardComponent } from './post-card.component';
 import { PostCardHeaderComponent } from './post-card-header/post-card-header.component';
 import { PostCardButtonsComponent } from './post-card-buttons/post-card-buttons.component';
@@ -38,6 +39,7 @@ import { PostEditDialogModule } from '../post-edit-dialog/post-edit-dialog.modul
     FormFieldModule,
     PostEditDialogModule,
     ConfirmDialogModule,
+    ReactionsDialogModule,
   ],
   exports: [
     PostCardComponent,

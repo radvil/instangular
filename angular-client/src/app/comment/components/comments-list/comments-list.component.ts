@@ -1,8 +1,17 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 import { CreateCommentDto } from 'src/app/comment';
-import { compareToGetClass } from 'src/app/_shared';
 import { Post } from 'src/app/post';
 import { User } from 'src/app/user';
+import { ReactionsDialogComponent } from 'src/app/_shared/components';
+import { compareToGetClass } from 'src/app/_shared/utils';
+import { CommentReaction } from '../../interfaces';
+import { ReactComment } from '../../store/actions';
+import { CommentState, ReplyState } from '../../store/states';
 
 @Component({
   selector: 'nsg-comments-list',
@@ -23,6 +32,19 @@ export class CommentsListComponent {
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<CreateCommentDto>();
 
+  public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
+  private _subscription = new Subscription()
+
+  constructor(
+    private _dialog: MatDialog,
+    private _store: Store<CommentState | ReplyState>,
+  ) { }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
+
+
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);
   }
@@ -32,12 +54,27 @@ export class CommentsListComponent {
   }
 
   public reactToComment(commentId: string) {
-    alert('TODO:// reactToComment(commentId: string)');
+    this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
+      width: '666px',
+      panelClass: 'container',
+    });
+
+    const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(
+      tap((variant: string) => {
+        const dto = <CommentReaction>{
+          commentId,
+          variant,
+          reactedBy: this.authUser,
+        }
+        this._store.dispatch(ReactComment({ dto }));
+      })
+    )
+
+    this._subscription.add(reactAndCloseDialog$.subscribe());
   }
 
   public replyToComment(commentId: string) {
     alert('TODO:// replyToComment(commentId: string)');
-    // dialog form; >> adding new comment;
   }
 
   public viewCommentReactions(commentId: string) {

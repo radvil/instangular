@@ -77,7 +77,11 @@ export class PostController implements Controller {
         path: 'myReaction',
         options: {
           where: { reactedBy: req.user._id },
-          select: '-_id -reactedBy',
+          // select: '-_id -reactedBy',
+          populate: <ModelPopulateOptions>{
+            path: 'reactedBy',
+            select: USER_POPULATE_SELECT,
+          },
         }
       })
 
@@ -163,7 +167,11 @@ export class PostController implements Controller {
         path: 'myReaction',
         options: {
           where: { reactedBy: req.user._id },
-          select: '-_id -reactedBy',
+          // select: '-_id -reactedBy',
+          populate: <ModelPopulateOptions>{
+            path: 'reactedBy',
+            select: USER_POPULATE_SELECT,
+          },
         }
       })
     }
@@ -218,7 +226,7 @@ export class PostController implements Controller {
               path: 'myReaction',
               options: {
                 where: { reactedBy: req.user._id },
-                select: '-_id -reactedBy',
+                // select: '-_id -reactedBy',
               }
             }
           ]

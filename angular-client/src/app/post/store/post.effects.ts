@@ -55,6 +55,14 @@ export class PostEffects {
     ))
   ))
 
+  reactPost$ = createEffect(() => this._actions$.pipe(
+    ofType(postActions.ReactPost),
+    switchMap(({ dto }) => this._postService.reactPost(dto).pipe(
+      map(_ => postActions.ReactPostSuccess({ data: dto })),
+      catchError(error => of(postActions.ReactPostFailure({ error })))
+    ))
+  ))
+
   doneActions$ = createEffect(() => this._actions$.pipe(
     ofType(
       postActions.UpdatePostByIdSuccess,

@@ -45,8 +45,8 @@ export const commentReducer = createReducer(
   })),
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
     commentAdapter.addOne(comment, {
-      ...state, 
-      loaded: true, 
+      ...state,
+      loaded: true,
       loading: false,
       updating: false,
     })
@@ -73,4 +73,41 @@ export const commentReducer = createReducer(
       selectedId: comment._id,
     })
   )),
+
+  on(CommentActions.ReactComment, (state) => ({
+    ...state,
+    loading: true,
+    loaded: false,
+  })),
+  on(CommentActions.ReactCommentFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(CommentActions.ReactCommentSuccess, (state, { data }) => {
+    const id = data.commentId;
+    const entity = state.entities[id];
+    if (entity) {
+      const alreadyReacted = entity.myReaction?.reactedBy?.username == data.reactedBy.username;
+      const hasSameReaction = entity.myReaction?.variant == data.variant;
+      return commentAdapter.updateOne({
+        id,
+        changes: {
+          reactionsCount: (alreadyReacted || hasSameReaction)
+            ? entity.reactionsCount > 0 
+              ? entity.reactionsCount - 1
+              : entity.reactionsCount
+            : entity.reactionsCount + 1,
+          myReaction: hasSameReaction ? null : data,
+        }
+      }, {
+        ...state,
+        loading: false,
+        loaded: true,
+      });
+    } else {
+      return state
+    }
+  }),
 )

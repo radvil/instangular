@@ -1,9 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { CommentsListComponent } from './comments-list.component';
+import { ReactionsDialogModule } from 'src/app/_shared/components';
+import { CommentStoreModule } from '../../store/comment-store.module';
 import { CommentRowModule } from '../comment-row/comment-row.module';
 import { RepliesPreviewModule } from '../replies-preview/replies-preview.module';
+import { CommentsListComponent } from './comments-list.component';
+
 
 @NgModule({
   declarations: [
@@ -13,6 +16,8 @@ import { RepliesPreviewModule } from '../replies-preview/replies-preview.module'
     CommonModule,
     CommentRowModule,
     RepliesPreviewModule,
+    CommentStoreModule,
+    ReactionsDialogModule,
   ],
   exports: [
     CommentsListComponent,

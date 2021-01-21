@@ -106,8 +106,12 @@ export class HomeComponent implements OnInit {
     return storyIds && (storyIds.length && storyIds.length > 0);
   }
 
-  public viewPostComments(postId: string) {
-    this._router.navigate(['post', postId]);
+  public viewPostComments(postIdEvent: string) {
+    this._router.navigate(['post', postIdEvent]);
+  }
+
+  public viewUserProfile(usernameEvent: string) {
+    this._router.navigate(['user', usernameEvent]);
   }
 
   public showMessages(): void {

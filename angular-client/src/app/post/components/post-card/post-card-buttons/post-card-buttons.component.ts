@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PostReaction } from 'src/app/post/interfaces';
 
 @Component({
   selector: 'nsg-post-card-buttons',
@@ -8,7 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class PostCardButtonsComponent {
 
   @Input() postId: string;
-  @Input() myReaction: { variant: string } = null;
+  @Input() myReaction: PostReaction = null;
   @Output() onReactClicked = new EventEmitter<string>();
   @Output() onCommentClicked = new EventEmitter<string>();
   @Output() onShareClicked = new EventEmitter<string>();

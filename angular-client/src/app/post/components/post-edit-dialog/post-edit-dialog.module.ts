@@ -9,7 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 
 import { InstAngularPipesModule } from 'src/app/_shared';
 import { PostEditDialogComponent } from './post-edit-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [PostEditDialogComponent],
@@ -20,7 +19,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDialogModule,
     InstAngularPipesModule,
   ]
 })

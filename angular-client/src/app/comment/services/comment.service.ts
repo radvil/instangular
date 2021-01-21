@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import {
   Comment,
+  CommentReaction,
   CreateCommentDto,
   GetCommentsDto,
 } from '../interfaces';
@@ -49,5 +50,9 @@ export class CommentService {
       createCommentDto
     );
     return request$.pipe(map((res) => res.data));
+  }
+
+  public reactComment(dto: CommentReaction): Observable<any> {
+    return this._http.post<ApiRes<CommentReaction>>(`${env.be.url}/comment-reactions`, dto);
   }
 }

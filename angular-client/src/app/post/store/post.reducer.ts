@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialPostState, PostState, postAdapter } from './post.state';
 import * as PostActions from './post.actions';
+import { PostReaction } from '../interfaces';
 
 export const postReducer = createReducer(
   initialPostState,
@@ -77,4 +78,46 @@ export const postReducer = createReducer(
       loaded: true,
     })
   )),
+
+  on(PostActions.ReactPost, (state) => ({
+    ...state,
+    loading: true,
+    loaded: false,
+  })),
+  on(PostActions.ReactPostFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(PostActions.ReactPostSuccess, (state, { data }) => {
+    const id = data.postId;
+    const entity = state.entities[id];
+    if (entity) {
+      const alreadyReacted = entity.myReaction?.reactedBy?.username == data.reactedBy.username;
+      const hasSameReaction = (entity.myReaction?.variant == data.variant);
+      return postAdapter.updateOne({
+        id,
+        changes: {
+          reactions: alreadyReacted
+            ? hasSameReaction
+              ? entity.reactions.filter(x => x.reactedBy.username != data.reactedBy.username)
+              : entity.reactions
+            : [...entity.reactions, data],
+          reactionsCount: (alreadyReacted || hasSameReaction)
+            ? entity.reactionsCount > 0
+              ? entity.reactionsCount - 1
+              : entity.reactionsCount
+            : entity.reactionsCount + 1,
+          myReaction: hasSameReaction ? null : data,
+        }
+      }, {
+        ...state,
+        loading: false,
+        loaded: true,
+      });
+    } else {
+      return state
+    }
+  }),
 )

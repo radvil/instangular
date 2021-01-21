@@ -2,9 +2,24 @@
   <button
     (click)="clickReactIcon(postId)"
     mat-icon-button
-    [class.active]="myReaction?.variant === 'love'"
+    [ngClass]="{
+      like: myReaction?.variant === 'like',
+      love: myReaction?.variant === 'love',
+      haha: myReaction?.variant === 'haha',
+      huhu: myReaction?.variant === 'huhu',
+      angry: myReaction?.variant === 'angry',
+      care: myReaction?.variant === 'care'
+    }"
   >
-    <mat-icon>favorite</mat-icon>
+    <mat-icon *ngIf="!myReaction; else reactionsList">favorite</mat-icon>
+    <ng-template #reactionsList>
+      <img *ngIf="myReaction?.variant === 'like'" src="assets/icons/like.svg" alt="like">
+      <img *ngIf="myReaction?.variant === 'love'" src="assets/icons/love.svg" alt="love">
+      <img *ngIf="myReaction?.variant === 'haha'" src="assets/icons/haha.svg" alt="haha">
+      <img *ngIf="myReaction?.variant === 'huhu'" src="assets/icons/huhu.svg" alt="huhu">
+      <img *ngIf="myReaction?.variant === 'angry'" src="assets/icons/angry.svg" alt="angry">
+      <img *ngIf="myReaction?.variant === 'care'" src="assets/icons/care.svg" alt="care">
+    </ng-template>
   </button>
   <button (click)="clickCommentIcon(postId)" mat-icon-button>
     <mat-icon>message</mat-icon>

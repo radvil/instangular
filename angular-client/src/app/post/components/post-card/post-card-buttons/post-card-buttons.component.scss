@@ -1,14 +1,35 @@
 .post-card--buttons {
   display: flex;
   margin: 0.5rem 1rem;
-  button {
-    margin-right: 1rem;
-    &:nth-last-child(1) {
-      margin-right: 0;
-    }
-    &.active mat-icon {
-      color: #f00;
-    }
+}
+button {
+  margin-right: 1rem;
+  img {
+    width: 1.5rem;
+  }
+  &:nth-last-child(1) {
+    margin-right: 0;
+  }
+  // &.active mat-icon {
+  //   color: #f00;
+  // }
+  &.like {
+    background-color: aliceblue;
+  }
+  &.love {
+    background-color: #ffebef;
+  }
+  &.haha {
+    background-color: #fbf3d2;
+  }
+  &.huhu {
+    background-color: #f1f1f1;
+  }
+  &.angry {
+    background-color: #ffeee2;
+  }
+  &.care {
+    background-color: #f6f7bc;
   }
 }
 .fx-spacer {

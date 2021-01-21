@@ -6,7 +6,7 @@ import { map } from "rxjs/operators";
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from "src/app/_core";
 import { HttpQueryOptions, makeHttpQueries } from "src/app/_shared";
-import { CreatePostDto, Post } from "../interfaces";
+import { CreatePostDto, Post, PostReaction } from "../interfaces";
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
@@ -41,5 +41,9 @@ export class PostService {
 
   public deletePostById(postId: string): Observable<any> {
     return this._http.delete<ApiRes<any>>(`${env.be.url}/posts/${postId}`);
+  }
+
+  public reactPost(dto: PostReaction): Observable<any> {
+    return this._http.post<ApiRes<PostReaction>>(`${env.be.url}/post-reactions`, dto);
   }
 }
