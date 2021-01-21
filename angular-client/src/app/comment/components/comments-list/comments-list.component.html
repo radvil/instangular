@@ -20,8 +20,8 @@
         [comment]="comment"
         [bgClass]="getCommentClass(comment.commentedBy.username)"
         (onUsernameClicked)="viewUserProfile($event)"
-        (onReactClicked)="reactToComment($event)"
-        (onReplyClicked)="replyToComment($event)"
+        (onReactClicked)="openReactionDialog($event)"
+        (onReplyClicked)="clickComment($event)"
         (onReactionsCountClicked)="viewCommentReactions($event)"
       >
         <!-- comment__replies -->

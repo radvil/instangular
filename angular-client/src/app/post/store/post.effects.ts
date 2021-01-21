@@ -16,7 +16,7 @@ export class PostEffects {
     ofType(postActions.GetPosts),
     exhaustMap(() => this._postService.getPosts({
       page: 1,
-      limit: 5,
+      limit: 10,
       includeComments: true,
       includeReactions: true,
     }).pipe(

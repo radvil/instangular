@@ -15,7 +15,6 @@ import {
   $_commentLoading,
   $_commentsByPostId,
   $_commentsByPostIdHasNextPage,
-  // $_replies
 } from 'src/app/comment/store/selectors';
 import { User } from 'src/app/user';
 import { Post } from '../../interfaces';

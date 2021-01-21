@@ -2,17 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
-import { compareToGetClass } from 'src/app/_shared';
+import { compareToGetClass, ReactionsDialogComponent } from 'src/app/_shared';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
-import { Comment, CreateReplyDto, GetRepliesDto, Reply } from '../../interfaces';
+import { Comment, CommentReaction, CreateReplyDto, GetRepliesDto, Reply } from '../../interfaces';
 import { CommentState } from '../../store/states/comment.state';
-import { AddNewReply, GetRepliesByCommentId } from '../../store/actions/reply.actions';
-import { GetCommentById } from '../../store/actions'
+import { AddNewReply, GetRepliesByCommentId, ReactReply } from '../../store/actions/reply.actions';
+import { GetCommentById, ReactComment } from '../../store/actions'
 import { $_comment } from '../../store/selectors';
 import { $_repliesByCommentId } from '../../store/selectors/reply.selectors';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-comment-detail',
@@ -28,6 +29,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   public replies: Reply[];
   public authUser: User;
   public pageHeaderTitle = "Comment Replies";
+  public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
 
   private initAuthUser(): void {
     const authUser = this._store.select($_authUser);
@@ -102,8 +104,28 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['user', usernameEvent]);
   }
 
-  reactToComment(commentIdEvent: string): void {
-    alert('TODO:// reactToComment / reactToCommentReply');
+  openReactionDialog(commentIdEvent: string, type: string): void {
+    this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
+      width: '666px',
+      panelClass: 'container',
+    });
+
+    const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(
+      tap((reactionName: string) => {
+        const dto = <CommentReaction>{
+          commentId: commentIdEvent,
+          variant: reactionName,
+          reactedBy: this.authUser,
+        }
+        if (type === 'REPLY') {
+          this._store.dispatch(ReactComment({ dto }));
+        } else {
+          this._store.dispatch(ReactReply({ dto }));
+        }
+      })
+    )
+
+    this._subscription.add(reactAndCloseDialog$.subscribe());
   }
 
   replyToComment(commentIdEvent: string): void {
@@ -134,6 +156,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store<CommentState>,
+    private _dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {

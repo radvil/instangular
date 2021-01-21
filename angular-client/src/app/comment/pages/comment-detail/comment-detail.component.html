@@ -11,7 +11,7 @@
   <nsg-comment-row
     [comment]="comment"
     (onUsernameClicked)="viewUserProfile($event)"
-    (onReactClicked)="reactToComment($event)"
+    (onReactClicked)="openReactionDialog($event, 'COMMENT')"
     (onReplyClicked)="replyToComment($event)"
     (onReactionsCountClicked)="showCommentReactions($event)"
   >
@@ -36,7 +36,7 @@
         [comment]="reply"
         [bgClass]="getCommentClassByUsername(reply.commentedBy.username)"
         (onUsernameClicked)="viewUserProfile($event)"
-        (onReactClicked)="reactToComment($event)"
+        (onReactClicked)="openReactionDialog($event, 'REPLY')"
         (onReplyClicked)="replyToComment($event)"
         (onReactionsCountClicked)="showCommentReactions($event)"
       >

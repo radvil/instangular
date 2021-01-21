@@ -53,7 +53,7 @@ export class CommentsListComponent {
     this.onUserProfileClicked.emit(username);
   }
 
-  public reactToComment(commentId: string) {
+  public openReactionDialog(commentId: string) {
     this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
       width: '666px',
       panelClass: 'container',
@@ -73,7 +73,7 @@ export class CommentsListComponent {
     this._subscription.add(reactAndCloseDialog$.subscribe());
   }
 
-  public replyToComment(commentId: string) {
+  public clickComment(commentId: string) {
     alert('TODO:// replyToComment(commentId: string)');
   }
 

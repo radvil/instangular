@@ -43,6 +43,43 @@ export const replyReducer = createReducer(
     })
   }),
 
+  on(replyActions.ReactReply, (state) => ({
+    ...state,
+    loading: true,
+    loaded: false,
+  })),
+  on(replyActions.ReactReplyFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    loaded: false,
+    error,
+  })),
+  on(replyActions.ReactReplySuccess, (state, { data }) => {
+    const id = data.commentId;
+    const entity = state.entities[id];
+    if (entity) {
+      const alreadyReacted = entity.myReaction?.reactedBy?.username == data.reactedBy.username;
+      const hasSameReaction = entity.myReaction?.variant == data.variant;
+      return replyAdapter.updateOne({
+        id,
+        changes: {
+          reactionsCount: (alreadyReacted || hasSameReaction)
+            ? entity.reactionsCount > 0 
+              ? entity.reactionsCount - 1
+              : entity.reactionsCount
+            : entity.reactionsCount + 1,
+          myReaction: hasSameReaction ? null : data,
+        }
+      }, {
+        ...state,
+        loading: false,
+        loaded: true,
+      });
+    } else {
+      return state
+    }
+  }),
+
   on(replyActions.AddNewReply, (state, action) => ({
     ...state,
     loading: true,
