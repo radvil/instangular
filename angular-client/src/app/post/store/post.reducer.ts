@@ -39,4 +39,23 @@ export const postReducer = createReducer(
   on(PostActions.GetPostByIdSuccess, (state, { post }) => (
     postAdapter.addOne(post, { ...state, loaded: true, loading: false })
   )),
+
+  on(PostActions.UpdatePostById, (state, { postId }) => ({
+    ...state,
+    loaded: false,
+    loading: true,
+    selectedId: postId,
+  })),
+  on(PostActions.UpdatePostByIdFailure, (state, { error }) => ({
+    ...state,
+    loaded: false,
+    loading: false,
+    error,
+  })),
+  on(PostActions.UpdatePostByIdSuccess, (state, { post }) => (
+    postAdapter.updateOne({
+      id: post._id,
+      changes: post,
+    }, { ...state, loaded: true, loading: false })
+  )),
 )

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Post } from '../post.interface';
+import { CreatePostDto, Post } from '../post.interface';
 
 export enum PostActionTypes {
 
@@ -16,6 +16,10 @@ export enum PostActionTypes {
   GET_POST_BY_ID = '[Post/API] Get Post By Id',
   GET_POST_BY_ID_SUCCESS = '[Post/API] Get Post By Id Success',
   GET_POST_BY_ID_FAILURE = '[Post/API] Get Post By Id Failure',
+
+  UDPATE_POST_BY_ID = '[Post/API] Update Post By Id',
+  UDPATE_POST_BY_ID_SUCCESS = '[Post/API] Update Post By Id Success',
+  UDPATE_POST_BY_ID_FAILURE = '[Post/API] Update Post By Id Failure',
 
 }
 
@@ -43,6 +47,19 @@ export const GetPostByIdSuccess = createAction(
   props<{ post: Post }>()
 )
 export const GetPostByIdFailure = createAction(
+  PostActionTypes.GET_POST_BY_ID_FAILURE,
+  props<{ error: Error }>()
+)
+
+export const UpdatePostById = createAction(
+  PostActionTypes.UDPATE_POST_BY_ID,
+  props<{ postId: string, changes: CreatePostDto }>()
+);
+export const UpdatePostByIdSuccess = createAction(
+  PostActionTypes.GET_POST_BY_ID_SUCCESS,
+  props<{ post: Post }>()
+)
+export const UpdatePostByIdFailure = createAction(
   PostActionTypes.GET_POST_BY_ID_FAILURE,
   props<{ error: Error }>()
 )

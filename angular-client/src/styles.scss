@@ -84,8 +84,6 @@ p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  line-height: 1;
-  max-height: 1 * 1;
 }
 input {
   color: #666;
@@ -128,14 +126,30 @@ input {
     font-size: 1rem !important;
   }
 }
+// limit text
 .truncate1 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  line-height: 1;
-  max-height: 1 * 1;
+}
+.truncate3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.updatePostDialog .mat-dialog-container {
+  padding: 0;
+
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 // notifications overlay
 .error-notification-overlay {

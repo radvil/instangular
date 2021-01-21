@@ -24,3 +24,8 @@ export interface PostReaction {
   variant: string;
   postId?: string;
 }
+
+export class CreatePostDto {
+  description: string;
+  tags?: string[];
+}

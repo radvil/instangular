@@ -1,0 +1,43 @@
+<div class="post__container">
+  <mat-icon class="closeIcon" (click)="cancelUpdate()">close</mat-icon>
+  <div *ngIf="data.currentPost.image" class="post__image__container">
+    <img [src]="data.currentPost?.image" alt="" />
+    <div class="post__meta">
+      <div class="favorite">
+        <mat-icon>favorite</mat-icon>{{ data.currentPost?.reactionsCount }}
+      </div>
+      <div class="comment">
+        <mat-icon>message</mat-icon>{{ data.currentPost?.commentsCount }}
+      </div>
+    </div>
+  </div>
+  <main>
+    <div class="post__description truncate3" *ngIf="data.currentPost.description">
+      <b>{{ data.currentPost?.postedBy?.username }}</b
+      >&nbsp;
+      {{ data.currentPost?.description }}
+    </div>
+    <form (ngSubmit)="submitUpdate()">
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="descriptionText"
+          placeholder="Update Description .."
+          rows="3"
+          autocomplete="off"
+          name="description"
+        ></textarea>
+      </mat-form-field>
+      <div class="form__buttons">
+        <button
+          mat-flat-button
+          [disabled]="isPostLoading$ | async"
+          type="submit"
+        >
+          {{ (isPostLoading$ | async) ? "Now Loading.." : "Submit Update" }}
+        </button>
+      </div>
+    </form>
+  </main>
+</div>

@@ -13,9 +13,16 @@
       <div class="time">{{ post.createdAt | relativeTime }}</div>
     </div>
     <div class="fx-spacer"></div>
-    <button mat-icon-button>
+    <!-- <button mat-icon-button>
       <mat-icon>more_vert</mat-icon>
-    </button>
+    </button> -->
+    <app-menu-actions
+      [key]="post._id"
+      [canEdit]="true"
+      [canDelete]="true"
+      (onClickedEdit)="openUpdatePostDialog($event)"
+      (onClickedDelete)="deletePost($event)"
+    ></app-menu-actions>
   </div>
   <div class="post--item-image">
     <!-- <div *ngIf="true" class="placeholder"></div> -->
@@ -58,7 +65,7 @@
     </span>
   </div>
   <div class="post--item-description">
-    <p>
+    <p class="truncate3">
       <b (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</b>
       &nbsp;{{ post.description }} 
       <!-- Taken by
