@@ -5,11 +5,12 @@ import { of } from "rxjs";
 import { catchError, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 
 import { AuthState } from "src/app/auth";
-import { ChangeProfilePhoto } from "src/app/auth/store/auth.actions";
+import { ChangeProfilePhoto, UpdateProfileBasicsInfo } from "src/app/auth/store/auth.actions";
 import { $_authUser } from "src/app/auth/store/auth.selectors";
 import { PushManyPosts } from "src/app/post/store/post.actions";
 import { PostState } from "src/app/post/store/post.state";
 import { UploadUserPhotoDto } from "..";
+import { UserBasicsInfoDto } from "../interfaces/user-basic-info.dto";
 import { UserService } from "../services/user.service";
 import * as userActions from './user.actions';
 
@@ -45,6 +46,22 @@ export class UserEffects {
           }
         }),
         catchError(error => of(userActions.UploadUserProfilePictureFailure({ error })))
+      )
+    })
+  ))
+
+  updateUserBasicsInfo$ = createEffect(() => this._actions$.pipe(
+    ofType(userActions.UpdateUserBasicsInfo),
+    withLatestFrom(this._store.select($_authUser)),
+    switchMap(([action, user]) => {
+      const dto = <UserBasicsInfoDto>{
+        userId: user._id,
+        ...action.dto
+      }
+      return this._userService.updateBasicsInfo(dto).pipe(
+        map(() => userActions.UpdateUserBasicsInfoSuccess({ dto })),
+        tap(({ dto }) => this._store.dispatch(UpdateProfileBasicsInfo({ dto }))),
+        catchError(error => of(userActions.UpdateUserBasicsInfoFailure({ error })))
       )
     })
   ))

@@ -1,5 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { UploadUserPhotoDto, User } from "../interfaces";
+import { UserBasicsInfoDto } from "../interfaces/user-basic-info.dto";
 
 export enum UserActionTypes {
 
@@ -10,6 +11,10 @@ export enum UserActionTypes {
   UPLOAD_USER_PROFILE_PICTURE = '[User/API] Upload User Profile Picture',
   UPLOAD_USER_PROFILE_PICTURE_SUCCESS = '[User/API] Upload User Profile Picture Success',
   UPLOAD_USER_PROFILE_PICTURE_FAILURE = '[User/API] Upload User Profile Picture Failure',
+
+  UPDATE_USER_BASICS_INFO = '[User/API] Update User Basics Info',
+  UPDATE_USER_BASICS_INFO_SUCCESS = '[User/API] Update User Basics Info Success',
+  UPDATE_USER_BASICS_INFO_FAILURE = '[User/API] Update User Basics Info Failure',
 
 }
 
@@ -36,5 +41,18 @@ export const UploadUserProfilePictureSuccess = createAction(
 );
 export const UploadUserProfilePictureFailure = createAction(
   UserActionTypes.UPLOAD_USER_PROFILE_PICTURE_FAILURE,
+  props<{ error: Error }>()
+);
+
+export const UpdateUserBasicsInfo = createAction(
+  UserActionTypes.UPDATE_USER_BASICS_INFO,
+  props<{ dto: UserBasicsInfoDto }>()
+);
+export const UpdateUserBasicsInfoSuccess = createAction(
+  UserActionTypes.UPDATE_USER_BASICS_INFO_SUCCESS,
+  props<{ dto: UserBasicsInfoDto }>()
+);
+export const UpdateUserBasicsInfoFailure = createAction(
+  UserActionTypes.UPDATE_USER_BASICS_INFO_FAILURE,
   props<{ error: Error }>()
 );

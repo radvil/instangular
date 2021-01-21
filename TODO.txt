@@ -6,3 +6,4 @@
 📖 Setup UserRegistration form & functionality
 ➕ Init Post UserRegistration units
 📷 Post UserRegistration \"Setup User Photo\"
+📖 Post UserRegistration \"Setup Basics Info\"

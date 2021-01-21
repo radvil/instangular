@@ -14,4 +14,10 @@ export interface User {
   updatedAt?: string;
   lastLoggedInAt?: string;
   posts?: Post[];
+  // basiscInfo
+  bio?: string;
+  websiteLink?: string;
+  facebookLink?: string;
+  twitterLink?: string;
+  githubLink?: string;
 }

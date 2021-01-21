@@ -1,0 +1,41 @@
+<div class="container">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h3>Bio</h3>
+    <small *ngIf="form.get('bio').hasError('minlength')">
+      Minimum 3 chars required
+    </small>
+    <textarea
+      formControlName="bio"
+      type="text"
+      rows="3"
+      placeholder="Write your description..."
+    ></textarea>
+
+    <h3>Social links</h3>
+    <input formControlName="websiteLink" type="text" placeholder="Website" />
+    <input formControlName="facebookLink" type="text" placeholder="Facebook" />
+    <input formControlName="twitterLink" type="text" placeholder="Twitter" />
+    <input formControlName="githubLink" type="text" placeholder="Github" />
+
+    <!-- form action buttons -->
+    <div class="form__action__buttons">
+      <button
+        [disabled]="isLoading"
+        mat-flat-button
+        type="submit"
+        [color]="submitButtonColor"
+      >
+        {{ submitButtonText }}
+      </button>
+      <button
+        *ngIf="isLoaded"
+        (click)="next()"
+        mat-stroked-button
+        type="button"
+        color="warn"
+      >
+        Close
+      </button>
+    </div>
+  </form>
+</div>

@@ -62,8 +62,15 @@ const reducer = createReducer(
     const { photo, photoThumb } = payload;
     return {
       ...state,
-      isLoading: false,
       user: { ...state.user, photo, photoThumb },
+    }
+  }),
+
+  on(AuthActions.UpdateProfileBasicsInfo, (state, { dto }) => {
+    const { userId, ...changes } = dto;
+    return {
+      ...state,
+      user: { ...state.user, changes },
     }
   }),
 

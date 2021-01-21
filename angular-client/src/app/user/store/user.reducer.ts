@@ -44,4 +44,25 @@ export const userReducer = createReducer(
       selectedUsername: user.username,
     })
   )),
+
+  on(UserActions.UpdateUserBasicsInfo, (state) => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+  })),
+  on(UserActions.UpdateUserBasicsInfoFailure, (state, { error }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error,
+  })),
+  on(UserActions.UpdateUserBasicsInfoSuccess, (state, { dto }) => {
+    const { userId: id, ...changes } = dto;
+
+    return userAdapter.updateOne({ id, changes }, {
+      ...state,
+      loading: false,
+      isLoaded: true,
+    })
+  }),
 )

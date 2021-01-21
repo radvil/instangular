@@ -41,8 +41,8 @@ export class UserController implements Controller {
 
   private initRoutes(): void {
     this.router.post(this.path + '/upload-profile-photo', authorizeAccess(), this.upload.single('photo'), this.uploadPhoto);
+    this.router.patch(this.path + '/basics-info', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
     this.router.get(this.path + '/:username', this.getUserByUsername);
-    this.router.patch(this.path + '/:userId/basics-info', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
     this.router.patch(this.path + '/:userId/sensitives-info', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
     this.router.patch(this.path + '/:userId/password', authorizeAccess([Role.USER, Role.ADMIN]), this.patchPassword);
   }
@@ -122,11 +122,8 @@ export class UserController implements Controller {
    * @desc private route to patch user's basics information
    */
   private patchBasicsInfo = async (req: RequestUser, res: Res, next: Next) => {
-    if (req.user._id.toString() !== req.params.userId.toString()) {
-      next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
-    }
     const { bio, websiteLink, facebookLink, twitterLink, githubLink } = <UserBasicsInfoDto>req.body;
-    const foundUser = await this._userModel.findById(req.params.userId);
+    const foundUser = await this._userModel.findById(req.user._id);
     if (!foundUser) {
       next(new NOT_FOUND_EXCEPTION('user not found!'));
     }

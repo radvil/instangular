@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
-import { UploadProfilePictureModule, PageHeaderModule } from 'src/app/_shared/components';
+import { UploadProfilePictureModule, PageHeaderModule, EditBasicsProfileModule } from 'src/app/_shared/components';
 import { InitProfileImageComponent } from './init-profile-image/init-profile-image.component';
 import { InitProfileInfoComponent } from './init-profile-info/init-profile-info.component';
 import { UserStoreModule } from 'src/app/user/store/user-store.module';
@@ -41,6 +41,7 @@ export class PostRegisteredRoutingModule { }
     PageHeaderModule,
     UploadProfilePictureModule,
     UserStoreModule,
+    EditBasicsProfileModule,
   ]
 })
 export class PostRegisteredModule { }

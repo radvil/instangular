@@ -1,6 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 
 import { User } from "src/app/user";
+import { UserBasicsInfoDto } from "src/app/user/interfaces/user-basic-info.dto";
 import { LoginDto, UserRegistrationDto } from "../interfaces";
 
 export enum AuthActionsType {
@@ -17,6 +18,7 @@ export enum AuthActionsType {
   GET_AUTH_USER_FAILURE = '[Auth] Get AuthUser Failure',
 
   CHANGE_PROFILE_PHOTO = '[Auth] Change Profile Photo',
+  UPDATE_PROFILE_BASICS_INFO = '[Auth] Update Profile Basics Info',
 
   LOGOUT = '[Auth] Logout',
 }
@@ -64,6 +66,11 @@ export const ChangeProfilePhoto = createAction(
   props<{ photo: string, photoThumb: string }>()
 )
 
+export const UpdateProfileBasicsInfo = createAction(
+  AuthActionsType.UPDATE_PROFILE_BASICS_INFO,
+  props<{ dto: UserBasicsInfoDto }>()
+)
+
 export const Logout = createAction(
-    AuthActionsType.LOGOUT,
-  )
+  AuthActionsType.LOGOUT,
+)
