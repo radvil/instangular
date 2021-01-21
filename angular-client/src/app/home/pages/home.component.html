@@ -27,6 +27,7 @@
       (onAddComment)="commentToPost($event, post._id)"
       (onEditSelected)="openEditDialog($event, post)"
       (onDeleteSelected)="openDeleteDialog($event)"
+      (onSubmitAddCommentInput)="commentToPost($event, post._id)"
     >
       <!-- post comments previews -->
       <div class="post__comments" *ngIf="post.comments.length">

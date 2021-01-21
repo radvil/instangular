@@ -9,9 +9,12 @@ import { Post } from 'src/app/post';
 })
 export class PostCardComponent {
   @Input() post: Post;
+  @Input() textInputClass: string = null;
   @Output() onUserProfileClicked = new EventEmitter<string>();
   @Output() onEditSelected = new EventEmitter<string>();
   @Output() onDeleteSelected = new EventEmitter<string>();
+  @Output() onCommentClicked = new EventEmitter<string>();
+  @Output() onSubmitAddCommentInput = new EventEmitter<string>();
 
   public get showedReactionUsername(): string {
     if (this.post.reactions.length > 0) {
@@ -43,7 +46,7 @@ export class PostCardComponent {
   }
 
   clickComment(postId: string) {
-    alert('TODO:// emit to home component for comment dialog input');
+    this.onCommentClicked.emit(postId);
   }
 
   clickShare(postId: string) {
@@ -52,6 +55,10 @@ export class PostCardComponent {
 
   clickSave(postId: string) {
     alert('TODO:// openSaveOptions(postId)');
+  }
+
+  submitAddCommentInput(commentText: string) {
+    this.onSubmitAddCommentInput.emit(commentText);
   }
 
 }

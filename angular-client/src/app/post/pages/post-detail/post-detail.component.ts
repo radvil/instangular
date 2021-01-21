@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import {
@@ -39,6 +39,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   public comments$: Observable<Comment[]>;
   public postCommentsHasNext$: Observable<boolean>;
   public pageHeaderTitle = 'Post Detail';
+  public commentInputClass: string = null;
 
   private initValues(): void {
     this._subscription.add(
@@ -71,11 +72,11 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.isCommentsLoading$ = this._store.select($_commentLoading);
   }
 
-  openEditPostDialog(postId: string) {
+  openEditPostDialog() {
     alert('Open update post dialog');
   }
 
-  openDeletePostDialog(postId: string) {
+  openDeletePostDialog() {
     alert('Open delete post dialog');
   }
 
@@ -99,12 +100,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this._router.navigate(['user', usernameEvent]);
   }
 
-  addComment(inputText: string) {
-    if (this.post && inputText) {
-      const createCommentDto = <CreateCommentDto>{
-        postId: this.post._id,
-        text: inputText,
-      };
+  openCommentForm() {
+    this.commentInputClass = 'sticky';
+    // TODO: doSomething like autofocus input to "on"
+  }
+
+  commentToPost(text: string, postId: string) {
+    if (this.post && text) {
+      const createCommentDto = <CreateCommentDto>{ postId, text };
       this._store.dispatch(AddComment({ createCommentDto }));
     }
   }

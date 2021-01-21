@@ -66,3 +66,14 @@
     color: #3797f1;
   }
 }
+.addCommentField {
+  padding: 0 1rem;
+  background-color: #fff;
+  &.sticky {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    width: -webkit-fill-available;
+    box-shadow: 0px -5px 20px -6px #00000033;
+  }
+}

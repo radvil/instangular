@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
     alert('TODO:// openDeleteDialog(postId) ' + postIdEvent);
   }
 
-  public commentToPost(commentText: string, postId: string) {
+  commentToPost(commentText: string, postId: string) {
     const createCommentDto = <CreateCommentDto>{
       postId: postId,
       text: commentText,

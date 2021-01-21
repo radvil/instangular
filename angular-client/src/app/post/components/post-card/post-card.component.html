@@ -74,4 +74,12 @@
 
   <!-- comments preview -->
   <ng-content></ng-content>
+
+  <!-- comment form -->
+  <div class="addCommentField" [ngClass]="textInputClass">
+    <app-form-field
+      [placeholder]="'Add Comment..'"
+      (onInputConfirmed)="submitAddCommentInput($event)"
+    ></app-form-field>
+  </div>
 </div>

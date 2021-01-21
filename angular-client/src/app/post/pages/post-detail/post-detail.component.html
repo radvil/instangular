@@ -14,6 +14,11 @@
       (onUserProfileClicked)="viewUserProfile($event)"
       (onEditSelected)="openEditPostDialog($event)"
       (onMenuDeleteClicked)="openDeletePostDialog($event)"
+
+      (onCommentClicked)="openCommentForm($event)"
+
+      [textInputClass]="commentInputClass"
+      (onSubmitAddCommentInput)="commentToPost($event, post._id)"
     >
       <nsg-comments-list
         [post]="post"
@@ -25,13 +30,6 @@
         (onViewRepliesClicked)="viewCommentReplies($event)"
         (onUserProfileClicked)="viewUserProfile($event)"
       ></nsg-comments-list>
-
-      <div class="add__comment">
-        <app-form-field
-          [placeholder]="'Add Comment..'"
-          (onInputConfirmed)="addComment($event)"
-        ></app-form-field>
-      </div>
     </nsg-post-card>
   </ng-template>
 </ng-container>

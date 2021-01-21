@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as replyActions from '../actions/reply.actions';
 import { ReplyService } from "../../services/reply.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { NotificationService } from "src/app/_shared/services";
 
 @Injectable()
 export class ReplyEffects {
@@ -33,14 +33,14 @@ export class ReplyEffects {
   addReplySuccess$ = createEffect(() => this._actions$.pipe(
     ofType(replyActions.AddNewReplySuccess),
     tap(() => {
-      this._snackBar.open('You\'ve commented', 'close', { duration: 2000 });
+      this._notificationService.success('Reply added');
     })
   ), { dispatch: false })
 
   constructor(
     private _actions$: Actions,
     private _replyService: ReplyService,
-    private _snackBar: MatSnackBar,
+    private _notificationService: NotificationService,
   ) { }
 
 }

@@ -6,8 +6,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as commentActions from '../actions/comment.actions';
 import { CommentService } from "../../services/comment.service";
-import { ReplyState } from "../states";
-import { PushManyReplies } from "../actions";
+import { ReplyState } from "../states/reply.state";
+import { PushManyReplies } from "../actions/reply.actions";
+import { NotificationService } from "src/app/_shared/services";
 
 @Injectable()
 export class CommentEffects {
@@ -27,6 +28,13 @@ export class CommentEffects {
       catchError(error => of(commentActions.AddCommentFailure({ error })))
     ))
   ))
+
+  onAddCommentSuccess$ = createEffect(() => this._actions$.pipe(
+    ofType(commentActions.AddCommentSuccess),
+    tap(() => {
+      this._notificationService.success('Comment added');
+    })
+  ), { dispatch: false })
 
   getCommentById$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentById),
@@ -49,6 +57,7 @@ export class CommentEffects {
     private _actions$: Actions,
     private _commentService: CommentService,
     private _store: Store<ReplyState>,
+    private _notificationService: NotificationService,
   ) { }
 
 }
