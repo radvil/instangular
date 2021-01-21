@@ -3,7 +3,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { PostEditDialogComponent } from 'src/app/post/components';
@@ -30,16 +29,8 @@ export class HomeComponent implements OnInit {
   public errorImagePath = "assets/images/portrait.jpg";
 
   private getAuthUser(): void {
-    const authUser$ = this._store
-      .select($_authUser)
-      .pipe(
-        tap(user => {
-          if (user) {
-            this.authUser = user;
-          }
-        })
-      );
-    this._subscription.add(authUser$.subscribe());
+    const authUser$ = this._store.select($_authUser);
+    this._subscription.add(authUser$.subscribe(user => this.authUser = user));
   }
 
   private getStories(): void {

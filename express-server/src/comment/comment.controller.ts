@@ -153,7 +153,7 @@ export class CommentController implements Controller {
         }
       })
       .populate(<ModelPopulateOptions>{
-        path: 'commentedToPost',
+        path: 'postRef',
         options: {
           populate: <ModelPopulateOptions>{
             path: 'postedBy',
@@ -169,7 +169,10 @@ export class CommentController implements Controller {
         options: {
           where: { reactedBy: req.user._id },
           // select: '-_id -reactedBy',
-          populate: 'reactedBy',
+          populate: {
+            path: 'reactedBy',
+            select: USER_POPULATE_SELECT,
+          },
         }
       })
     }
@@ -209,10 +212,10 @@ export class CommentController implements Controller {
                 options: {
                   where: { reactedBy: req.user._id },
                   // select: '-_id -reactedBy',
-          populate: <ModelPopulateOptions>{
-            path: 'reactedBy',
-            select: USER_POPULATE_SELECT,
-          },
+                  populate: <ModelPopulateOptions>{
+                    path: 'reactedBy',
+                    select: USER_POPULATE_SELECT,
+                  },
                 }
               }
             ]

@@ -1,5 +1,5 @@
 import { User } from "src/app/user";
-import { Comment } from 'src/app/comment';
+import { PostComment } from 'src/app/comment';
 import { PostReaction } from "./post-reaction.interface";
 
 export interface Post {
@@ -11,7 +11,7 @@ export interface Post {
   image: string;
   createdAt: Date;
   updatedAt: Date;
-  comments: Comment[];
+  comments: PostComment[];
   commentsCount: number;
   commentsAsParentCount?: number; // ??
   reactions: PostReaction[];

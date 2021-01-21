@@ -1,28 +1,32 @@
 import { createReducer, on } from '@ngrx/store';
-import { initialCommentState, commentAdapter } from '../states/comment.state';
-import * as CommentActions from '../actions/comment.actions';
+import { initialState, adapter } from './comment.state';
+import * as CommentActions from './comment.actions';
 
 export const commentReducer = createReducer(
-  initialCommentState,
+  initialState,
 
   on(CommentActions.GetCommentsByPostId, (state, { dto }) => ({
     ...state,
-    loaded: false,
     loading: true,
+    loaded: false,
     selectedPostId: dto.postId
   })),
   on(CommentActions.GetCommentsByPostIdFailure, (state, { error }) => ({
     ...state,
-    loaded: false,
     loading: false,
+    loaded: false,
     error,
   })),
   on(CommentActions.GetCommentsByPostIdSuccess, (state, { comments }) => (
-    commentAdapter.addMany(comments, { ...state, loaded: true, loading: false })
+    adapter.addMany(comments, {
+      ...state,
+      loading: false,
+      loaded: true,
+    })
   )),
 
   on(CommentActions.PushManyComments, (state, { comments }) => (
-    commentAdapter.addMany(comments, {
+    adapter.addMany(comments, {
       ...state,
       loaded: true,
       loading: false,
@@ -44,7 +48,7 @@ export const commentReducer = createReducer(
     error,
   })),
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
-    commentAdapter.addOne(comment, {
+    adapter.addOne(comment, {
       ...state,
       loaded: true,
       loading: false,
@@ -65,7 +69,7 @@ export const commentReducer = createReducer(
     error,
   })),
   on(CommentActions.GetCommentByIdSuccess, (state, { comment }) => (
-    commentAdapter.upsertOne(comment, {
+    adapter.upsertOne(comment, {
       ...state,
       loaded: true,
       loading: false,
@@ -91,7 +95,7 @@ export const commentReducer = createReducer(
     if (entity) {
       const alreadyReacted = entity.myReaction?.reactedBy?.username == data.reactedBy.username;
       const hasSameReaction = entity.myReaction?.variant == data.variant;
-      return commentAdapter.updateOne({
+      return adapter.updateOne({
         id,
         changes: {
           reactionsCount: (alreadyReacted || hasSameReaction)

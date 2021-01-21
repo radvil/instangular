@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { CreateCommentDto } from 'src/app/comment/interfaces';
+import { CreatePostCommentDto } from 'src/app/comment/interfaces';
 import { AddComment } from 'src/app/comment/store/actions';
 import { UpdatePostDto, Post, PostReaction } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
@@ -132,7 +132,7 @@ export class PostCardComponent implements OnDestroy {
 
   commentToPost(text: string, commentedBy: string) {
     if (text && this.post._id) {
-      const createCommentDto = <CreateCommentDto>{
+      const createCommentDto = <CreatePostCommentDto>{
         postId: this.post._id,
         text: text,
         commentedBy,

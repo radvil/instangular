@@ -6,9 +6,9 @@ import { map, tap } from 'rxjs/operators';
 
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import {
-  Comment,
-  CreateCommentDto,
-  GetCommentsDto
+  PostComment,
+  CreatePostCommentDto,
+  GetPostCommentsDto
 } from 'src/app/comment/interfaces';
 import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/actions';
 import {
@@ -35,7 +35,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   public authUser: User;
   public post: Post;
-  public comments$: Observable<Comment[]>;
+  public comments$: Observable<PostComment[]>;
   public postCommentsHasNext$: Observable<boolean>;
   public pageHeaderTitle = 'Post Detail';
   public commentInputClass: string = null;
@@ -80,7 +80,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   viewPreviousComments(postIdEvent: string) {
-    const dto: GetCommentsDto = {
+    const dto: GetPostCommentsDto = {
       postId: postIdEvent,
       pageNumber: this.pageNumber,
       limit: 5,
@@ -106,7 +106,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   commentToPost(text: string, postId: string) {
     if (this.post && text) {
-      const createCommentDto = <CreateCommentDto>{ postId, text };
+      const createCommentDto = <CreatePostCommentDto>{ postId, text };
       this._store.dispatch(AddComment({ createCommentDto }));
     }
   }

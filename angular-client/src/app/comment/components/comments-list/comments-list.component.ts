@@ -4,14 +4,14 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { CreateCommentDto } from 'src/app/comment';
+import { CreatePostCommentDto } from 'src/app/comment';
 import { Post } from 'src/app/post';
 import { User } from 'src/app/user';
 import { ReactionsDialogComponent } from 'src/app/_shared/components';
 import { compareToGetClass } from 'src/app/_shared/utils';
 import { CommentReaction } from '../../interfaces';
 import { ReactComment } from '../../store/actions';
-import { CommentState, ReplyState } from '../../store/states';
+import { State, ReplyState } from '../../store/states';
 
 @Component({
   selector: 'nsg-comments-list',
@@ -30,14 +30,14 @@ export class CommentsListComponent {
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onViewRepliesClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
-  @Output() onAddCommentClicked = new EventEmitter<CreateCommentDto>();
+  @Output() onAddCommentClicked = new EventEmitter<CreatePostCommentDto>();
 
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   private _subscription = new Subscription()
 
   constructor(
     private _dialog: MatDialog,
-    private _store: Store<CommentState | ReplyState>,
+    private _store: Store<State | ReplyState>,
   ) { }
 
   ngOnDestroy() {

@@ -1,15 +1,11 @@
 import { Injectable } from "@angular/core";
 import { of } from 'rxjs';
-import { map, switchMap, catchError, exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { map, switchMap, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import * as commentActions from '../actions/comment.actions';
-import { CommentService } from "../../services/comment.service";
-import { ReplyState } from "../states/reply.state";
-import { PushManyReplies } from "../actions/reply.actions";
+import * as commentActions from './comment.actions';
+import { CommentService } from "../services/comment.service";
 import { NotificationService } from "src/app/_shared/services";
-import { $_authUser } from "src/app/auth/store/auth.selectors";
 
 @Injectable()
 export class CommentEffects {
@@ -45,11 +41,11 @@ export class CommentEffects {
     ))
   ))
 
-  pushRepliesOfSingleComment$ = createEffect(() => this._actions$.pipe(
+  pushComments$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentByIdSuccess),
     tap(({ comment }) => {
       if (comment.replies.length) {
-        this._store.dispatch(PushManyReplies({ replies: comment.replies }))
+        commentActions.PushManyComments({ comments: comment.replies });
       }
     })
   ), { dispatch: false })
@@ -65,7 +61,6 @@ export class CommentEffects {
   constructor(
     private _actions$: Actions,
     private _commentService: CommentService,
-    private _store: Store<ReplyState>,
     private _notificationService: NotificationService,
   ) { }
 

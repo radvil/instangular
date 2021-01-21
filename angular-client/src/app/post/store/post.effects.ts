@@ -6,7 +6,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as postActions from './post.actions';
 import { PostService } from "../services/post.service";
-import { PushManyComments } from "src/app/comment/store/actions/comment.actions";
+import { PushManyComments } from "src/app/comment/store/comment.actions";
 import { NotificationService } from "src/app/_shared/services";
 
 @Injectable()

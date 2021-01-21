@@ -28,7 +28,7 @@
           View all {{ post.commentsCount }} comments
         </p>
         <p class="truncate1" *ngFor="let comment of post.comments | slice: 0:2">
-          <b (click)="viewUserProfile(comment.commentedBy.username)">
+          <b (click)="viewUserProfile(comment.commentedBy?.username)">
             {{ comment.commentedBy.username }}
           </b>
           {{ comment.text }}

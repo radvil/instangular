@@ -7,8 +7,8 @@ import { filter, map, tap } from 'rxjs/operators';
 import { compareToGetClass, ReactionsDialogComponent } from 'src/app/_shared';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
-import { Comment, CommentReaction, CreateReplyDto, GetRepliesDto, Reply } from '../../interfaces';
-import { CommentState } from '../../store/states/comment.state';
+import { PostComment, CommentReaction, CreatePostCommentReplyDto, GetRepliesDto, PostCommentReply } from '../../interfaces';
+import { State } from '../../store/comment.state';
 import { AddNewReply, GetRepliesByCommentId, ReactReply } from '../../store/actions/reply.actions';
 import { GetCommentById, ReactComment } from '../../store/actions'
 import { $_comment } from '../../store/selectors';
@@ -25,8 +25,8 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   private _subscription = new Subscription();
   public commentId: string;
   public pageNumber = 1;
-  public comment: Comment;
-  public replies: Reply[];
+  public comment: PostComment;
+  public replies: PostCommentReply[];
   public authUser: User;
   public pageHeaderTitle = "Comment Replies";
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
@@ -52,9 +52,9 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
         filter(comment => !!comment),
       ).subscribe(comment => {
         this.comment = comment;
-        if (comment.commentedBy && comment.commentedToPost) {
+        if (comment.commentedBy && comment.postRef) {
           const commentAuthor = this.decideUsernameText(comment.commentedBy?.username);
-          const postAuthor = this.decideUsernameText(comment.commentedToPost?.postedBy?.username);
+          const postAuthor = this.decideUsernameText(comment.postRef?.postedBy?.username);
           this.pageHeaderTitle = `Replies to ${commentAuthor} comment on ${postAuthor} post`;
         }
       })
@@ -143,7 +143,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   addNewReply(textInput: string): void {
     if (this.comment) {
       console.log('addNewReply(textInput) >> ' + textInput);
-      const replyDto = <CreateReplyDto>{
+      const replyDto = <CreatePostCommentReplyDto>{
         postId: this.comment.postId,
         repliedTo: this.commentId,
         text: textInput,
@@ -155,7 +155,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store<CommentState>,
+    private _store: Store<State>,
     private _dialog: MatDialog,
   ) { }
 

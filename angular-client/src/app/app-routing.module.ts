@@ -8,28 +8,28 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
-  {
-    path: 'auth',
-    loadChildren: () => import('./auth/pages/auth.module').then(m => m.AuthModule)
-  },
-  {
-    path: 'user',
-    // canActivate: [AuthGuard],
-    loadChildren: () => import('./user/pages/user.module').then(m => m.UserModule)
-  },
-  {
-    path: 'post',
-    // canActivate: [AuthGuard],
-    loadChildren: () => import('./post/pages/post.module').then(m => m.PostModule)
-  },
-  {
-    path: 'comment',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./comment/pages/comment.module').then(m => m.CommentModule)
-  },
+  // {
+  //   path: 'auth',
+  //   loadChildren: () => import('./auth/pages/auth.module').then(m => m.AuthModule)
+  // },
+  // {
+  //   path: 'user',
+  //   // canActivate: [AuthGuard],
+  //   loadChildren: () => import('./user/pages/user.module').then(m => m.UserModule)
+  // },
+  // {
+  //   path: 'post',
+  //   // canActivate: [AuthGuard],
+  //   loadChildren: () => import('./post/pages/post.module').then(m => m.PostModule)
+  // },
+  // {
+  //   path: 'comment',
+  //   canActivate: [AuthGuard],
+  //   loadChildren: () => import('./comment/pages/comment.module').then(m => m.CommentModule)
+  // },
   {
     path: 'home',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./home/pages/home.module').then(m => m.HomeModule),
   },
 ];

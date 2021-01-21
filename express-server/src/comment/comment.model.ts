@@ -57,7 +57,7 @@ const schema = new Schema<Comment>({
   text: String,
 }, schemaOptions);
 
-schema.virtual('commentedToPost', {
+schema.virtual('postRef', {
   ref: 'Post',
   foreignField: '_id',
   localField: 'postId',

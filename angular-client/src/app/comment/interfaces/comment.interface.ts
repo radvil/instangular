@@ -1,36 +1,26 @@
 import { User } from "src/app/user/interfaces";
 
-export interface Comment {
+export interface PostComment {
   _id: string;
   postId: string;
   commentedBy: User;
-  commentedToPost?: {
+  postRef?: { // if commentAsParent
     _id: string;
     postedBy: User;
   };
+  repliedTo?: string; // if commentAsReply
   text: string;
   createdAt: string;
   reactions: any[];
   reactionsCount: number;
-  replies: Reply[];
-  myReaction?: CommentReaction;
-}
-
-export interface Reply {
-  _id: string;
-  postId: string;
-  repliedTo: string;
-  commentedBy: User;
-  text: string;
-  createdAt: string;
-  reactions: any[];
-  reactionsCount: number;
+  replies: PostComment[];
   myReaction?: CommentReaction;
 }
 
 export interface CommentReaction {
   _id?: string;
+  postId: string;
   commentId?: string;
-  reactedBy?: User;
+  reactedBy: User;
   variant: string;
 }

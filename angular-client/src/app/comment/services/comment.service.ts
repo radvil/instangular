@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
-  Comment,
+  PostComment,
   CommentReaction,
-  CreateCommentDto,
-  GetCommentsDto,
+  CreatePostCommentDto,
+  GetPostCommentsDto,
 } from '../interfaces';
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from 'src/app/_core';
@@ -17,8 +17,8 @@ export class CommentService {
   constructor(private _http: HttpClient) {}
 
   public getCommentsByPostId(
-    getCommentsByPostIdDto: GetCommentsDto
-  ): Observable<Comment[]> {
+    getCommentsByPostIdDto: GetPostCommentsDto
+  ): Observable<PostComment[]> {
     const { postId, pageNumber, limit } = getCommentsByPostIdDto;
 
     let httpParams = new HttpParams();
@@ -26,26 +26,26 @@ export class CommentService {
     if (pageNumber) httpParams = httpParams.set('page', pageNumber.toString());
     if (limit) httpParams = httpParams.set('limit', limit.toString());
 
-    const request$ = this._http.get<ApiRes<Comment[]>>(
+    const request$ = this._http.get<ApiRes<PostComment[]>>(
       `${env.be.url}/comments`,
       { params: httpParams }
     );
     return request$.pipe(map((res) => res.data));
   }
 
-  public getCommentById(commentId: string): Observable<Comment> {
+  public getCommentById(commentId: string): Observable<PostComment> {
     let httpParams = new HttpParams();
     httpParams = httpParams.set('includingReplies', 'true');
 
-    const request$ = this._http.get<ApiRes<Comment>>(
+    const request$ = this._http.get<ApiRes<PostComment>>(
       `${env.be.url}/comments/${commentId}`,
       { params: httpParams }
     );
     return request$.pipe(map((res) => res.data));
   }
 
-  public addComment(createCommentDto: CreateCommentDto): Observable<Comment> {
-    const request$ = this._http.post<ApiRes<Comment>>(
+  public addComment(createCommentDto: CreatePostCommentDto): Observable<PostComment> {
+    const request$ = this._http.post<ApiRes<PostComment>>(
       `${env.be.url}/comments`,
       createCommentDto
     );
