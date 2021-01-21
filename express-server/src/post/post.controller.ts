@@ -63,7 +63,7 @@ export class PostController implements Controller {
 
   private getAllPosts = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const querify = new Querify(req.query);
-    const originalRequest = this._postModel
+    const foundPosts = await this._postModel
       .find(querify.search)
       .limit(querify.limit)
       .skip(querify.skip)
@@ -73,70 +73,72 @@ export class PostController implements Controller {
         path: 'postedBy',
         select: USER_POPULATE_SELECT,
       })
-    if (req.user._id) {
-      originalRequest.populate(<ModelPopulateOptions>{
+      .populate(<ModelPopulateOptions>{
         path: 'myReaction',
         options: {
           where: { reactedBy: req.user._id },
           select: '-_id -reactedBy',
         }
       })
-    }
-    if (req.query.includeComments == 'true') {
-      originalRequest
-        .populate(<ModelPopulateOptions>{
-          path: 'comments',
-          options: {
-            where: { repliedTo: { $eq: null } },
-            limit: 5,
-            sort: { createdAt: -1 },
-          },
-          populate: [
-            { path: 'reactionsCount' },
-            // { path: 'repliesCount' },
-            { path: 'commentedBy', select: USER_POPULATE_SELECT },
-            {
-              path: 'replies',
-              options: {
-                where: {
-                  repliedTo: {
-                    $ne: null
+
+    for (const post of foundPosts) {
+      if (req.query.includeComments == 'true') {
+        await post
+          .populate(<ModelPopulateOptions>{
+            path: 'comments',
+            options: {
+              where: { repliedTo: { $eq: null } },
+              limit: 5,
+              sort: { createdAt: -1 },
+            },
+            populate: [
+              { path: 'reactionsCount' },
+              { path: 'commentedBy', select: USER_POPULATE_SELECT },
+              {
+                path: 'replies',
+                options: {
+                  where: {
+                    repliedTo: {
+                      $ne: null
+                    },
                   },
-                },
-                sort: {
-                  createdAt: -1,
-                },
-                limit: 5,
-                populate: {
-                  path: 'commentedBy',
-                  select: USER_POPULATE_SELECT,
+                  sort: {
+                    createdAt: -1,
+                  },
+                  limit: 5,
+                  populate: {
+                    path: 'commentedBy',
+                    select: USER_POPULATE_SELECT,
+                  }
                 }
-              }
+              },
+            ]
+          })
+          .populate('commentsAsParentCount')
+          .populate('commentsCount')
+          .execPopulate();
+      }
+      if (req.query.includeReactions == 'true') {
+        await post
+          .populate(<ModelPopulateOptions>{
+            path: 'reactions',
+            options: {
+              sort: {
+                createdAt: -1
+              },
+              limit: 5,
+              populate: {
+                path: 'reactedBy',
+                select: USER_POPULATE_SELECT
+              },
             },
-          ]
-        })
-        .populate('commentsAsParentCount')
-        .populate('commentsCount')
+          })
+          .populate('reactionsCount')
+          .execPopulate()
+      }
     }
-    if (req.query.includeReactions == 'true') {
-      originalRequest
-        .populate(<ModelPopulateOptions>{
-          path: 'reactions',
-          options: {
-            sort: {
-              createdAt: -1
-            },
-            limit: 5,
-            populate: {
-              path: 'reactedBy',
-              select: USER_POPULATE_SELECT
-            },
-          },
-        })
-        .populate('reactionsCount')
-    }
+
     try {
-      const foundPosts = await originalRequest;
       res.json(<JsonHttpResponse<Post[]>>{
         status: 200,
         message: 'GET posts succeded!',
