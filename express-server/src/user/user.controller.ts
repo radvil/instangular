@@ -122,13 +122,13 @@ export class UserController implements Controller {
    * @desc private route to patch user's basics information
    */
   private patchBasicsInfo = async (req: RequestUser, res: Res, next: Next) => {
-    const { bio, websiteLink, facebookLink, twitterLink, githubLink } = <UserBasicsInfoDto>req.body;
+    const { name, bio, websiteLink, facebookLink, twitterLink, githubLink } = <UserBasicsInfoDto>req.body;
     const foundUser = await this._userModel.findById(req.user._id);
     if (!foundUser) {
       next(new NOT_FOUND_EXCEPTION('user not found!'));
     }
     try {
-      foundUser.set({ bio, websiteLink, facebookLink, twitterLink, githubLink });
+      foundUser.set({ name, bio, websiteLink, facebookLink, twitterLink, githubLink });
       const savedUser = await foundUser.save();
       res.json(<JsonHttpResponse<User>>{
         status: 200,

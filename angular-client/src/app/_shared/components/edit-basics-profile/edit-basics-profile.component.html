@@ -1,6 +1,12 @@
 <div class="container">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <h3>Bio</h3>
+    <h5>Full Name</h5>
+    <small *ngIf="form.get('name').hasError('maxlength')">
+      Maximum 100 chars allowed
+    </small>
+    <input formControlName="name" type="text" placeholder="Full Name" />
+
+    <h5>Bio</h5>
     <small *ngIf="form.get('bio').hasError('minlength')">
       Minimum 3 chars required
     </small>
@@ -11,7 +17,7 @@
       placeholder="Write your description..."
     ></textarea>
 
-    <h3>Social links</h3>
+    <h5>Social links</h5>
     <input formControlName="websiteLink" type="text" placeholder="Website" />
     <input formControlName="facebookLink" type="text" placeholder="Facebook" />
     <input formControlName="twitterLink" type="text" placeholder="Twitter" />

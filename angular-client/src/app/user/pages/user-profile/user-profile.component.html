@@ -39,19 +39,19 @@
       <div class="bio">{{ user.bio }}</div>
       <div class="socialLinks">
         <div *ngIf="user.websiteLink" class="socialLinkItem">
-          <a href="#">{{ user.websiteLink | truncate }}</a>
+          <a href="#">{{ user.websiteLink | truncate: 15 }}</a>
         </div>
         <div *ngIf="user.facebookLink" class="socialLinkItem">
           <fa-icon [icon]="['fab', 'facebook']"></fa-icon>&nbsp;
-          <a href="#">{{ user.facebookLink }}</a>
+          <a href="#">{{ user.facebookLink | truncate: 15 }}</a>
         </div>
         <div *ngIf="user.twitterLink" class="socialLinkItem">
           <fa-icon [icon]="['fab', 'twitter']"></fa-icon>&nbsp;
-          <a href="#">{{ user.twitterLink }}</a>
+          <a href="#">{{ user.twitterLink | truncate: 15 }}</a>
         </div>
         <div *ngIf="user.githubLink" class="socialLinkItem">
           <fa-icon [icon]="['fab', 'github']"></fa-icon>&nbsp;
-          <a href="#">{{ user.githubLink }}</a>
+          <a href="#">{{ user.githubLink | truncate: 15 }}</a>
         </div>
       </div>
     </div>

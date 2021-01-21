@@ -15,7 +15,7 @@ export class UserAvatarComponent {
 
   public get imageContainerStyle() {
     return {
-      cursor: this.clickable ? "pointer" : "none",
+      cursor: this.clickable ? "pointer" : "initial",
       height: `${parseInt(this.imageHeight) + 6}px`,
       width: `${parseInt(this.imageHeight) + 6}px`
     }

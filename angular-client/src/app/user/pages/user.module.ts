@@ -8,7 +8,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 // local modules
-import { PageHeaderModule } from 'src/app/_shared/components';
+import { InstAngularPipesModule } from 'src/app/_shared/pipes';
+import { EditBasicsProfileModule, PageHeaderModule, UploadProfilePictureModule, UserAvatarModule } from 'src/app/_shared/components';
 import { UserStoreModule } from '../store/user-store.module';
 import { PostStoreModule } from 'src/app/post/store/post-store.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -45,9 +46,13 @@ export class UserRoutingModule { }
     MatIconModule,
     // local modules
     UserRoutingModule,
+    InstAngularPipesModule,
     UserStoreModule,
     PostStoreModule,
     PageHeaderModule,
+    UploadProfilePictureModule,
+    EditBasicsProfileModule,
+    UserAvatarModule,
   ],
 })
 export class UserModule { }

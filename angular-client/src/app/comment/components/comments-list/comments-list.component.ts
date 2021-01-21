@@ -78,7 +78,7 @@ export class CommentsListComponent {
   onContextMenuEditAction(comment: PostComment) {
     this.commentDialogRef = this._dialog.open(CommentDialogComponent, {
       data: { comment, authUser: this.authUser },
-      panelClass: 'commentDialogPanel',
+      panelClass: 'dialogPanel',
       maxWidth: '95vw',
       width: '666px',
     });
@@ -103,7 +103,7 @@ export class CommentsListComponent {
     this.deleteDialogRef = this._dialog.open(ConfirmDialogComponent, {
       data: { message: 'Delete this comment ?' },
       width: '666px',
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
     });
 
     this._subscription.add(
@@ -131,7 +131,7 @@ export class CommentsListComponent {
   public openReactionDialog(commentId: string) {
     this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
       width: '666px',
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
     });
 
     const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(

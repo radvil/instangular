@@ -106,7 +106,7 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
   openReactionDialog(commentIdEvent: string, type: string): void {
     this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
       width: '666px',
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
     });
 
     const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(

@@ -42,6 +42,7 @@ export class EditBasicsProfileComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.form = this._formBuilder.group({
+      name: ['', [Validators.maxLength(100)]],
       bio: ['', [Validators.minLength(5)]],
       websiteLink: [''],
       facebookLink: [''],
@@ -82,8 +83,9 @@ export class EditBasicsProfileComponent implements OnInit, OnDestroy {
   }
 
   private patchForm(user: User): void {
-    const { bio, websiteLink, facebookLink, twitterLink, githubLink } = user;
+    const { name, bio, websiteLink, facebookLink, twitterLink, githubLink } = user;
 
+    if (name) this.form.patchValue({ name });
     if (bio) this.form.patchValue({ bio });
     if (websiteLink) this.form.patchValue({ websiteLink });
     if (facebookLink) this.form.patchValue({ facebookLink });

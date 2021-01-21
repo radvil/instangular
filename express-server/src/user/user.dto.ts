@@ -23,6 +23,10 @@ export class CreateUserDto {
 export class UserBasicsInfoDto {
   @IsOptional()
   @IsString()
+  public name?: string;
+
+  @IsOptional()
+  @IsString()
   public bio?: string;
 
   @IsOptional()

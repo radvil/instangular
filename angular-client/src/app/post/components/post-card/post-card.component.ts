@@ -81,7 +81,7 @@ export class PostCardComponent implements OnDestroy {
       width: '333px',
       maxWidth: '95vw',
       maxHeight: '95vh',
-      panelClass: 'updatePostDialog',
+      panelClass: 'updatePostPanel',
       data: { postId: postIdEvent, currentPost: this.post },
     });
 
@@ -102,7 +102,7 @@ export class PostCardComponent implements OnDestroy {
   openDeletePostDialog(postIdEvent: string) {
     this.deleteDialogRef = this._dialog.open(ConfirmDialogComponent, {
       width: '333px',
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
       data: { message: 'Delete this post ?' },
     });
 
@@ -120,7 +120,7 @@ export class PostCardComponent implements OnDestroy {
   openReactionsDialog(postIdEvent: string) {
     this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
       width: '666px',
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
     });
 
     const reactAndCloseDialog$ = this.reactionsDialogRef.beforeClosed().pipe(
@@ -140,7 +140,7 @@ export class PostCardComponent implements OnDestroy {
   clickComment(postId: string) {
     this.commentDialogRef = this._dialog.open(CommentDialogComponent, {
       data: { authUser: this.authUser },
-      panelClass: 'commentDialogPanel',
+      panelClass: 'dialogPanel',
       maxWidth: '95vw',
       width: '666px',
     });

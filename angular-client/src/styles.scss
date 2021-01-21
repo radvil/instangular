@@ -141,7 +141,10 @@ input {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
-.updatePostDialog .mat-dialog-container {
+.container {
+  margin: 1rem;
+}
+.updatePostPanel .mat-dialog-container {
   padding: 0;
 
   overflow-x: auto;
@@ -151,10 +154,7 @@ input {
     display: none;
   }
 }
-.container .mat-dialog-container {
-  padding: 1rem;
-}
-.commentDialogPanel {
+.dialogPanel {
   .mat-dialog-container {
     padding: 1rem;
   }

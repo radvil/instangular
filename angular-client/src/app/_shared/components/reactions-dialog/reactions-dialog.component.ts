@@ -5,15 +5,13 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-reactions-dialog',
   styleUrls: ['./reactions-dialog.component.scss'],
   template: `
-    <div class="container">
-      <h3 class="title">Choose reaction</h3>
-      <ul class="reactionsList">
-        <li *ngFor="let reaction of reactionsList" (click)="confirmReaction(reaction.key)">
-          <img [src]="reaction.icon" />
-          <small>{{ reaction.label }}</small>
-        </li>
-      </ul>
-    </div>
+    <h3 class="title">Choose reaction</h3>
+    <ul class="reactionsList">
+      <li *ngFor="let reaction of reactionsList" (click)="confirmReaction(reaction.key)">
+        <img [src]="reaction.icon" />
+        <small>{{ reaction.label }}</small>
+      </li>
+    </ul>
   `,
 })
 export class ReactionsDialogComponent {

@@ -69,7 +69,7 @@ export class PostAddComponent implements OnInit, OnDestroy {
   public openLoadingDialog(): void {
     this.loadingDialog = this._dialog.open(LoadingDialogComponent, {
       disableClose: true,
-      panelClass: 'container',
+      panelClass: 'dialogPanel',
       width: '15rem',
       height: '15rem',
       data: {

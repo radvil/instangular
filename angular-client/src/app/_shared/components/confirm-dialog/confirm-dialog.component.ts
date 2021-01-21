@@ -5,23 +5,21 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-confirm-dialog',
   styleUrls: ['./confirm-dialog.component.scss'],
   template: `
-    <div class="container">
-      <ng-container *ngIf="!isLoading; else placeholder">
-        <h3 class="message">{{ messageText }}</h3>
-        <br />
-        <div class="fx-row">
-          <button mat-raised-button (click)="onConfirmClicked()">
-            {{ confirmText }}
-          </button>
-          <button (click)="onCancelClicked()">
-            {{ cancelText }}
-          </button>
-        </div>
-      </ng-container>
-      <ng-template #placeholder>
-        <h3 class="message">Loading...</h3>
-      </ng-template>
-    </div>
+    <ng-container *ngIf="!isLoading; else placeholder">
+      <h3 class="message">{{ messageText }}</h3>
+      <br />
+      <div class="fx-row">
+        <button mat-raised-button (click)="onConfirmClicked()">
+          {{ confirmText }}
+        </button>
+        <button (click)="onCancelClicked()">
+          {{ cancelText }}
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #placeholder>
+      <h3 class="message">Loading...</h3>
+    </ng-template>
   `,
 })
 export class ConfirmDialogComponent {
