@@ -3,8 +3,8 @@ import { userAdapter, $_userState } from './user.state';
 
 const { selectAll, selectEntities } = userAdapter.getSelectors();
 
-export const $_userLoading = createSelector($_userState, state => state.loading);
-export const $_userLoaded = createSelector($_userState, state => state.loaded);
+export const $_userLoading = createSelector($_userState, state => state.isLoading);
+export const $_userLoaded = createSelector($_userState, state => state.isLoaded);
 export const $_userError = createSelector($_userState, state => state.error);
 export const $_userSelectedUsername = createSelector($_userState, state => state.selectedUsername);
 export const $_users = createSelector($_userState, selectAll);

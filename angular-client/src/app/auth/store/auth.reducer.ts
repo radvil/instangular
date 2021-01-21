@@ -58,6 +58,15 @@ const reducer = createReducer(
     error: action.error,
   })),
 
+  on(AuthActions.ChangeProfilePhoto, (state, payload) => {
+    const { photo, photoThumb } = payload;
+    return {
+      ...state,
+      isLoading: false,
+      user: { ...state.user, photo, photoThumb },
+    }
+  }),
+
   on(AuthActions.Logout, state => ({
     ...state,
     isLoading: false,

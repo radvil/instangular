@@ -31,6 +31,10 @@ export class PostCardComponent implements OnDestroy {
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   private _subscription = new Subscription();
 
+  get sameAsAuthor(): boolean {
+    return this.authUser._id === this.post.postedBy._id;
+  }
+
   constructor(
     private _dialog: MatDialog,
     private _store: Store,

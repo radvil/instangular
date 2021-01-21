@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment as env } from 'src/environments/environment'
-import { User } from '../interfaces';
+import { UploadUserPhotoDto, User } from '../interfaces';
+import { ApiRes } from 'src/app/_core';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -15,5 +16,13 @@ export class UserService {
       `${env.be.url}/users/${username}?includePosts=true`
     );
     return request$.pipe(map(res => res.data))
+  }
+
+  public uploadProfilePicture(dto: UploadUserPhotoDto): Observable<User> {
+    const url = env.be.url + `/users/upload-profile-photo`;
+    const formData: FormData = new FormData();
+    formData.append('userId', dto.userId);
+    formData.append('photo', dto.photo);
+    return this._http.post<ApiRes<User>>(url, formData).pipe(map(res => res.data));
   }
 }

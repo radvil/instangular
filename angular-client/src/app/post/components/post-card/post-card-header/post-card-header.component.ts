@@ -20,11 +20,15 @@ export class PostCardHeaderComponent {
   }
 
   clickMenuEdit(postId: string): void {
-    this.onMenuEditClicked.emit(postId);
+    if (this.enableEdit) {
+      this.onMenuEditClicked.emit(postId);
+    }
   }
 
   clickMenuDelete(postId: string): void {
-    this.onMenuDeleteClicked.emit(postId);
+    if (this.enableDelete) {
+      this.onMenuDeleteClicked.emit(postId);
+    }
   }
   
 

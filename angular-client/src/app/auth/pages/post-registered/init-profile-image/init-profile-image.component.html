@@ -1,2 +1,21 @@
+<app-page-header
+  [style]="'sticky'"
+  [fontSize]="'1.5rem'"
+  [textAlign]="'center'"
+  [title]="'Setup profile photo'"
+>
+</app-page-header>
+
 <app-upload-profile-picture>
 </app-upload-profile-picture>
+
+<div class="next__action">
+  <button
+    (click)="nextStep()"
+    [disabled]="nextActionTextSubject.value === 'Uploading'"
+    mat-stroked-button
+    color="warn"
+  >
+    {{ nextActionText$ | async }}
+  </button>
+</div>

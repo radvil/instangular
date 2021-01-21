@@ -10,8 +10,8 @@ const sortComparer = (userX: User, userY: User): number => {
 export const userAdapter = createEntityAdapter<User>({ selectId, sortComparer });
 
 export interface UserState extends EntityState<User> {
-  loaded: boolean;
-  loading: boolean;
+  isLoaded: boolean;
+  isLoading: boolean;
   error?: Error;
   selectedUsername?: string;
 }
@@ -19,8 +19,8 @@ export interface UserState extends EntityState<User> {
 export const $_userState = createFeatureSelector<UserState>('users');
 
 export const initialUserState: UserState = userAdapter.getInitialState({
-  loaded: false,
-  loading: false,
+  isLoaded: false,
+  isLoading: false,
   error: null,
   selectedUsername: null,
 })

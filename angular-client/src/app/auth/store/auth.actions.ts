@@ -16,6 +16,8 @@ export enum AuthActionsType {
   GET_AUTH_USER_SUCCESS = '[Auth] Get AuthUser Success',
   GET_AUTH_USER_FAILURE = '[Auth] Get AuthUser Failure',
 
+  CHANGE_PROFILE_PHOTO = '[Auth] Change Profile Photo',
+
   LOGOUT = '[Auth] Logout',
 }
 
@@ -57,6 +59,11 @@ export const GetAuthUserFailure = createAction(
   props<{ error: Error }>()
 )
 
-export const Logout = createAction(
-  AuthActionsType.LOGOUT,
+export const ChangeProfilePhoto = createAction(
+  AuthActionsType.CHANGE_PROFILE_PHOTO,
+  props<{ photo: string, photoThumb: string }>()
 )
+
+export const Logout = createAction(
+    AuthActionsType.LOGOUT,
+  )

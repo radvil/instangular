@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialPostState, PostState, postAdapter } from './post.state';
 import * as PostActions from './post.actions';
-import { PostReaction } from '../interfaces';
 
 export const postReducer = createReducer(
   initialPostState,
@@ -56,7 +55,9 @@ export const postReducer = createReducer(
   on(PostActions.UpdatePostByIdSuccess, (state, { post }) => (
     postAdapter.updateOne({
       id: post._id,
-      changes: post,
+      changes: {
+        description: post.description
+      }
     }, { ...state, loaded: true, loading: false })
   )),
 

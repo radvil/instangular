@@ -7,21 +7,41 @@ export const userReducer = createReducer(
 
   on(UserActions.GetUser, (state: UserState, { username }) => ({
     ...state,
-    loaded: false,
-    loading: true,
+    isLoaded: false,
+    isLoading: true,
     selectedUsername: username,
   })),
   on(UserActions.GetUserFailure, (state: UserState, { error }) => ({
     ...state,
-    loaded: false,
-    loading: false,
+    isLoaded: false,
+    isLoading: false,
     error,
   })),
   on(UserActions.GetUserSuccess, (state: UserState, { user }) => (
     userAdapter.addOne(user, {
       ...state,
-      loaded: true,
+      isLoaded: true,
       loading: false,
+    })
+  )),
+
+  on(UserActions.UploadUserProfilePicture, (state) => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+  })),
+  on(UserActions.UploadUserProfilePictureFailure, (state, { error }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error,
+  })),
+  on(UserActions.UploadUserProfilePictureSuccess, (state, { user }) => (
+    userAdapter.upsertOne(user, {
+      ...state,
+      loading: false,
+      isLoaded: true,
+      selectedUsername: user.username,
     })
   )),
 )

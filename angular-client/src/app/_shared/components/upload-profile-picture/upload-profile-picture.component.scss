@@ -32,3 +32,10 @@
 mat-icon {
   font-size: 5rem !important;
 }
+.loading__container {
+  height: 75%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

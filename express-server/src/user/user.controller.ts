@@ -40,10 +40,10 @@ export class UserController implements Controller {
   }
 
   private initRoutes(): void {
+    this.router.post(this.path + '/upload-profile-photo', authorizeAccess(), this.upload.single('photo'), this.uploadPhoto);
     this.router.get(this.path + '/:username', this.getUserByUsername);
-    this.router.patch(this.path + '/:userId/photo', authorizeAccess(), this.upload.single('photo'), this.uploadPhoto);
-    this.router.patch(this.path + '/:userId/basicsInfo', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
-    this.router.patch(this.path + '/:userId/sensitivesInfo', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
+    this.router.patch(this.path + '/:userId/basics-info', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
+    this.router.patch(this.path + '/:userId/sensitives-info', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
     this.router.patch(this.path + '/:userId/password', authorizeAccess([Role.USER, Role.ADMIN]), this.patchPassword);
   }
 
@@ -87,16 +87,18 @@ export class UserController implements Controller {
    * @desc private route to patch user's basics information
    */
   private uploadPhoto = async (req: RequestUser, res: Res, next: Next) => {
-    if (req.user._id.toString() !== req.params.userId.toString()) {
-      next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
+    if (req.user._id.toString() !== req.body.userId.toString()) {
+      return next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
     }
-    const foundUser = await this._userModel.findById(req.params.userId);
+    const foundUser = await this._userModel.findById(req.user._id);
     if (!foundUser) {
-      next(new NOT_FOUND_EXCEPTION('user not found!'));
+      return next(new NOT_FOUND_EXCEPTION('user not found!'));
     }
-    const [thumbPath, imagePath] = await this.uploadPostImage(req.file, 'url');
-    console.log(thumbPath, imagePath);
     try {
+      if (foundUser.photo && foundUser.photoThumb) {
+        await this.imageService.removeAssociatedImages(foundUser.photo, this.sizesConfigs);
+      }
+      const [thumbPath, imagePath] = await this.uploadImage(req.file, 'url');
       foundUser.set(<User>{
         photo: imagePath,
         photoThumb: thumbPath,
@@ -105,7 +107,7 @@ export class UserController implements Controller {
       res.json(<JsonHttpResponse<User>>{
         status: 200,
         message: "upload photo succeed!",
-        data: savedUser
+        data: savedUser,
       })
     } catch (error) {
       next(new INTERNAL_SERVER_EXCEPTION(error));
@@ -216,7 +218,7 @@ export class UserController implements Controller {
    * @desc get value from a image output that return string provided by given key.
    * #### example usage: uploadPostImage(req.file, 'key');
    */
-  protected async uploadPostImage(file: any, key?: string): Promise<string[]> {
+  protected async uploadImage(file: any, key?: string): Promise<string[]> {
     const options: TransformOptions = {};
     try {
       const images = await this.imageService.uploadImage({ file, options } as UploadImageDto);

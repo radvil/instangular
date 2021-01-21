@@ -1,12 +1,7 @@
-<app-page-header
-  [style]="'sticky'"
-  [fontSize]="'1.5rem'"
-  [textAlign]="'center'"
-  [title]="'Upload profile image'"
+<div
+  class="container"
+  *ngIf="!(isLoading$ | async) || (isLoaded$ | async); else isLoading"
 >
-</app-page-header>
-
-<div class="container" *ngIf="!(isLoading$ | async); else isLoadingTemplate">
   <!-- hidden input -->
   <input
     #fileInput
@@ -42,9 +37,9 @@
   <!-- submit button -->
   <button
     (click)="submitUpload()"
-    [disabled]="!selectedImage"
-    mat-stroked-button
-    color="accent"
+    [disabled]="!selectedImage || (isLoading$ | async)"
+    mat-flat-button
+    color="primary"
     class="upload__button"
     type="button"
   >
@@ -52,6 +47,8 @@
   </button>
 </div>
 
-<ng-template #isLoadingTemplate>
-  <h3>🎵🎵 Uploading image 🎵🎵</h3>
+<ng-template #isLoading>
+  <div class="loading__container">
+    <h2>🎵🎵 Uploading image ...</h2>
+  </div>
 </ng-template>

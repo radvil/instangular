@@ -2,8 +2,8 @@
   <!-- post card header -->
   <nsg-post-card-header
     [post]="post"
-    [enableEdit]="true"
-    [enableDelete]="true"
+    [enableEdit]="sameAsAuthor"
+    [enableDelete]="sameAsAuthor"
     (onUsernameClicked)="viewUserProfile($event)"
     (onMenuEditClicked)="openUpdatePostDialog($event)"
     (onMenuDeleteClicked)="openDeletePostDialog($event)"
