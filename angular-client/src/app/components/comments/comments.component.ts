@@ -27,17 +27,31 @@ export class CommentsComponent  {
     this.onViewCommentsClicked.emit(postId);
   }
 
-  public viewCommentReplies(commentId: string) {
-    this.onViewRepliesClicked.emit(commentId);
-  }
-
   public viewUserProfile(username: string) {
     this.onUserProfileClicked.emit(username);
   }
 
-  getCommentClass(username: string): string {
+  public reactToComment(commentId: string) {
+    alert('TODO:// reactToComment(commentId: string)');
+  }
+
+  public replyToComment(commentId: string) {
+    alert('TODO:// replyToComment(commentId: string)');
+    // dialog form; >> adding new comment;
+  }
+
+  public viewCommentReactions(commentId: string) {
+    alert('TODO:// View Comment Reactions');
+  }
+
+  public viewCommentReplies(commentId: string) {
+    this.onViewRepliesClicked.emit(commentId);
+    // navigate to comment detail and it's replies
+  }
+
+  getCommentClass(authorUsername: string): string {
     let currentClasses = "comment__box";
-    if (this.authUser.username === username) currentClasses += ' self';
+    if (this.authUser.username === authorUsername) currentClasses += ' self';
     return currentClasses;
   }
 

@@ -1,0 +1,24 @@
+<div
+  class="view__prev__replies"
+  (click)="clickViewReplies()"
+  *ngIf="replies.length > 2"
+>
+  View previous {{ repliesCount - 2 }} replies
+</div>
+<ul class="replies__list">
+  <li
+    *ngFor="let reply of replies | slice: 0:2; let i = index"
+    (click)="clickViewReplies()"
+  >
+    <img
+      [lazyLoad]="reply.commentedBy.photoThumb"
+      [defaultImage]="'assets/images/portrait.jpg'"
+      [errorImage]="'assets/images/portrait.jpg'"
+      alt=""
+      height="25"
+      width="25"
+    />
+    <span class="username">{{ reply.commentedBy.username }}</span>
+    <p class="textLimit1">{{ reply.text }}</p>
+  </li>
+</ul>

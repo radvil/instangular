@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { CreatePostDto, Post } from 'src/app/post';
+import { UpdatePostById } from 'src/app/post/store/post.actions';
+import { PostState } from 'src/app/post/store/post.state';
 import { PostEditDialogComponent } from '../post-edit-dialog/post-edit-dialog.component';
-import { Post } from 'src/app/post';
 
 @Component({
   selector: 'app-post-card',
@@ -20,6 +23,7 @@ export class PostCardComponent implements OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _snackBar: MatSnackBar,
+    private _store: Store<PostState>,
   ) { }
 
   ngOnDestroy() {
@@ -50,14 +54,21 @@ export class PostCardComponent implements OnDestroy {
       panelClass: 'updatePostDialog',
       data: { postId: postIdEvent, currentPost: this.post }
     });
-    this._subscription.add(this.updateDialogRef.afterClosed().subscribe(
-      submitted => {
-        if (submitted) {
-          this._snackBar.open('Post Updated', 'See Post');
-          // TODO: Make click action on see post snackbar
-        }
-      }
-    ))
+    this._subscription.add(
+      this.updateDialogRef
+        .afterClosed()
+        .subscribe((dto: CreatePostDto) => {
+          if (dto) {
+            this._store.dispatch(
+              UpdatePostById({
+                postId: this.post._id,
+                changes: { description: dto.description },
+              })
+            );
+            this._snackBar.open('Post Updated', 'See Post');
+          }
+        })
+    );
   }
 
 }

@@ -1,17 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
+  Inject
 } from '@angular/core';
-
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Post } from 'src/app/post';
-import { UpdatePostById } from 'src/app/post/store/post.actions';
-import { $_postLoading } from 'src/app/post/store/post.selectors';
-import { PostState } from 'src/app/post/store/post.state';
-import { TruncatePipe } from 'src/app/utils';
+import { CreatePostDto, Post } from 'src/app/post';
+
 
 @Component({
   selector: 'app-post-edit-dialog',
@@ -21,17 +15,13 @@ import { TruncatePipe } from 'src/app/utils';
 })
 export class PostEditDialogComponent {
   public descriptionText: string;
-  public isPostLoading$: Observable<boolean>;
-  private _truncateText = new TruncatePipe();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { postId: string; currentPost: Post },
+    @Inject(MAT_DIALOG_DATA) public data: { currentPost: Post },
     public _dialogRef: MatDialogRef<PostEditDialogComponent>,
-    private _store: Store<PostState>,
   ) {
     if (this.data) {
       this.descriptionText = this.data.currentPost.description;
-      this.isPostLoading$ = this._store.select($_postLoading);
     }
   }
 
@@ -41,14 +31,10 @@ export class PostEditDialogComponent {
   }
 
   public submitUpdate(): void {
-    if (this.data.postId) {
-      this._store.dispatch(
-        UpdatePostById({
-          postId: this.data.postId,
-          changes: { description: this.descriptionText },
-        })
-      );
-      this._dialogRef.close(true);
+    if (this.data) {
+      this._dialogRef.close(<CreatePostDto>{
+        description: this.descriptionText
+      });
     }
   }
 

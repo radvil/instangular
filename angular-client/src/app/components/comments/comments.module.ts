@@ -5,11 +5,15 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { CommentsComponent } from './comments.component';
 import { InstAngularPipesModule } from 'src/app/utils';
+import { CommentComponent } from './comment/comment.component';
+import { RepliesPreviewComponent } from './replies-preview/replies-preview.component';
 
 
 @NgModule({
   declarations: [
     CommentsComponent,
+    CommentComponent,
+    RepliesPreviewComponent,
   ],
   imports: [
     CommonModule,
@@ -17,6 +21,10 @@ import { InstAngularPipesModule } from 'src/app/utils';
     LazyLoadImageModule,
     InstAngularPipesModule,
   ],
-  exports: [CommentsComponent],
+  exports: [
+    CommentsComponent,
+    CommentComponent,
+    RepliesPreviewComponent
+  ],
 })
 export class CommentsModule { }

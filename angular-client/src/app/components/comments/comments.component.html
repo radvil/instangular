@@ -15,71 +15,15 @@
 
     <!-- comment row -->
     <ng-container *ngFor="let comment of comments">
-      <div class="comment__item">
-        <div class="user__photo__container">
-          <img
-            [lazyLoad]="comment.commentedBy.photoThumb"
-            [defaultImage]="'assets/images/portrait.jpg'"
-            [errorImage]="'assets/images/portrait.jpg'"
-            (click)="viewUserProfile(comment.commentedBy.username)"
-            alt=""
-            height="40"
-            width="40"
-          />
-        </div>
-        <div class="column">
-          <!-- comment__box -->
-          <div>
-            <div [class]="getCommentClass(comment.commentedBy.username)">
-              <small (click)="viewUserProfile(comment.commentedBy.username)">
-                {{ comment.commentedBy.username }}
-              </small>
-              <p>{{ comment.text }}</p>
-            </div>
-            <div class="comment__actions">
-              <div class="time">
-                {{ comment.createdAt | relativeTime: "short" }}
-              </div>
-              <div class="react">React</div>
-              <div class="reply">Reply</div>
-              <div class="reactions__count" *ngIf="comment.reactionsCount">
-                ❤ {{ comment.reactionsCount }}
-              </div>
-            </div>
-          </div>
-          <!-- comment__replies -->
-          <ng-container *ngIf="comment.replies && comment.replies.length">
-            <div
-              class="view__prev"
-              (click)="viewCommentReplies(comment._id)"
-              *ngIf="comment.replies.length > 2"
-            >
-              View previous
-              {{ comment.repliesCount - 2 }} replies
-            </div>
-            <ul class="replies__list">
-              <li
-                *ngFor="
-                  let reply of comment.replies | slice: 0:2;
-                  let i = index
-                "
-                (click)="viewCommentReplies(comment._id)"
-              >
-                <img
-                  [lazyLoad]="reply.commentedBy.photoThumb"
-                  [defaultImage]="'assets/images/portrait.jpg'"
-                  [errorImage]="'assets/images/portrait.jpg'"
-                  alt=""
-                  height="25"
-                  width="25"
-                />
-                <span class="username">{{ reply.commentedBy.username }}</span>
-                <p class="textLimit1">{{ reply.text }}</p>
-              </li>
-            </ul>
-          </ng-container>
-        </div>
-      </div>
+      <app-comment
+        [comment]="comment"
+        [bgClass]="getCommentClass(comment.commentedBy.username)"
+        (onUsernameClicked)="viewUserProfile($event)"
+        (onReactClicked)="reactToComment($event)"
+        (onReplyClicked)="replyToComment($event)"
+        (onReactionsCountClicked)="viewCommentReactions($event)"
+        (onViewRepliesClicked)="viewCommentReplies($event)"
+      ></app-comment>
     </ng-container>
 
     <div class="comment__add">

@@ -1,0 +1,52 @@
+.comment__item {
+  display: flex;
+  line-height: 1.4rem;
+}
+.comment__item p {
+  margin: 0;
+}
+small {
+	font-weight: bold;
+}
+.user__photo__container {
+  margin-right: 0.5rem;
+  height: fit-content;
+  img {
+    object-fit: cover;
+  }
+}
+.user__photo__container img {
+  border-radius: 50%;
+  cursor: pointer;
+}
+.comment__box,
+.comment__actions {
+  padding: 0.5rem 1rem;
+}
+.comment__box {
+  background-color: #f1f1f1;
+  border-radius: 1.5rem;
+}
+.self {
+  background-color: bisque;
+}
+.comment__actions {
+  display: flex;
+}
+.comment__actions > * {
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #5f5f5f;
+  font-weight: bold;
+}
+.comment__actions > .time,
+.comment__actions > .reactions__count {
+  font-weight: inherit;
+}
+.user__photo__container img,
+.comment__box small,
+.react,
+.reply,
+.reactions__count {
+  cursor: pointer;
+}

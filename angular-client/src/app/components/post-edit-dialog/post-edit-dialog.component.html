@@ -12,7 +12,10 @@
     </div>
   </div>
   <main>
-    <div class="post__description truncate3" *ngIf="data.currentPost.description">
+    <div
+      class="post__description truncate3"
+      *ngIf="data.currentPost.description"
+    >
       <b>{{ data.currentPost?.postedBy?.username }}</b
       >&nbsp;
       {{ data.currentPost?.description }}
@@ -30,13 +33,7 @@
         ></textarea>
       </mat-form-field>
       <div class="form__buttons">
-        <button
-          mat-flat-button
-          [disabled]="isPostLoading$ | async"
-          type="submit"
-        >
-          {{ (isPostLoading$ | async) ? "Now Loading.." : "Submit Update" }}
-        </button>
+        <button mat-flat-button type="submit">Submit Update</button>
       </div>
     </form>
   </main>

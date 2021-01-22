@@ -17,9 +17,9 @@ export enum PostActionTypes {
   GET_POST_BY_ID_SUCCESS = '[Post/API] Get Post By Id Success',
   GET_POST_BY_ID_FAILURE = '[Post/API] Get Post By Id Failure',
 
-  UDPATE_POST_BY_ID = '[Post/API] Update Post By Id',
-  UDPATE_POST_BY_ID_SUCCESS = '[Post/API] Update Post By Id Success',
-  UDPATE_POST_BY_ID_FAILURE = '[Post/API] Update Post By Id Failure',
+  UPDATE_POST_BY_ID = '[Post/API] Update Post By Id',
+  UPDATE_POST_BY_ID_SUCCESS = '[Post/API] Update Post By Id Success',
+  UPDATE_POST_BY_ID_FAILURE = '[Post/API] Update Post By Id Failure',
 
 }
 
@@ -52,14 +52,14 @@ export const GetPostByIdFailure = createAction(
 )
 
 export const UpdatePostById = createAction(
-  PostActionTypes.UDPATE_POST_BY_ID,
+  PostActionTypes.UPDATE_POST_BY_ID,
   props<{ postId: string, changes: CreatePostDto }>()
 );
 export const UpdatePostByIdSuccess = createAction(
-  PostActionTypes.GET_POST_BY_ID_SUCCESS,
+  PostActionTypes.UPDATE_POST_BY_ID_SUCCESS,
   props<{ post: Post }>()
 )
 export const UpdatePostByIdFailure = createAction(
-  PostActionTypes.GET_POST_BY_ID_FAILURE,
+  PostActionTypes.UPDATE_POST_BY_ID_FAILURE,
   props<{ error: Error }>()
 )
