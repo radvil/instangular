@@ -34,15 +34,22 @@ export const commentReducer = createReducer(
     ...state,
     loaded: false,
     loading: true,
+    updating: true,
   })),
   on(CommentActions.AddCommentFailure, (state, { error }) => ({
     ...state,
     loaded: false,
     loading: false,
+    updating: false,
     error,
   })),
   on(CommentActions.AddCommentSuccess, (state, { comment }) => (
-    commentAdapter.addOne(comment, { ...state, loaded: true, loading: false })
+    commentAdapter.addOne(comment, {
+      ...state, 
+      loaded: true, 
+      loading: false,
+      updating: false,
+    })
   )),
 
   on(CommentActions.GetCommentById, (state, { commentId }) => ({

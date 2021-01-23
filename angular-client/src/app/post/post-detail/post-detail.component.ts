@@ -22,7 +22,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   private pageNumber = 1;
   private _subscription = new Subscription();
   public isPostLoading$: Observable<boolean>;
-  public isPostHttpError$: Observable<Error>;
   public isCommentsLoading$: Observable<boolean>;
 
   public authUser$: Observable<User>;
@@ -56,7 +55,6 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.comments$ = this._store.select($_commentsByPostId);
     this.postCommentsHasNext$ = this._store.select($_commentsByPostIdHasNextPage);
     this.isPostLoading$ = this._store.select($_postLoading);
-    this.isPostHttpError$ = this._store.select($_postError);
     this.isCommentsLoading$ = this._store.select($_commentLoading);
   }
 

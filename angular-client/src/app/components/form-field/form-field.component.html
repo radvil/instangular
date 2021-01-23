@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="photo__container" *ngIf="authUser$ | async as authUser">
+    <img
+      [lazyLoad]="authUser.photo"
+      [defaultImage]="'assets/images/portrait.jpg'"
+      [errorImage]="'assets/images/portrait.jpg'"
+      [alt]="authUser.username"
+      height="40"
+      width="40"
+    />
+  </div>
+  <form (ngSubmit)="confirmInput()">
+    <input
+      [(ngModel)]="commentInputText"
+      [placeholder]="placeholder"
+      autocomplete="off"
+      name="inputText"
+    />
+    <button type="submit">></button>
+  </form>
+</div>

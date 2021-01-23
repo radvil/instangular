@@ -7,6 +7,7 @@ import { CommentsComponent } from './comments.component';
 import { InstAngularPipesModule } from 'src/app/utils';
 import { CommentComponent } from './comment/comment.component';
 import { RepliesPreviewComponent } from './replies-preview/replies-preview.component';
+import { FormFieldModule } from '../form-field/form-field.module';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { RepliesPreviewComponent } from './replies-preview/replies-preview.compo
     FormsModule,
     LazyLoadImageModule,
     InstAngularPipesModule,
+    FormFieldModule,
   ],
   exports: [
     CommentsComponent,

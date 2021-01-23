@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { PageHeaderModule, PostCardModule } from '../components';
 import { HomeComponent } from './home.component';
@@ -38,6 +40,8 @@ export class HomeRoutingModule { }
 
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ]
 })
 export class HomeModule { }

@@ -9,7 +9,7 @@ import { User } from 'src/app/user';
   styleUrls: ['./comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentsComponent  {
+export class CommentsComponent {
 
   @Input() post: Post;
   @Input() authUser: User;
@@ -20,8 +20,7 @@ export class CommentsComponent  {
   @Output() onViewCommentsClicked = new EventEmitter<string>();
   @Output() onViewRepliesClicked = new EventEmitter<string>();
   @Output() onUserProfileClicked = new EventEmitter<string>();
-  @Output() onAddCommentClicked = new EventEmitter<any>();
-  public commentInputText: string;
+  @Output() onAddCommentClicked = new EventEmitter<CreateCommentDto>();
 
   public viewPostComments(postId: string) {
     this.onViewCommentsClicked.emit(postId);
@@ -55,15 +54,14 @@ export class CommentsComponent  {
     return currentClasses;
   }
 
-  public emitAddComment(): void {
-    if (this.post && this.commentInputText) {
-      const comment = {
+  public emitAddComment(inputText: string): void {
+    if (this.post && inputText) {
+      const comment = <CreateCommentDto>{
         postId: this.post._id,
-        text: this.commentInputText,
+        text: inputText,
         commentedBy: this.authUser._id,
-      } as CreateCommentDto;
+      };
       this.onAddCommentClicked.emit(comment);
-      this.commentInputText = "";
     }
   }
 }

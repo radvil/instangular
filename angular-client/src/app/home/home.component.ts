@@ -6,11 +6,18 @@ import { filter, tap } from 'rxjs/operators';
 
 import { $_authUser } from '../auth/store/auth.selectors';
 import { $_posts } from '../post/store/post.selectors';
-import { GetPosts } from '../post/store/post.actions';
+import { GetPosts, UpdatePostById } from '../post/store/post.actions';
 import { StoryWithUser } from './story/story.component';
 import { User } from '../user';
-import { Post } from '../post';
-import { Comment } from '../comment';
+import { CreatePostDto, Post } from '../post';
+import { CreateCommentDto } from '../comment';
+import { AddComment } from '../comment/store/comment.actions';
+
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
+import { PostState } from 'src/app/post/store/post.state';
+import { PostEditDialogComponent } from '../components';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +26,8 @@ import { Comment } from '../comment';
 })
 export class HomeComponent implements OnInit {
 
+  private _subscription = new Subscription();
+  public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
   public authUser: User;
   public stories: StoryWithUser[];
   public posts$: Observable<Post[]>;
@@ -106,8 +115,37 @@ export class HomeComponent implements OnInit {
     alert('TODO:// Showing user messages');
   }
 
-  public addComment(postIdEvent: string) {
-    alert('TODO:// Add new comment. postId = ' + postIdEvent);
+  openEditDialog(postId: string, currentPost: Post): void {
+    this.updateDialogRef = this._dialog.open(PostEditDialogComponent, {
+      width: '333px',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'updatePostDialog',
+      data: { postId, currentPost }
+    });
+    const doAfterClose$ = this.updateDialogRef
+      .afterClosed()
+      .pipe(tap((dto: CreatePostDto) => {
+        if (dto) {
+          let changes = { description: dto.description };
+          this._store.dispatch(UpdatePostById({ postId, changes }));
+          this._snackBar.open('Post Updated', 'See Post');
+        }
+      }))
+    this._subscription.add(doAfterClose$.subscribe());
+  }
+
+  openDeleteDialog(postIdEvent: string): void {
+    alert('TODO:// openDeleteDialog(postId) ' + postIdEvent);
+  }
+
+  public commentToPost(commentText: string, postId: string) {
+    const createCommentDto = <CreateCommentDto>{
+      postId: postId,
+      text: commentText,
+      commentedBy: this.authUser._id,
+    }
+    this._store.dispatch(AddComment({ createCommentDto }));
   }
 
   ngOnInit(): void {
@@ -116,9 +154,15 @@ export class HomeComponent implements OnInit {
     this.getFeeds();
   }
 
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
+
   constructor(
-    private _store: Store,
     private _router: Router,
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private _store: Store<PostState>,
   ) { }
 
 }

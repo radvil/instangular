@@ -4,7 +4,7 @@ import { User } from "../user.interface";
 
 const selectId = (user: User): string => user.username;
 const sortComparer = (userX: User, userY: User): number => {
-  return userX.createdAt.toString().localeCompare(userY.createdAt.toString())
+  return userX.createdAt?.toString().localeCompare(userY.createdAt?.toString())
 }
 
 export const userAdapter = createEntityAdapter<User>({ selectId, sortComparer });

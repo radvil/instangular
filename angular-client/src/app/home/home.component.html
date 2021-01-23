@@ -24,7 +24,11 @@
     <app-post-card
       [post]="post"
       (onUserProfileClicked)="viewUserProfile($event)"
+      (onAddComment)="commentToPost($event, post._id)"
+      (onEditSelected)="openEditDialog($event, post)"
+      (onDeleteSelected)="openDeleteDialog($event)"
     >
+    <!-- post comments previews -->
     <div class="post__comments" *ngIf="post.comments.length">
       <p class="viewComments" (click)="viewPostComments(post._id)">
         View all {{ post.commentsCount }} comments

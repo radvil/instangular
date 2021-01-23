@@ -25,13 +25,16 @@ export class AuthService {
     const request$ = this._http.post<TokenRes>(
       `${this._authUrl}/login`,
       loginDto,
-      { withCredentials: true }
+      // { withCredentials: true }
     );
     return request$.pipe(map(res => res.data.accessToken))
   }
 
   public requestAuthUser(): Observable<User> {
-    const request$ = this._http.get<AuthUserRes>(`${this._authUrl}/request-auth-user`);
+    const request$ = this._http.get<AuthUserRes>(
+      `${this._authUrl}/request-auth-user`,
+      // { withCredentials: true }
+    );
     return request$.pipe(map(res => res.data));
   }
 

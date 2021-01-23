@@ -26,26 +26,9 @@
       ></app-comment>
     </ng-container>
 
-    <div class="comment__add">
-      <div class="user__photo__container">
-        <img
-          [lazyLoad]="authUser.photoThumb"
-          [defaultImage]="'assets/images/portrait.jpg'"
-          [errorImage]="'assets/images/portrait.jpg'"
-          [alt]="authUser.username"
-          height="40"
-          width="40"
-        />
-      </div>
-      <form (ngSubmit)="emitAddComment()">
-        <input
-          [(ngModel)]="commentInputText"
-          placeholder="Add Comment .."
-          autocomplete="off"
-          name="text"
-        />
-        <button type="submit">></button>
-      </form>
-    </div>
+    <app-form-field
+      [placeholder]="'Add Comment..'"
+      (onInputConfirmed)="emitAddComment($event)"
+    ></app-form-field>
   </div>
 </div>

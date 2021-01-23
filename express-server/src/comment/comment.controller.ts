@@ -90,6 +90,7 @@ export class CommentController implements Controller {
             ]
           }
         })
+        .populate('repliesCount')
         .populate(<ModelPopulateOptions>{
           path: 'reactions',
           options: {

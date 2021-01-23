@@ -14,6 +14,10 @@ export const $_commentLoaded = createSelector(
   $_commentState,
   state => state.loaded
 );
+export const $_commentUpdating = createSelector(
+  $_commentState,
+  state => state.updating
+);
 export const $_commentError = createSelector(
   $_commentState,
   state => state.error
@@ -36,10 +40,12 @@ export const $_commentsByPostIdHasNextPage = createSelector(
   $_commentsByPostId,
   $_post,
   (comments, post) => {
-    const commentsHasNextPage = comments.length < post.commentsAsParentCount;
-    console.log('_commentsByPostIdHasNextPage', commentsHasNextPage);
-    console.log(comments.length, post.commentsAsParentCount);
-    return commentsHasNextPage;
+    if (comments.length && post.commentsAsParentCount) {
+      const commentsHasNextPage = comments.length < post.commentsAsParentCount;
+      console.log('_commentsByPostIdHasNextPage', commentsHasNextPage);
+      console.log(comments.length, post.commentsAsParentCount);
+      return commentsHasNextPage;
+    }
   }
 )
 export const $_comment = createSelector(

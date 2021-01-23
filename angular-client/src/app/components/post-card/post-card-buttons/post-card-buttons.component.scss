@@ -1,0 +1,16 @@
+.post-card--buttons {
+  display: flex;
+  margin: 0.5rem 1rem;
+  button {
+    margin-right: 1rem;
+    &:nth-last-child(1) {
+      margin-right: 0;
+    }
+    &.active mat-icon {
+      color: #f00;
+    }
+  }
+}
+.fx-spacer {
+  flex: auto;
+}

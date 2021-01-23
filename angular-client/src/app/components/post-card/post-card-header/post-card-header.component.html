@@ -1,0 +1,29 @@
+<div class="post-card--header">
+  <div class="photo--container active">
+    <img
+      [lazyLoad]="post.postedBy.photoThumb"
+      [defaultImage]="'assets/images/portrait.jpg'"
+      [errorImage]="'assets/images/portrait.jpg'"
+      [alt]="post.postedBy.username"
+    />
+  </div>
+  <div class="post-card--texts">
+    <a (click)="clickUsername(post.postedBy.username)">
+      {{ post.postedBy.username }}
+    </a>
+    <div class="timestamp">
+      {{ post.createdAt | relativeTime }}
+    </div>
+  </div>
+  <div class="fx-spacer"></div>
+  <!-- <button mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+    </button> -->
+  <app-menu-actions
+    [key]="post._id"
+    [canEdit]="enableEdit"
+    [canDelete]="enableDelete"
+    (onClickedEdit)="clickMenuEdit($event)"
+    (onClickedDelete)="clickMenuDelete($event)"
+  ></app-menu-actions>
+</div>

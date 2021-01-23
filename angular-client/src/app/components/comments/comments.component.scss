@@ -21,51 +21,6 @@
   margin-bottom: 1rem;
   text-align: center;
 }
-.comment__add {
-  display: flex;
-  align-items: center;
-  margin-top: .5rem;
-}
-.user__photo__container {
-  margin-right: 0.5rem;
-  height: fit-content;
-  img {
-    object-fit: cover;
-  }
-}
-.user__photo__container img {
-  border-radius: 50%;
+.comment__paging {
   cursor: pointer;
-}
-.comment__add form {
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.comment__add form input {
-  padding: 1rem;
-  width: -webkit-fill-available;
-  border-radius: 2rem;
-  outline: none;
-  border: none;
-  background-color: #f1f1f1;
-  font-size: 14px;
-}
-.comment__add button {
-  position: absolute;
-  right: 1rem;
-  height: 2rem;
-  width: 2rem;
-  border-radius: 50%;
-  outline: none;
-  border: none;
-  background-color: bisque;
-  color: #222;
-  font-weight: bold;
-}
-
-.comment__paging,
-.comment__add button {
-	cursor: pointer;
 }

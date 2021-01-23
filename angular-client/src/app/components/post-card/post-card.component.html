@@ -1,31 +1,17 @@
 <div *ngIf="post" class="post--item">
-  <div class="post--item-header">
-    <div class="photo--container active">
-      <img
-        [lazyLoad]="post.postedBy.photoThumb"
-        [defaultImage]="'assets/images/portrait.jpg'"
-        [errorImage]="'assets/images/portrait.jpg'"
-        [alt]="post.postedBy.username"
-      />
-    </div>
-    <div class="post--item-texts">
-      <a (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</a>
-      <div class="time">{{ post.createdAt | relativeTime }}</div>
-    </div>
-    <div class="fx-spacer"></div>
-    <!-- <button mat-icon-button>
-      <mat-icon>more_vert</mat-icon>
-    </button> -->
-    <app-menu-actions
-      [key]="post._id"
-      [canEdit]="true"
-      [canDelete]="true"
-      (onClickedEdit)="openUpdatePostDialog($event)"
-      (onClickedDelete)="deletePost($event)"
-    ></app-menu-actions>
-  </div>
+  <!-- post card header -->
+  <post-card-header
+    [post]="post"
+    [enableEdit]="true"
+    [enableDelete]="true"
+    (onUsernameClicked)="viewUserProfile($event)"
+    (onMenuEditClicked)="selectMenuEdit($event)"
+    (onMenuDeleteClicked)="selectMenuDelete($event)"
+  >
+  </post-card-header>
+
+  <!-- post card image -->
   <div class="post--item-image">
-    <!-- <div *ngIf="true" class="placeholder"></div> -->
     <img
       [defaultImage]="post.thumbnail"
       [lazyLoad]="post.image"
@@ -34,21 +20,32 @@
       alt="post alt text"
     />
   </div>
-  <div class="post--item-buttons">
-    <button mat-icon-button class="active">
-      <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-icon-button><mat-icon>message</mat-icon></button>
-    <button mat-icon-button><mat-icon>share</mat-icon></button>
-    <div class="fx-spacer"></div>
-    <button mat-icon-button><mat-icon>save</mat-icon></button>
-  </div>
+
+  <!-- post card buttons -->
+  <post-card-buttons
+    [postId]="post._id"
+    (onReactClicked)="clickReact($event)"
+    (onCommentClicked)="clickComment($event)"
+    (onShareClicked)="clickShare($event)"
+    (onSaveClicked)="clickSave($event)"
+  ></post-card-buttons>
+
+  <!-- post card reactions -->
   <div *ngIf="post.reactions?.length > 0" class="post--item-likes">
     <div class="label">Reacted by&nbsp;</div>
     <div class="photos pointer">
-      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
-      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
-      <img src="assets/images/portrait.jpg" [alt]="post.reactions[0].reactedBy.username"/>
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
     </div>
     <ng-container *ngFor="let reaction of post.reactions; index as idx">
       <span class="username pointer">
@@ -56,21 +53,24 @@
       </span>
     </ng-container>
     <div *ngIf="post.reactionsCount > 1">
-      &nbsp;and <span class="count pointer">
-        {{ post.reactionsCount - 1 }} others
-      </span>
+      &nbsp;and
+      <span class="count pointer"> {{ post.reactionsCount - 1 }} others </span>
     </div>
     <span class="count" *ngIf="reactionsCount > 2">
       &nbsp;and <b>{{ reactionsCount - 1 }} others</b>
     </span>
   </div>
+
+  <!-- post card description -->
   <div class="post--item-description">
     <p class="truncate3">
-      <b (click)="viewUserProfile(post.postedBy.username)">{{ post.postedBy.username }}</b>
-      &nbsp;{{ post.description }} 
-      <!-- Taken by
-      <span class="mention">@traxex</span> -->
+      <b (click)="viewUserProfile(post.postedBy.username)">
+        {{ post.postedBy.username }}
+      </b>
+      &nbsp;{{ post.description }}
     </p>
   </div>
+
+  <!-- comments preview -->
   <ng-content></ng-content>
 </div>

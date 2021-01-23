@@ -4,7 +4,7 @@ import { Post } from "../post.interface";
 
 const selectId = (post: Post): string => post._id;
 const sortComparer = (postX: Post, postY: Post): number => {
-  return postX.createdAt.toString().localeCompare(postY.createdAt.toString())
+  return postY.createdAt?.toString().localeCompare(postX.createdAt?.toString())
 }
 
 export const postAdapter = createEntityAdapter<Post>({ selectId, sortComparer });

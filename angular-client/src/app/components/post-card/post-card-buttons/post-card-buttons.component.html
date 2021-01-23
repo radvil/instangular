@@ -1,0 +1,15 @@
+<div *ngIf="postId" class="post-card--buttons">
+  <button (click)="clickReactIcon(postId)" mat-icon-button class="active">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button (click)="clickCommentIcon(postId)" mat-icon-button>
+    <mat-icon>message</mat-icon>
+  </button>
+  <button (click)="clickShareIcon(postId)" mat-icon-button>
+    <mat-icon>share</mat-icon>
+  </button>
+  <div class="fx-spacer"></div>
+  <button (click)="clickSaveIcon(postId)" mat-icon-button>
+    <mat-icon>save</mat-icon>
+  </button>
+</div>

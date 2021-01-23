@@ -6,3 +6,4 @@ export * from './comments/comments.module';
 export * from './menu-actions/menu-actions.module';
 export * from './post-edit-dialog/post-edit-dialog.module';
 export * from './post-edit-dialog/post-edit-dialog.component';
+export * from './form-field/form-field.component';
