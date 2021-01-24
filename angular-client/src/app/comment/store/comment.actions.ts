@@ -2,9 +2,9 @@ import { createAction, props } from '@ngrx/store';
 import { Comment } from 'src/app/comment';
 import {
   CreateCommentDto,
-  GetCommentsByPostIdDto,
-  GetRepliesByCommentIdDto
-} from '../comment.interface';
+  GetCommentsDto,
+  GetCommentRepliesDto,
+} from '../interfaces';
 
 export enum CommentActionTypes {
 
@@ -30,7 +30,7 @@ export enum CommentActionTypes {
 
 export const GetCommentsByPostId = createAction(
   CommentActionTypes.GET_COMMENTS_BY_POST_ID,
-  props<{ dto: GetCommentsByPostIdDto }>()
+  props<{ dto: GetCommentsDto }>()
 );
 export const GetCommentsByPostIdSuccess = createAction(
   CommentActionTypes.GET_COMMENTS_BY_POST_ID_SUCCESS,
@@ -74,7 +74,7 @@ export const GetCommentByIdFailure = createAction(
 
 export const GetReplies = createAction(
   CommentActionTypes.GET_REPLIES,
-  props<{ dto: GetRepliesByCommentIdDto }>()
+  props<{ dto: GetCommentRepliesDto }>()
 );
 export const GetRepliesSuccess = createAction(
   CommentActionTypes.GET_REPLIES_SUCCESS,

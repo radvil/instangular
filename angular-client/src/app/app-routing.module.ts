@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './auth';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -10,27 +10,27 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./auth/pages/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'user',
     // canActivate: [AuthGuard],
-    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+    loadChildren: () => import('./user/pages/user.module').then(m => m.UserModule)
   },
   {
     path: 'post',
     // canActivate: [AuthGuard],
-    loadChildren: () => import('./post/post.module').then(m => m.PostModule)
+    loadChildren: () => import('./post/pages/post.module').then(m => m.PostModule)
   },
   {
     path: 'comment',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./comment/comment.module').then(m => m.CommentModule)
+    loadChildren: () => import('./comment/pages/comment.module').then(m => m.CommentModule)
   },
   {
     path: 'home',
     // canActivate: [AuthGuard],
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    loadChildren: () => import('./home/pages/home.module').then(m => m.HomeModule),
   },
 ];
 

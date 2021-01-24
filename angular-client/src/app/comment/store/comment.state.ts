@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store'
-import { Comment } from "../comment.interface";
+import { Comment } from "../interfaces";
 
 const selectId = (comment: Comment): string => comment._id;
 const sortByLatestDate = (commentX: Comment, commentY: Comment): number => {

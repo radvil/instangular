@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store'
-import { User } from "../user.interface";
+import { User } from "../interfaces";
 
 const selectId = (user: User): string => user.username;
 const sortComparer = (userX: User, userY: User): number => {

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CreatePostDto, Post } from '../post.interface';
+import { CreatePostDto, Post } from '../interfaces';
 
 export enum PostActionTypes {
 

@@ -1,14 +1,10 @@
 import { Injectable } from "@angular/core";
 import { of } from 'rxjs';
-import { map, switchMap, catchError, exhaustMap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, catchError, exhaustMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as commentActions from './comment.actions';
-import { CommentService } from "../comment.service";
-import { Store } from "@ngrx/store";
-import { Comment } from "../comment.interface";
-import { CommentState } from "./comment.state";
-import { $_commentSelectedId } from "./comment.selectors";
+import { CommentService } from "../services/comment.service";
 
 @Injectable()
 export class CommentEffects {
@@ -54,7 +50,6 @@ export class CommentEffects {
 
   constructor(
     private _actions$: Actions,
-    private _store: Store<CommentState>,
     private _commentService: CommentService,
   ) { }
 

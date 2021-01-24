@@ -5,7 +5,7 @@ import { of } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { Post } from "src/app/post";
 import { PushManyPosts } from "src/app/post/store/post.actions";
-import { UserService } from "../user.service";
+import { UserService } from "../services/user.service";
 import * as userActions from './user.actions';
 
 

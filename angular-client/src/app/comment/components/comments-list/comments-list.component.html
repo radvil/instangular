@@ -1,0 +1,34 @@
+<div *ngIf="post && comments" class="comments__container">
+  <!-- view all comments -->
+  <div class="comment__paging">
+    <p
+      class="viewPrevComments"
+      *ngIf="commentsHasNextPage"
+      (click)="viewPostComments(post._id)"
+    >
+      View previous comments
+    </p>
+  </div>
+  <div class="comments__list" *ngIf="post.commentsCount">
+    <!-- loading ph -->
+    <div *ngIf="isCommentsLoading" class="loading--ph">🎵 🎵</div>
+
+    <!-- comment row -->
+    <ng-container *ngFor="let comment of comments">
+      <nsg-comment-row
+        [comment]="comment"
+        [bgClass]="getCommentClass(comment.commentedBy.username)"
+        (onUsernameClicked)="viewUserProfile($event)"
+        (onReactClicked)="reactToComment($event)"
+        (onReplyClicked)="replyToComment($event)"
+        (onReactionsCountClicked)="viewCommentReactions($event)"
+        (onViewRepliesClicked)="viewCommentReplies($event)"
+      ></nsg-comment-row>
+    </ng-container>
+
+    <app-form-field
+      [placeholder]="'Add Comment..'"
+      (onInputConfirmed)="emitAddComment($event)"
+    ></app-form-field>
+  </div>
+</div>

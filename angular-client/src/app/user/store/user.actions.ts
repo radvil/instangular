@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { User } from "../user.interface";
+import { User } from "../interfaces";
 
 export enum UserActionTypes {
 

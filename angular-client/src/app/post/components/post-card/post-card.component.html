@@ -1,0 +1,76 @@
+<div *ngIf="post" class="post--item">
+  <!-- post card header -->
+  <nsg-post-card-header
+    [post]="post"
+    [enableEdit]="true"
+    [enableDelete]="true"
+    (onUsernameClicked)="viewUserProfile($event)"
+    (onMenuEditClicked)="selectMenuEdit($event)"
+    (onMenuDeleteClicked)="selectMenuDelete($event)"
+  >
+  </nsg-post-card-header>
+
+  <!-- post card image -->
+  <div class="post--item-image">
+    <img
+      [defaultImage]="post.thumbnail"
+      [lazyLoad]="post.image"
+      [errorImage]="errorImagePath"
+      class="blur"
+      alt="post alt text"
+    />
+  </div>
+
+  <!-- post card buttons -->
+  <nsg-post-card-buttons
+    [postId]="post._id"
+    (onReactClicked)="clickReact($event)"
+    (onCommentClicked)="clickComment($event)"
+    (onShareClicked)="clickShare($event)"
+    (onSaveClicked)="clickSave($event)"
+  ></nsg-post-card-buttons>
+
+  <!-- post card reactions -->
+  <div *ngIf="post.reactions?.length > 0" class="post--item-likes">
+    <div class="label">Reacted by&nbsp;</div>
+    <div class="photos pointer">
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
+      <img
+        src="assets/images/portrait.jpg"
+        [alt]="post.reactions[0].reactedBy.username"
+      />
+    </div>
+    <ng-container *ngFor="let reaction of post.reactions; index as idx">
+      <span class="username pointer">
+        {{ reaction.reactedBy.username }}
+      </span>
+    </ng-container>
+    <div *ngIf="post.reactionsCount > 1">
+      &nbsp;and
+      <span class="count pointer"> {{ post.reactionsCount - 1 }} others </span>
+    </div>
+    <span class="count" *ngIf="reactionsCount > 2">
+      &nbsp;and <b>{{ reactionsCount - 1 }} others</b>
+    </span>
+  </div>
+
+  <!-- post card description -->
+  <div class="post--item-description">
+    <p class="truncate3">
+      <b (click)="viewUserProfile(post.postedBy.username)">
+        {{ post.postedBy.username }}
+      </b>
+      &nbsp;{{ post.description }}
+    </p>
+  </div>
+
+  <!-- comments preview -->
+  <ng-content></ng-content>
+</div>

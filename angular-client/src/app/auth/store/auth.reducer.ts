@@ -1,14 +1,8 @@
 import { Action, createReducer, on } from "@ngrx/store";
-import { AuthState } from "./auth.model";
-import * as AuthActions from './auth.actions';
 
-export const initialState: AuthState = {
-  isLoading: false,
-  isAuth: false,
-  accessToken: null,
-  user: null,
-  error: null,
-}
+import { AuthState } from "../interfaces";
+import { initialState } from "./auth.state";
+import * as AuthActions from './auth.actions';
 
 const reducer = createReducer(
   initialState,

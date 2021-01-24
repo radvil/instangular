@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { AuthState } from "./auth.model";
+import { AuthState } from "../interfaces";
 
 export const $_authState = createFeatureSelector<AuthState>('auth');
 export const $_isLoading = createSelector($_authState,state => state.isLoading);
