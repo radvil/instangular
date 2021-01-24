@@ -22,8 +22,18 @@
         (onReactClicked)="reactToComment($event)"
         (onReplyClicked)="replyToComment($event)"
         (onReactionsCountClicked)="viewCommentReactions($event)"
-        (onViewRepliesClicked)="viewCommentReplies($event)"
-      ></nsg-comment-row>
+      >
+        <!-- comment__replies -->
+        <ng-container *ngIf="comment.replies && comment.replies.length">
+          <nsg-replies-preview
+            [commentId]="comment._id"
+            [replies]="comment.replies"
+            [repliesCount]="comment.repliesCount"
+            (onViewRepliesClicked)="viewCommentReplies($event)"
+          >
+          </nsg-replies-preview>
+        </ng-container>
+      </nsg-comment-row>
     </ng-container>
 
     <app-form-field

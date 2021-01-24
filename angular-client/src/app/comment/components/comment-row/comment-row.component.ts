@@ -9,12 +9,11 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 export class CommentRowComponent {
 
   @Input() comment: Comment;
-  @Input() bgClass: string;
+  @Input() bgClass: string = "comment__box";
   @Output() onUsernameClicked = new EventEmitter<string>();
   @Output() onReactClicked = new EventEmitter<string>();
   @Output() onReplyClicked = new EventEmitter<string>();
   @Output() onReactionsCountClicked = new EventEmitter<string>();
-  @Output() onViewRepliesClicked = new EventEmitter<string>();
 
   public clickUsername(username: string): void {
     this.onUsernameClicked.emit(username);
@@ -30,10 +29,6 @@ export class CommentRowComponent {
 
   public clickReactionsCount(commentId: string): void {
     this.onReactionsCountClicked.emit(commentId);
-  }
-
-  public clickViewReplies(commentId: string): void {
-    this.onViewRepliesClicked.emit(commentId);
   }
 
 }

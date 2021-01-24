@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CommentRowModule, CommentsListModule } from '../components';
 import { CommentDetailComponent } from './comment-detail/comment-detail.component';
 import { CommentStoreModule } from '../store/comment-store.module';
 
@@ -25,6 +26,8 @@ export class CommentRoutingModule { }
     CommonModule,
     CommentRoutingModule,
     CommentStoreModule,
+    CommentsListModule,
+    CommentRowModule,
   ]
 })
 export class CommentModule { }

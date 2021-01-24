@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { InstAngularPipesModule } from 'src/app/_shared';
-import { CommentRowComponent } from './comment-row.component';
+import { RepliesPreviewComponent } from './replies-preview.component';
 
 
 @NgModule({
   declarations: [
-    CommentRowComponent,
+    RepliesPreviewComponent,
   ],
   imports: [
     CommonModule,
@@ -16,7 +16,7 @@ import { CommentRowComponent } from './comment-row.component';
     InstAngularPipesModule,
   ],
   exports: [
-    CommentRowComponent,
+    RepliesPreviewComponent
   ],
 })
-export class CommentRowModule { }
+export class RepliesPreviewModule { }

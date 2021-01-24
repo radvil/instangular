@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CreateCommentDto } from 'src/app/comment';
+import { compareToGetClass } from 'src/app/_shared';
 import { Post } from 'src/app/post';
 import { User } from 'src/app/user';
 
@@ -49,9 +50,7 @@ export class CommentsListComponent {
   }
 
   getCommentClass(authorUsername: string): string {
-    let currentClasses = "comment__box";
-    if (this.authUser.username === authorUsername) currentClasses += ' self';
-    return currentClasses;
+    return compareToGetClass(this.authUser.username, authorUsername);
   }
 
   public emitAddComment(inputText: string): void {

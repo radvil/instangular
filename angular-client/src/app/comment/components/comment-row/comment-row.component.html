@@ -35,7 +35,8 @@
       </div>
     </div>
     <!-- comment__replies -->
-    <ng-container *ngIf="comment.replies && comment.replies.length">
+    <ng-content></ng-content>
+    <!-- <ng-container *ngIf="comment.replies && comment.replies.length">
       <nsg-replies-preview
         [commentId]="comment._id"
         [replies]="comment.replies"
@@ -43,6 +44,6 @@
         (onViewRepliesClicked)="clickViewReplies($event)"
       >
       </nsg-replies-preview>
-    </ng-container>
+    </ng-container> -->
   </div>
 </div>

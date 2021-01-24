@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { $_comment, GetCommentById, GetReplies } from '../../store';
 import { CommentState } from '../../store/comment.state';
 import { Comment } from '../../interfaces';
+import { compareToGetClass } from 'src/app/_shared';
+import { User } from 'src/app/user';
+import { $_authUser } from 'src/app/auth';
 
 @Component({
   selector: 'app-comment-detail',
@@ -19,14 +22,22 @@ export class CommentDetailComponent implements OnInit {
   public commentId: string;
   public pageNumber = 1;
   public comment$: Observable<Comment>;
+  public authUser: User;
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store<CommentState>,
   ) { }
 
   ngOnInit(): void {
+    this.initAuthUser();
     this.initComment();
+  }
+
+  private initAuthUser(): void {
+    const authUser = this._store.select($_authUser);
+    this._subscription.add(authUser.subscribe(user => this.authUser = user));
   }
 
   private initComment() {
@@ -48,7 +59,7 @@ export class CommentDetailComponent implements OnInit {
     this.pageNumber += 1;
   }
 
-  public viewNextReplies(commentId: string) {
+  public viewPreviousReplies(commentId: string) {
     const dto = {
       commentId: commentId,
       pageNumber: this.pageNumber,
@@ -56,6 +67,26 @@ export class CommentDetailComponent implements OnInit {
     }
     this._store.dispatch(GetReplies({ dto }));
     this.pageNumber += 1;
+  }
+
+  viewUserProfile(usernameEvent: string): void {
+    this._router.navigate(['user', usernameEvent]);
+  }
+
+  reactToComment(commentIdEvent: string): void {
+    alert('TODO:// reactToComment / reactToCommentReply');
+  }
+
+  replyToComment(commentIdEvent: string): void {
+    alert('TODO:// replyToComment / replyToCommentReply');
+  }
+
+  showCommentReactions(commentIdEvent: string): void {
+    alert('TODO:// showCommentReactions / showCommentReplyReactions');
+  }
+
+  public getCommentClassByUsername(username: string) {
+    return compareToGetClass(this.authUser.username, username);
   }
 
 }
