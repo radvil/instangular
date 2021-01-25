@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { LocalStorageService } from 'src/app/_shared';
 import { AuthService } from 'src/app/auth/services';
 import { AuthState } from 'src/app/auth/interfaces';
-import { Logout } from 'src/app/auth/store';
+import { Logout } from 'src/app/auth/store/auth.actions';
 
 
 @Injectable() export class TokenInterceptor implements HttpInterceptor {
@@ -33,11 +33,13 @@ import { Logout } from 'src/app/auth/store';
           if (!!this.token) return this.refreshToken(request, next);
         }
         // if 403 (refresh token req unauthorized)
-        if (err instanceof HttpErrorResponse && err.status === 403) {
+        else if (err instanceof HttpErrorResponse && err.status === 403) {
           this.store.dispatch(Logout());
         }
-        // if other error status code
-        return throwError(err);
+        else {
+          // if other error status code
+          return throwError(err);
+        }
       })
     );
   }

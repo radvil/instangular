@@ -9,7 +9,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { PageHeaderModule } from 'src/app/_shared';
-import { PostStoreModule, PostCardModule } from 'src/app/post'
+import { PostCardModule } from 'src/app/post/components';
+import { PostStoreModule } from 'src/app/post/store/post-store.module'
 import { StoryComponent } from '../components';
 import { HomeComponent } from './home.component';
 

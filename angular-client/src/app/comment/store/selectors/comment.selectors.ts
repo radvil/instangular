@@ -1,33 +1,38 @@
 import { createSelector } from '@ngrx/store';
-import { $_post, $_postSelectedId } from 'src/app/post/store/post.selectors';
-import { commentAdapter, $_commentState } from './comment.state';
 
-const MAX_COMMENTS_LIMIT = 5;
+import { commentAdapter } from '../states/comment.state';
+import { $_FeatureStates } from '../comment-feature.state';
+import { $_post, $_postSelectedId } from 'src/app/post/store/post.selectors';
 
 const { selectAll, selectEntities } = commentAdapter.getSelectors();
 
+export const $_CommentState = createSelector(
+  $_FeatureStates,
+  state => state.comments
+)
+
 export const $_commentLoading = createSelector(
-  $_commentState,
+  $_CommentState,
   state => state.loading
 );
 export const $_commentLoaded = createSelector(
-  $_commentState,
+  $_CommentState,
   state => state.loaded
 );
 export const $_commentUpdating = createSelector(
-  $_commentState,
+  $_CommentState,
   state => state.updating
 );
 export const $_commentError = createSelector(
-  $_commentState,
+  $_CommentState,
   state => state.error
 );
 export const $_commentSelectedId = createSelector(
-  $_commentState,
+  $_CommentState,
   state => state.selectedId
 );
-export const $_comments = createSelector($_commentState, selectAll);
-export const $_commentEntities = createSelector($_commentState, selectEntities);
+export const $_comments = createSelector($_CommentState, selectAll);
+export const $_commentEntities = createSelector($_CommentState, selectEntities);
 export const $_commentsByPostId = createSelector(
   $_comments,
   $_postSelectedId,

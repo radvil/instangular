@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { initialCommentState, commentAdapter } from './comment.state';
-import * as CommentActions from './comment.actions';
+import { initialCommentState, commentAdapter } from '../states/comment.state';
+import * as CommentActions from '../actions/comment.actions';
 
 export const commentReducer = createReducer(
   initialCommentState,
@@ -71,26 +71,4 @@ export const commentReducer = createReducer(
       loading: false,
     })
   )),
-
-  on(CommentActions.GetReplies, (state, { dto }) => ({
-    ...state,
-    loaded: false,
-    loading: true,
-    selectedId: dto.commentId
-  })),
-  on(CommentActions.GetRepliesFailure, (state, { error }) => ({
-    ...state,
-    loaded: false,
-    loading: false,
-    error,
-  })),
-  on(CommentActions.GetRepliesSuccess, (state, { commentId, replies }) => {
-    const entity = state.entities[commentId];
-    if (!entity) return state;
-
-    return commentAdapter.updateOne({
-      id: commentId,
-      changes: { replies: entity.replies.concat(replies) }
-    }, { ...state, loaded: true, loading: false })
-  })
 )

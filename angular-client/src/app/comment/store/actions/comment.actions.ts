@@ -3,8 +3,7 @@ import { Comment } from 'src/app/comment';
 import {
   CreateCommentDto,
   GetCommentsDto,
-  GetCommentRepliesDto,
-} from '../interfaces';
+} from '../../interfaces';
 
 export enum CommentActionTypes {
 
@@ -69,18 +68,5 @@ export const GetCommentByIdSuccess = createAction(
 )
 export const GetCommentByIdFailure = createAction(
   CommentActionTypes.GET_COMMENT_BY_ID_FAILURE,
-  props<{ error: Error }>()
-)
-
-export const GetReplies = createAction(
-  CommentActionTypes.GET_REPLIES,
-  props<{ dto: GetCommentRepliesDto }>()
-);
-export const GetRepliesSuccess = createAction(
-  CommentActionTypes.GET_REPLIES_SUCCESS,
-  props<{ commentId: string, replies: Comment[] }>()
-)
-export const GetRepliesFailure = createAction(
-  CommentActionTypes.GET_REPLIES_FAILURE,
   props<{ error: Error }>()
 )

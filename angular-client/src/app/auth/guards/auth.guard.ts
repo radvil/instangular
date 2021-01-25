@@ -10,8 +10,7 @@ import { Observable } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { $_isAuth } from '../store/auth.selectors';
-import { NotificationService } from 'src/app/_shared/services';
+import { LocalStorageService, NotificationService } from 'src/app/_shared/services';
 
 type canActivateTypes =
   | Observable<boolean | UrlTree>
@@ -24,14 +23,17 @@ export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
     private notificationSrv: NotificationService,
-    private store: Store
+    private localStorageService: LocalStorageService,
   ) { }
 
   canActivate(route: ActiveSnapshot, state: RouterSnapshot): canActivateTypes {
-    return this.store.select($_isAuth).pipe(
-      filter(isAuth => isAuth = true),
-      tap(isAuth => !isAuth && this.redirectUrl(state))
-    );
+    const accessToken = this.localStorageService.getItem('accessToken');
+    if (!accessToken) {
+      this.redirectUrl(state);
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private redirectUrl(state: RouterSnapshot) {

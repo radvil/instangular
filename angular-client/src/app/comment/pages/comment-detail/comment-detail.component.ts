@@ -1,39 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, of, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import { $_comment, GetCommentById, GetReplies } from '../../store';
-import { CommentState } from '../../store/comment.state';
-import { Comment } from '../../interfaces';
 import { compareToGetClass } from 'src/app/_shared';
+import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
-import { $_authUser } from 'src/app/auth';
+import { Comment, GetRepliesDto, Reply } from '../../interfaces';
+import { CommentState } from '../../store/states/comment.state';
+import { GetRepliesByCommentId } from '../../store/actions/reply.actions';
+import { GetCommentById } from '../../store/actions'
+import { $_comment } from '../../store/selectors';
+import { $_repliesByCommentId } from '../../store/selectors/reply.selectors';
+import { $_post } from 'src/app/post/store/post.selectors';
 
 @Component({
   selector: 'app-comment-detail',
   templateUrl: './comment-detail.component.html',
   styleUrls: ['./comment-detail.component.scss']
 })
-export class CommentDetailComponent implements OnInit {
+export class CommentDetailComponent implements OnInit, OnDestroy {
 
   private _subscription = new Subscription();
   public commentId: string;
   public pageNumber = 1;
-  public comment$: Observable<Comment>;
+  public comment: Comment;
+  public replies: Reply[];
   public authUser: User;
-
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _store: Store<CommentState>,
-  ) { }
-
-  ngOnInit(): void {
-    this.initAuthUser();
-    this.initComment();
-  }
+  public pageHeaderTitle = "Comment Replies";
 
   private initAuthUser(): void {
     const authUser = this._store.select($_authUser);
@@ -51,7 +46,24 @@ export class CommentDetailComponent implements OnInit {
           }
         })
     );
-    this.comment$ = this._store.select($_comment);
+    this._subscription.add(
+      this._store.select($_comment).pipe(
+        filter(comment => !!comment),
+      ).subscribe(comment => {
+        this.comment = comment;
+        if (comment.commentedBy.username) {
+          this.pageHeaderTitle = `Replies to ${comment.commentedBy.username}'s comment`;
+        }
+      })
+    )
+  }
+
+  private initReplies() {
+    this._subscription.add(
+      this._store.select($_repliesByCommentId).subscribe(replies => {
+        this.replies = replies;
+      })
+    );
   }
 
   private loadCommentDetail(commentId: string): void {
@@ -60,12 +72,12 @@ export class CommentDetailComponent implements OnInit {
   }
 
   public viewPreviousReplies(commentId: string) {
-    const dto = {
+    const dto = <GetRepliesDto>{
       commentId: commentId,
       pageNumber: this.pageNumber,
       limit: 5,
     }
-    this._store.dispatch(GetReplies({ dto }));
+    this._store.dispatch(GetRepliesByCommentId({ dto }));
     this.pageNumber += 1;
   }
 
@@ -87,6 +99,22 @@ export class CommentDetailComponent implements OnInit {
 
   public getCommentClassByUsername(username: string) {
     return compareToGetClass(this.authUser.username, username);
+  }
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _store: Store<CommentState>,
+  ) { }
+
+  ngOnInit(): void {
+    this.initAuthUser();
+    this.initComment();
+    this.initReplies();
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 
 }

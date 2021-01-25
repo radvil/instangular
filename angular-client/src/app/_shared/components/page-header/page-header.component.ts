@@ -7,7 +7,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PageHeaderComponent {
 
-  @Input() style: string;
+  @Input() style: string; // sticky | default;
+  @Input() fontSize: string;
   @Input() title: string;
   @Input() icon: string;
   @Output() onIconClicked = new EventEmitter<any>();

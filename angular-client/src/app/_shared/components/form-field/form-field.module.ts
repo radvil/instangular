@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { FormFieldComponent } from './form-field.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { CommentStoreModule } from 'src/app/comment/store';
+import { CommentStoreModule } from 'src/app/comment/store/comment-store.module';
 
 
 @NgModule({

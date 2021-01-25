@@ -1,4 +1,4 @@
-export class GetCommentRepliesDto {
+export class GetRepliesDto {
   commentId: string;
   pageNumber?: number;
   limit?: number;

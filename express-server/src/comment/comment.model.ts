@@ -33,7 +33,6 @@ const schemaOptions: SchemaOptions = {
   timestamps: true,
   toJSON: {
     virtuals: true,
-    getters: true,
     versionKey: false,
     transform: function (doc: Document, ret: Comment) {
       delete ret.__v;
@@ -58,11 +57,6 @@ const schema = new Schema<Comment>({
   },
   text: String,
 }, schemaOptions);
-
-schema.methods.findMyReaction = async function (postId: string, userId:string) {
-  const myReaction = await PostReaction.findOne({postId, reactedBy: userId});
-  return myReaction;
-}
 
 schema.virtual('reactions', {
   ref: 'CommentReaction',

@@ -1,6 +1,5 @@
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
-import { createFeatureSelector } from '@ngrx/store'
-import { Comment } from "../interfaces";
+import { Comment } from "../../interfaces";
 
 const selectId = (comment: Comment): string => comment._id;
 const sortByLatestDate = (commentX: Comment, commentY: Comment): number => {
@@ -20,8 +19,6 @@ export interface CommentState extends EntityState<Comment> {
   selectedPostId?: string;
   error?: Error;
 }
-
-export const $_commentState = createFeatureSelector<CommentState>('comments');
 
 export const initialCommentState: CommentState = commentAdapter.getInitialState({
   loaded: false,

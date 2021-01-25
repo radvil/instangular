@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { $_authUser } from 'src/app/auth/store';
-import { User } from 'src/app/user';
-import { PostState, $_posts, GetPosts, UpdatePostById } from 'src/app/post/store';
+import { $_authUser } from 'src/app/auth/store/auth.selectors';
+import { CreateCommentDto } from 'src/app/comment/interfaces';
+import { AddComment } from 'src/app/comment/store/actions';
 import { PostEditDialogComponent } from 'src/app/post/components';
 import { CreatePostDto, Post } from 'src/app/post/interfaces';
-import { AddComment } from 'src/app/comment/store';
-import { CreateCommentDto } from 'src/app/comment/interfaces';
+import { GetPosts, UpdatePostById } from 'src/app/post/store/post.actions';
+import { $_posts } from 'src/app/post/store/post.selectors';
+import { PostState } from 'src/app/post/store/post.state';
+import { User } from 'src/app/user';
 import { StoryWithUser } from '../components';
 
 @Component({

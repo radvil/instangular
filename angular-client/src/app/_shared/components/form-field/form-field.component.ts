@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { AuthState } from 'src/app/auth/interfaces';
-import { $_authUser } from 'src/app/auth/store';
+import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
 
 @Component({

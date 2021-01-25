@@ -7,7 +7,6 @@ import {
   Comment,
   CreateCommentDto,
   GetCommentsDto,
-  GetCommentRepliesDto,
 } from '../interfaces';
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from 'src/app/_core';
@@ -39,22 +38,6 @@ export class CommentService {
 
     const request$ = this._http.get<ApiRes<Comment>>(
       `${env.be.url}/comments/${commentId}`,
-      { params: httpParams }
-    );
-    return request$.pipe(map((res) => res.data));
-  }
-
-  public getRepliesByCommentId(
-    getRepliesByCommentIdDto: GetCommentRepliesDto
-  ): Observable<Comment[]> {
-    const { commentId, pageNumber, limit } = getRepliesByCommentIdDto;
-
-    let httpParams = new HttpParams();
-    if (pageNumber) httpParams = httpParams.set('page', pageNumber.toString());
-    if (limit) httpParams = httpParams.set('limit', limit.toString());
-
-    const request$ = this._http.get<ApiRes<Comment[]>>(
-      `${env.be.url}/comments/${commentId}/replies`,
       { params: httpParams }
     );
     return request$.pipe(map((res) => res.data));

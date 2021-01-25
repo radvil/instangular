@@ -1,4 +1,10 @@
-<div class="container" *ngIf="comment$ | async as comment">
+<app-page-header
+  [title]="pageHeaderTitle"
+  [style]="'sticky'"
+  [fontSize]="'1rem'"
+></app-page-header>
+
+<div class="container" *ngIf="comment">
   <nsg-comment-row
     [comment]="comment"
     (onUsernameClicked)="viewUserProfile($event)"
@@ -14,14 +20,14 @@
     <div class="paginator">
       <p
         class="paginator__text"
-        *ngIf="comment.replies.length < comment.repliesCount"
+        *ngIf="replies.length < comment.repliesCount"
         (click)="viewPreviousReplies(comment._id)"
       >
         View previous {{ comment.repliesCount - comment.replies.length }} replies
       </p>
     </div>
     <!-- reply row item -->
-    <ng-container *ngFor="let reply of comment.replies">
+    <ng-container *ngFor="let reply of replies">
       <nsg-comment-row
         [comment]="reply"
         [bgClass]="getCommentClassByUsername(reply.commentedBy.username)"

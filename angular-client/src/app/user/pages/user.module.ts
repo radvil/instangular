@@ -9,8 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 // local modules
 import { PageHeaderModule } from 'src/app/_shared/components';
-import { PostStoreModule } from 'src/app/post/store';
-import { UserStoreModule } from '../store';
+import { UserStoreModule } from '../store/user-store.module';
+import { PostStoreModule } from 'src/app/post/store/post-store.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 

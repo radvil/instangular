@@ -1,10 +1,13 @@
 import { Injectable } from "@angular/core";
 import { of } from 'rxjs';
 import { map, switchMap, catchError, exhaustMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import * as commentActions from './comment.actions';
-import { CommentService } from "../services/comment.service";
+import * as commentActions from '../actions/comment.actions';
+import { CommentService } from "../../services/comment.service";
+import { ReplyState } from "../states";
+import { PushManyReplies } from "../actions";
 
 @Injectable()
 export class CommentEffects {
@@ -28,29 +31,20 @@ export class CommentEffects {
   getCommentById$ = createEffect(() => this._actions$.pipe(
     ofType(commentActions.GetCommentById),
     exhaustMap(({ commentId }) => this._commentService.getCommentById(commentId).pipe(
-      map(comment => commentActions.GetCommentByIdSuccess({ comment })),
+      map(comment => {
+        if (comment.replies) {
+          this._store.dispatch(PushManyReplies({ replies: comment.replies }));
+        }
+        return commentActions.GetCommentByIdSuccess({ comment });
+      }),
       catchError(error => of(commentActions.GetCommentByIdFailure({ error })))
-    ))
-  ))
-
-  getCommentReplies$ = createEffect(() => this._actions$.pipe(
-    ofType(commentActions.GetReplies),
-    exhaustMap(({ dto }) => this._commentService.getRepliesByCommentId({
-      commentId: dto.commentId,
-      pageNumber: dto.pageNumber,
-      limit: 5
-    }).pipe(
-      map(replies => commentActions.GetRepliesSuccess({
-        commentId: replies[0].repliedTo,
-        replies
-      })),
-      catchError(error => of(commentActions.GetRepliesFailure({ error })))
     ))
   ))
 
   constructor(
     private _actions$: Actions,
     private _commentService: CommentService,
+    private _store: Store<ReplyState>,
   ) { }
 
 }

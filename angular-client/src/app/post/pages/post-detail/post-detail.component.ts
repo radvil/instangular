@@ -2,24 +2,25 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
-import { $_authUser } from 'src/app/auth/store';
-import {
-  AddComment,
-  GetCommentsByPostId,
-  $_commentLoading,
-  $_commentsByPostId,
-  $_commentsByPostIdHasNextPage,
-} from 'src/app/comment/store';
+import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import {
   Comment,
   CreateCommentDto,
-  GetCommentsDto,
+  GetCommentsDto
 } from 'src/app/comment/interfaces';
+import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/actions';
+import {
+  $_commentLoading,
+  $_commentsByPostId,
+  $_commentsByPostIdHasNextPage
+} from 'src/app/comment/store/selectors';
 import { User } from 'src/app/user';
-import { GetPostById, $_post, $_postLoading } from '../../store';
 import { Post } from '../../interfaces';
+import { GetPostById } from '../../store/post.actions';
+import { $_post, $_postLoading } from '../../store/post.selectors';
+
 
 @Component({
   selector: 'app-post-detail',
@@ -32,8 +33,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   public isPostLoading$: Observable<boolean>;
   public isCommentsLoading$: Observable<boolean>;
 
-  public authUser$: Observable<User>;
-  public post$: Observable<Post>;
+  public authUser: User;
+  public post: Post;
   public comments$: Observable<Comment[]>;
   public postCommentsHasNext$: Observable<boolean>;
   public pageHeaderTitle = 'Post Detail';
@@ -50,11 +51,12 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-
-    this.authUser$ = this._store.select($_authUser);
-    this.post$ = this._store.select($_post).pipe(
-      filter((post) => !!post),
-      tap((post) => {
+    this._subscription.add(
+      this._store.select($_authUser).subscribe((user) => (this.authUser = user))
+    );
+    this._subscription.add(
+      this._store.select($_post).subscribe((post) => {
+        this.post = post;
         if (post.postedBy.username) {
           this.pageHeaderTitle = post.postedBy.username + "'s post";
         }
@@ -68,7 +70,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.isCommentsLoading$ = this._store.select($_commentLoading);
   }
 
-  public viewPreviousComments(postIdEvent: string) {
+  viewPreviousComments(postIdEvent: string) {
     const dto: GetCommentsDto = {
       postId: postIdEvent,
       pageNumber: this.pageNumber,
@@ -78,21 +80,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     this.pageNumber++;
   }
 
-  public viewCommentReplies(commentIdEvent: string) {
+  viewCommentReplies(commentIdEvent: string) {
     // Get Comment By Id and includingReplies = 'true'
     // queryOpts: includingReplies, limit, page, sort;
     this._router.navigate(['comment', commentIdEvent]);
   }
 
-  public viewUserProfile(usernameEvent: string) {
+  viewUserProfile(usernameEvent: string) {
     this._router.navigate(['user', usernameEvent]);
   }
 
-  public addComment(commentEvent: CreateCommentDto) {
+  addComment(commentEvent: CreateCommentDto) {
     this._store.dispatch(AddComment({ createCommentDto: commentEvent }));
   }
 
-  public showOptions(): void {
+  showOptions(): void {
     alert('Showing comments options');
   }
 

@@ -3,7 +3,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { $_authUser, $_isAuth, GetAuthUser } from './auth/store';
+import { $_authUser } from './auth/store/auth.selectors';
+import { GetAuthUser } from './auth/store/auth.actions'
 import { AuthState } from './auth/interfaces';
 import { User } from './user/interfaces';
 
@@ -14,7 +15,6 @@ import { User } from './user/interfaces';
 })
 export class AppComponent implements OnInit {
   public authUser$: Observable<User>;
-  public isAuth$: Observable<boolean>;
   public isShrinkMode = true;
   public menuItemsPrivate = [
     {
@@ -65,10 +65,7 @@ export class AppComponent implements OnInit {
   }
 
   private setAuthUser(): void {
-    this.authUser$ = this._store.select($_authUser).pipe(
-      filter(user => user !== null)
-    );
-    this.isAuth$ = this._store.select($_isAuth);
+    this.authUser$ = this._store.select($_authUser);
     this._store.dispatch(GetAuthUser());
   }
 

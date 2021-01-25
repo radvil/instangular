@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommentRowModule, CommentsListModule } from '../components';
 import { CommentDetailComponent } from './comment-detail/comment-detail.component';
 import { CommentStoreModule } from '../store/comment-store.module';
+import { PageHeaderModule } from 'src/app/_shared';
+import { PostStoreModule } from 'src/app/post/store/post-store.module';
 
 const routes: Routes = [
   {
@@ -28,6 +30,7 @@ export class CommentRoutingModule { }
     CommentStoreModule,
     CommentsListModule,
     CommentRowModule,
+    PageHeaderModule,
   ]
 })
 export class CommentModule { }

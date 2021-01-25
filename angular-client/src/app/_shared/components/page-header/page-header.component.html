@@ -1,5 +1,5 @@
 <div [class]="'page__header ' + style">
-  <div class="header--text">{{ title }}</div>
+  <div class="header--text" [style.fontSize]="fontSize">{{ title }}</div>
   <button *ngIf="icon" (click)="emitIconClick()" mat-icon-button class="header--icon-right">
     <mat-icon>{{ icon }}</mat-icon>
   </button>

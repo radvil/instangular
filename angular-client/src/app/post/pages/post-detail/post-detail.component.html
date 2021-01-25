@@ -1,4 +1,4 @@
-<ng-container *ngIf="post$ | async as post">
+<ng-container *ngIf="post">
   <app-page-header
     [title]="pageHeaderTitle"
     [style]="'sticky'"
@@ -15,8 +15,8 @@
     >
       <nsg-comments-list
         [post]="post"
+        [authUser]="authUser"
         [comments]="comments$ | async"
-        [authUser]="authUser$ | async"
         [commentsHasNextPage]="postCommentsHasNext$ | async"
         [isCommentsLoading]="isCommentsLoading$ | async"
         (onViewCommentsClicked)="viewPreviousComments($event)"

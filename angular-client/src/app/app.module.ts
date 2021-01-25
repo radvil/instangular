@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 // local classes
-import { CoreModule } from './_core';
+import { CoreModule } from './_core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
