@@ -34,6 +34,7 @@
   <!-- post card reactions -->
   <div *ngIf="post.reactions?.length" class="post--item-likes">
     <div class="label">Reacted by&nbsp;</div>
+    <span class="username pointer">{{ reactionText }}</span>
     <!-- <div class="photos pointer">
       <img
         src="assets/images/portrait.jpg"
@@ -48,7 +49,7 @@
         [alt]="post.reactions[0].reactedBy.username"
       />
     </div> -->
-    <ng-container>
+    <!-- <ng-container>
       <span class="username pointer" *ngFor="let reaction of post.reactions">
         {{ reaction.reactedBy?.username }}
       </span>
@@ -56,7 +57,7 @@
     <div *ngIf="post.reactionsCount > 1">
       &nbsp;and
       <span class="count pointer"> {{ post.reactionsCount - 1 }} others </span>
-    </div>
+    </div> -->
   </div>
 
   <!-- post card description -->
@@ -73,11 +74,7 @@
   <ng-content></ng-content>
 
   <!-- comment form -->
-  <div
-    *ngIf="authUser"
-    class="addCommentField"
-    [ngClass]="textInputClass"
-  >
+  <div *ngIf="authUser" class="addCommentField" [ngClass]="textInputClass">
     <app-form-field
       [user]="authUser"
       [placeholder]="'Add Comment..'"

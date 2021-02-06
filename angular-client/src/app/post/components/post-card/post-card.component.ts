@@ -50,6 +50,23 @@ export class PostCardComponent implements OnDestroy {
     return this.authUser?._id === this.post?.postedBy?._id;
   }
 
+  get reactionText(): string {
+    if (this.post.reactions?.length) {
+      let usernames = this.post.reactions.map(reaction => reaction.reactedBy.username);
+      // TODO: change to switchCase
+      if (usernames.length > 2) {
+        return `${usernames.slice(0, 2).toString()}, and ${this.post.reactionsCount - 2} others`;
+      } else if (usernames.length === 2) {
+        return `${usernames[0]} and ${usernames[1]}`;
+      } else if (usernames.length === 1) {
+        return `${usernames.toString()}`;
+      } else {
+        const lastUsername = usernames.pop();
+        return `${usernames.toString()}, and ${lastUsername}`;
+      }
+    }
+  }
+
   constructor(
     private _dialog: MatDialog,
     private _store: Store,

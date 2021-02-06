@@ -1,3 +1,4 @@
+import { PostReaction } from "src/app/post";
 import { User } from "src/app/user/interfaces";
 
 export interface PostComment {
@@ -11,7 +12,7 @@ export interface PostComment {
   repliedTo?: string; // if commentAsReply
   text: string;
   createdAt: string;
-  reactions: any[];
+  reactions: PostReaction[];
   reactionsCount: number;
   replies: PostComment[];
   repliesCount: number;

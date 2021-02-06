@@ -12,5 +12,6 @@
 💬 Make CommentDialogComponent
 ✔️ Edit User Profile
 ✔️ rework commenListComponent please
+✔️ A bit of reactionsText rework.
 
 [] Make ChatRoom And Message Schema

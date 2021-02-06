@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { of } from "rxjs";
-import { catchError, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
+import { catchError, exhaustMap, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 
 import { AuthState } from "src/app/auth";
 import { ChangeProfilePhoto, UpdateProfileBasicsInfo } from "src/app/auth/store/auth.actions";
@@ -53,7 +53,7 @@ export class UserEffects {
   updateUserBasicsInfo$ = createEffect(() => this._actions$.pipe(
     ofType(userActions.UpdateUserBasicsInfo),
     withLatestFrom(this._store.select($_authUser)),
-    switchMap(([action, user]) => {
+    exhaustMap(([action, user]) => {
       const dto = <UserBasicsInfoDto>{
         userId: user._id,
         ...action.dto
