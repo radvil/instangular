@@ -12,7 +12,7 @@
     <app-post-card [post]="post" [authUser]="authUser">
       <div class="comment__paginator">
         <p *ngIf="postCommentsHasNext$ | async" (click)="onViewMoreComments(post._id)">
-          View previous comments
+          View previous {{ postCommentsRemaining$ | async }} comments
         </p>
       </div>
       <app-comments-list

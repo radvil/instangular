@@ -14,7 +14,8 @@ import { AddComment, GetCommentsByPostId } from 'src/app/comment/store/comment.a
 import {
   $__commentIsLoading,
   $_commentsAsParentsByPostId,
-  $_commentsAsParentsByPostIdHasNextPage,
+  $_commentsByPostIdHasNext,
+  $_commentsByPostIdRemaining,
 } from 'src/app/comment/store/comment.selectors';
 import { User, UserBasic } from 'src/app/user';
 import { Post } from '../../interfaces';
@@ -28,15 +29,15 @@ import { $_post, $_postLoading } from '../../store/post.selectors';
   styleUrls: ['./post-detail.component.scss'],
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
-  private pageNumber = 1;
   private _subscription = new Subscription();
+  public pageNumber = 1;
   public isPostLoading$: Observable<boolean>;
   public isCommentsLoading$: Observable<boolean>;
-
   public authUser: User;
   public post: Post;
   public comments$: Observable<PostComment[]>;
   public postCommentsHasNext$: Observable<boolean>;
+  public postCommentsRemaining$: Observable<number>;
   public pageHeaderTitle = 'Post Detail';
   public commentInputClass: string = null;
 
@@ -78,11 +79,10 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       })
     );
     this.comments$ = this._store.select($_commentsAsParentsByPostId);
-    this.postCommentsHasNext$ = this._store.select(
-      $_commentsAsParentsByPostIdHasNextPage
-    );
     this.isPostLoading$ = this._store.select($_postLoading);
     this.isCommentsLoading$ = this._store.select($__commentIsLoading);
+    this.postCommentsHasNext$ = this._store.select($_commentsByPostIdHasNext);
+    this.postCommentsRemaining$ = this._store.select($_commentsByPostIdRemaining);
   }
 
   openEditPostDialog() {

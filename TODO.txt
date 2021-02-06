@@ -11,5 +11,6 @@
 ✔️ Add CommentAction Delete on 
 💬 Make CommentDialogComponent
 ✔️ Edit User Profile
-[✔️] rework commenListComponent please
-[] storyListComponent rework please
+✔️ rework commenListComponent please
+
+[] Make ChatRoom And Message Schema

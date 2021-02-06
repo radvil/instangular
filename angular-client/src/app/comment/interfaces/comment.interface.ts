@@ -14,6 +14,7 @@ export interface PostComment {
   reactions: any[];
   reactionsCount: number;
   replies: PostComment[];
+  repliesCount: number;
   myReaction?: CommentReaction;
 }
 

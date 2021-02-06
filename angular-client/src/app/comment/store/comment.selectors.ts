@@ -30,6 +30,12 @@ export const $__commentSelectedPostId = createSelector(
 export const $_comments = createSelector($_state, selectAll);
 export const $_commentsEntities = createSelector($_state, selectEntities);
 
+export const $_commentsByPostId = createSelector(
+  $_comments,
+  $_postSelectedId,
+  (comments, postId) => comments.filter(comment => comment.postId === postId)
+)
+
 export const $_commentsAsParents = createSelector(
   $_comments,
   (comments) => comments.filter(comment => !comment.repliedTo),
@@ -38,7 +44,7 @@ export const $_commentsAsParents = createSelector(
 export const $_commentsAsParentsByPostId = createSelector(
   $_comments,
   $_postSelectedId,
-  (comments, postId) =>  {
+  (comments, postId) => {
     if (postId) {
       return comments.filter(comment => (!comment.repliedTo && comment.postId == postId));
     } else {
@@ -55,7 +61,7 @@ export const $_commentsAsReplies = createSelector(
 export const $_commentsAsRepliesByPostId = createSelector(
   $_comments,
   $_postSelectedId,
-  (comments, postId) =>  {
+  (comments, postId) => {
     if (postId) {
       return comments.filter(comment => (comment.repliedTo && comment.postId == postId));
     } else {
@@ -67,7 +73,7 @@ export const $_commentsAsRepliesByPostId = createSelector(
 export const $_commentsAsRepliesByCommentId = createSelector(
   $_comments,
   $__commentSelectedId,
-  (comments, parentId) =>  {
+  (comments, parentId) => {
     if (parentId) {
       return comments.filter(comment => comment.repliedTo == parentId);
     } else {
@@ -76,16 +82,22 @@ export const $_commentsAsRepliesByCommentId = createSelector(
   }
 )
 
-export const $_commentsAsParentsByPostIdHasNextPage = createSelector(
-  $_commentsAsParentsByPostId,
+export const $_commentsCurrentTotal = createSelector(
+  $_commentsByPostId,
+  (comments) => comments.reduce((curr, b) => curr + b.repliesCount + 1, 0)
+)
+
+export const $_commentsByPostIdHasNext = createSelector(
   $_post,
-  (comments, post) => {
-    if (comments.length && post.commentsAsParentCount) {
-      const commentsHasNextPage = comments.length < post.commentsAsParentCount;
-      return commentsHasNextPage;
-    }
-  }
+  $_commentsCurrentTotal,
+  (post, currentTotal) => currentTotal < post.commentsCount
 );
+
+export const $_commentsByPostIdRemaining = createSelector(
+  $_post,
+  $_commentsCurrentTotal,
+  (post, currentTotal) => post.commentsCount - currentTotal
+)
 
 export const $_comment = createSelector(
   $__commentSelectedId,
