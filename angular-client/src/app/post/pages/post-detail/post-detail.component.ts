@@ -40,6 +40,20 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   public pageHeaderTitle = 'Post Detail';
   public commentInputClass: string = null;
 
+  constructor(
+    private _store: Store,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.initValues();
+  }
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
+
   private initValues(): void {
     this._subscription.add(
       this._route.paramMap
@@ -79,9 +93,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
     alert('Open delete post dialog');
   }
 
-  viewPreviousComments(postIdEvent: string) {
+  onViewMoreComments(postId: string) {
     const dto: GetPostCommentsDto = {
-      postId: postIdEvent,
+      postId,
       pageNumber: this.pageNumber,
       limit: 5,
     };
@@ -112,19 +126,5 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 
   showOptions(): void {
     alert('Showing comments options');
-  }
-
-  constructor(
-    private _store: Store,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) { }
-
-  ngOnInit(): void {
-    this.initValues();
-  }
-
-  ngOnDestroy(): void {
-    this._subscription.unsubscribe();
   }
 }

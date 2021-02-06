@@ -8,17 +8,6 @@
 small {
   font-weight: bold;
 }
-.user__photo__container {
-  margin-right: 0.5rem;
-  height: fit-content;
-  img {
-    object-fit: cover;
-  }
-}
-.user__photo__container img {
-  border-radius: 50%;
-  cursor: pointer;
-}
 .comment__box,
 .comment__actions {
   padding: 0.5rem 1rem;
@@ -66,7 +55,6 @@ small {
     color: #3fdb80;
   }
 }
-.user__photo__container img,
 .comment__box small,
 .react,
 .reply,

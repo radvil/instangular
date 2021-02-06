@@ -1,58 +1,44 @@
-<div *ngIf="post && comments" class="comments__container">
-  <!-- view all comments -->
-  <div class="comment__paging">
-    <p
-      class="viewPrevComments"
-      *ngIf="commentsHasNextPage"
-      (click)="viewPostComments(post._id)"
-    >
-      <!-- View previous {{ remainingCommentsTotal }} comments -->
-      View previous comments
-    </p>
-  </div>
-  <div class="comments__list" *ngIf="post.commentsCount">
-    <!-- loading ph -->
-    <div *ngIf="isCommentsLoading" class="loading--ph">🎵 🎵</div>
+<!-- loading ph -->
+<section>
+  <div *ngIf="isLoading" class="loading">🎵 🎵</div>
+</section>
 
-    <!-- comment row -->
-    <ng-container *ngFor="let comment of comments">
-      <app-comment-row
-        [comment]="comment"
-        [bgClass]="getCommentClass(comment.commentedBy.username)"
-        (contextmenu)="onContextMenu($event, comment)"
-        (clickReact)="openReactionDialog($event)"
-        (clickReply)="clickComment($event)"
-        (clickReactionsCount)="viewCommentReactions($event)"
+<!-- comment row -->
+<section>
+  <app-comment-row
+    *ngFor="let comment of comments"
+    [comment]="comment"
+    [bgClass]="getCommentClass(comment.commentedBy.username)"
+    (contextmenu)="onContextMenu($event, comment)"
+    (clickReact)="openReactionDialog($event)"
+    (clickReply)="clickComment($event)"
+    (clickReactionsCount)="viewCommentReactions($event)"
+  >
+    <!-- comment__replies -->
+    <ng-container *ngIf="comment.replies && comment.replies.length">
+      <app-replies-preview
+        [commentId]="comment._id"
+        [replies]="comment.replies"
+        [repliesCount]="comment.repliesCount"
+        (clickViewReplies)="onClickViewReplies($event)"
       >
-        <!-- comment__replies -->
-        <ng-container *ngIf="comment.replies && comment.replies.length">
-          <app-replies-preview
-            [commentId]="comment._id"
-            [replies]="comment.replies"
-            [repliesCount]="comment.repliesCount"
-            (onViewRepliesClicked)="viewCommentReplies($event)"
-          >
-          </app-replies-preview>
-        </ng-container>
-      </app-comment-row>
+      </app-replies-preview>
     </ng-container>
+  </app-comment-row>
+</section>
 
-    <!-- contextMenu -->
-    <div
-      style="visibility: hidden; position: fixed"
-      [style.left]="contextMenuPosition.x"
-      [style.top]="contextMenuPosition.y"
-      [matMenuTriggerFor]="contextMenu"
-    ></div>
-    <mat-menu #contextMenu="matMenu">
-      <ng-template matMenuContent let-item="item">
-        <button mat-menu-item (click)="onContextMenuEditAction(item)">
-          Edit
-        </button>
-        <button mat-menu-item (click)="onContextMenuDeleteAction(item)">
-          Delete
-        </button>
-      </ng-template>
-    </mat-menu>
-  </div>
-</div>
+<!-- contextMenu -->
+<div
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <button mat-menu-item (click)="onContextMenuEditAction(item)">Edit</button>
+    <button mat-menu-item (click)="onContextMenuDeleteAction(item)">
+      Delete
+    </button>
+  </ng-template>
+</mat-menu>

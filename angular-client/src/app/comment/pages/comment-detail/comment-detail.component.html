@@ -7,45 +7,41 @@
 ></app-page-header>
 
 <!-- comment rows -->
-<div class="container" *ngIf="comment">
+<section>
   <app-comment-row
+    *ngIf="comment"
     [comment]="comment"
     (clickReact)="openReactionDialog($event, 'COMMENT')"
     (clickReply)="replyToComment($event)"
     (clickReactionsCount)="showCommentReactions($event)"
   >
   </app-comment-row>
+</section>
 
-  <!-- replies list -->
-  <div class="replies__list" *ngIf="comment.replies.length">
-    <!-- view prev replies -->
-    <div class="paginator">
-      <p
-        class="paginator__text"
-        *ngIf="replies.length < comment.repliesCount"
-        (click)="viewPreviousCommentReplies(comment._id)"
-      >
-        View previous
-        {{ comment.repliesCount - comment.replies.length }} replies
-      </p>
-    </div>
-    <!-- reply row item -->
-    <ng-container *ngFor="let reply of replies">
-      <app-comment-row
-        [comment]="reply"
-        [bgClass]="getCommentClassByUsername(reply.commentedBy.username)"
-        (clickReact)="openReactionDialog($event, 'REPLY')"
-        (clickReply)="replyToComment($event)"
-        (clickReactionsCount)="showCommentReactions($event)"
-      >
-      </app-comment-row>
-    </ng-container>
+<section *ngIf="comment?.replies?.length">
+  <!-- view prev replies -->
+  <div class="paginator">
+    <p
+      *ngIf="replies.length < comment.repliesCount"
+      (click)="viewPreviousCommentReplies(comment._id)"
+    >
+      View previous
+      {{ comment.repliesCount - comment.replies.length }} replies
+    </p>
   </div>
+  <!-- replies list -->
+  <app-comments-list
+    *ngIf="replies?.length"
+    [authUser]="authUser"
+    [comments]="replies"
+    [isLoading]="isLoading$ | async"
+    (clickViewReplies)="viewPreviousCommentReplies($event)"
+  ></app-comments-list>
+</section>
 
-  <!-- addComment form -->
-  <app-form-field
-    [user]="authUser"
-    [placeholder]="'Write your reply..'"
-    (submitInput)="addNewReply($event)"
-  ></app-form-field>
-</div>
+<!-- addComment form -->
+<app-form-field
+  [user]="authUser"
+  [placeholder]="'Write your reply..'"
+  (submitInput)="addNewReply($event)"
+></app-form-field>

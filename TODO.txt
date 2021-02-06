@@ -11,5 +11,5 @@
 ✔️ Add CommentAction Delete on 
 💬 Make CommentDialogComponent
 ✔️ Edit User Profile
-[] rework commenListComponent please
+[✔️] rework commenListComponent please
 [] storyListComponent rework please

@@ -9,18 +9,18 @@
   </div>
 
   <ng-template #postCard>
-    <app-post-card
-      [post]="post"
-      [authUser]="authUser"
-    >
+    <app-post-card [post]="post" [authUser]="authUser">
+      <div class="comment__paginator">
+        <p *ngIf="postCommentsHasNext$ | async" (click)="onViewMoreComments(post._id)">
+          View previous comments
+        </p>
+      </div>
       <app-comments-list
-        [post]="post"
+        *ngIf="post.commentsCount"
         [authUser]="authUser"
         [comments]="comments$ | async"
-        [commentsHasNextPage]="postCommentsHasNext$ | async"
-        [isCommentsLoading]="isCommentsLoading$ | async"
-        (onViewCommentsClicked)="viewPreviousComments($event)"
-        (onViewRepliesClicked)="viewCommentReplies($event)"
+        [isLoading]="isCommentsLoading$ | async"
+        (clickViewReplies)="viewCommentReplies($event)"
         (clickUser)="showUser($event)"
       ></app-comments-list>
     </app-post-card>

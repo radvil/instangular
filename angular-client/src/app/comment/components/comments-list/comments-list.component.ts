@@ -17,7 +17,6 @@ import {
   EditCommentDto,
   PostComment,
 } from 'src/app/comment/interfaces';
-import { Post } from 'src/app/post/interfaces';
 import { User } from 'src/app/user/interfaces';
 import {
   ConfirmDialogComponent,
@@ -40,26 +39,30 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsListComponent {
-  @Input() post: Post;
   @Input() authUser: User;
   @Input() comments: Comment[];
-  @Input() commentsHasNextPage: boolean;
-  @Input() isCommentsLoading: boolean = false;
+  @Input() isLoading: boolean = false;
   @Input() isTruncatedTexts: boolean = false;
-
-  @Output() onViewCommentsClicked = new EventEmitter<string>();
-  @Output() onViewRepliesClicked = new EventEmitter<string>();
+  @Output() clickViewReplies = new EventEmitter<string>();
   @Output() onAddCommentClicked = new EventEmitter<CreatePostCommentDto>();
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
+  public contextMenuPosition = { x: '0px', y: '0px' };
   public commentDialogRef: MatDialogRef<CommentDialogComponent>;
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
   private _subscription = new Subscription();
 
-  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
-  public contextMenuPosition = { x: '0px', y: '0px' };
+  constructor(
+    private _dialog: MatDialog,
+    private _store: Store<CommentState>
+  ) { }
 
-  public isPermitted(commentAuthorId: string): boolean {
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
+
+  isPermitted(commentAuthorId: string): boolean {
     return this.authUser?._id === commentAuthorId;
   }
 
@@ -119,11 +122,7 @@ export class CommentsListComponent {
     );
   }
 
-  public viewPostComments(postId: string) {
-    this.onViewCommentsClicked.emit(postId);
-  }
-
-  public openReactionDialog(commentId: string) {
+  openReactionDialog(commentId: string) {
     this.reactionsDialogRef = this._dialog.open(ReactionsDialogComponent, {
       width: '666px',
       panelClass: 'dialogPanel',
@@ -143,29 +142,20 @@ export class CommentsListComponent {
     this._subscription.add(reactAndCloseDialog$.subscribe());
   }
 
-  public clickComment(commentId: string) {
+  clickComment(commentId: string) {
     alert('TODO:// replyToComment(commentId: string)');
   }
 
-  public viewCommentReactions(commentId: string) {
+  viewCommentReactions(commentId: string) {
     alert('TODO:// View Comment Reactions');
   }
 
-  public viewCommentReplies(commentId: string) {
-    this.onViewRepliesClicked.emit(commentId);
+  onClickViewReplies(commentId: string) {
+    this.clickViewReplies.emit(commentId);
     // navigate to comment detail and it's replies
   }
 
   getCommentClass(authorUsername: string): string {
     return compareToGetClass(this.authUser.username, authorUsername);
-  }
-
-  constructor(
-    private _dialog: MatDialog,
-    private _store: Store<CommentState>
-  ) { }
-
-  ngOnDestroy() {
-    this._subscription.unsubscribe();
   }
 }

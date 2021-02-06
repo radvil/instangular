@@ -11,11 +11,11 @@ export class RepliesPreviewComponent {
   @Input() commentId: string;
   @Input() replies: Comment[];
   @Input() repliesCount: number;
-  @Output() onViewRepliesClicked = new EventEmitter<string>();
+  @Output() clickViewReplies = new EventEmitter<string>();
 
-  public clickViewReplies(): void {
+  onClickViewReplies(): void {
     if (this.commentId) {
-      this.onViewRepliesClicked.emit(this.commentId);
+      this.clickViewReplies.emit(this.commentId);
     }
   }
 
