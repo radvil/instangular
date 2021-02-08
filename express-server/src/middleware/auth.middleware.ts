@@ -1,4 +1,4 @@
-import { JsonWebTokenError, TokenExpiredError, verify as jwtVerify } from 'jsonwebtoken';
+import { verify as jwtVerify } from 'jsonwebtoken';
 
 import { AUTH_TOKEN_MISSING_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { RequestUser } from '../interface';
@@ -53,7 +53,10 @@ function verifyRole(roles: Role | Role[]) {
       if (!refreshTokens) {
         next(new UNAUTHORIZED_EXCEPTION());
       }
-      req.user.ownsToken = (token: string) => !!refreshTokens.find(x => x.token === token);
+      req.user.ownsToken = (token: string) => {
+        const foundToken = refreshTokens.find(x => x.token === token);
+        return !!foundToken;
+      };
       next();
     } catch (error) {
       next(new UNAUTHORIZED_EXCEPTION());

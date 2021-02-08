@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { FormFieldComponent } from './form-field.component';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { UserAvatarModule } from '../user-avatar/user-avatar.module';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
+import { FormFieldService } from './form-field.service';
+import { FormFieldComponent } from './form-field.component';
+import { UserAvatarModule } from '../user-avatar/user-avatar.module';
 
 @NgModule({
   declarations: [FormFieldComponent],
@@ -19,6 +19,7 @@ import { UserAvatarModule } from '../user-avatar/user-avatar.module';
     MatIconModule,
     UserAvatarModule,
   ],
-  exports: [FormFieldComponent]
+  exports: [FormFieldComponent],
+  providers: [FormFieldService],
 })
 export class FormFieldModule { }

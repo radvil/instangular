@@ -29,7 +29,6 @@ export const Login = createAction(
 )
 export const LoginSuccess = createAction(
   AuthActionsType.LOGIN_SUCCESS,
-  props<{ accessToken: string }>()
 )
 export const LoginFailure = createAction(
   AuthActionsType.LOGIN_FAILURE,
@@ -42,7 +41,6 @@ export const RegisterUser = createAction(
 )
 export const RegisterUserSuccess = createAction(
   AuthActionsType.REGISTER_USER_SUCCESS,
-  props<{ accessToken: string }>()
 )
 export const RegisterUserFailure = createAction(
   AuthActionsType.REGISTER_USER_FAILURE,
@@ -54,7 +52,7 @@ export const GetAuthUser = createAction(
 )
 export const GetAuthUserSuccess = createAction(
   AuthActionsType.GET_AUTH_USER_SUCCESS,
-  props<{ user: User, accessToken: string }>()
+  props<{ user: User }>()
 )
 export const GetAuthUserFailure = createAction(
   AuthActionsType.GET_AUTH_USER_FAILURE,

@@ -39,12 +39,21 @@ export class PostCardComponent implements OnDestroy {
   @Input() authUser: User;
   @Input() textInputClass: string = null;
   @Output() onCommentClicked = new EventEmitter<string>();
-
   public updateDialogRef: MatDialogRef<PostEditDialogComponent>;
   public deleteDialogRef: MatDialogRef<ConfirmDialogComponent>;
   public reactionsDialogRef: MatDialogRef<ReactionsDialogComponent>;
   public commentDialogRef: MatDialogRef<CommentDialogComponent>;
   private _subscription = new Subscription();
+
+  constructor(
+    private _dialog: MatDialog,
+    private _store: Store,
+    private _router: Router,
+  ) { }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
 
   get sameAsAuthor(): boolean {
     return this.authUser?._id === this.post?.postedBy?._id;
@@ -67,25 +76,7 @@ export class PostCardComponent implements OnDestroy {
     }
   }
 
-  constructor(
-    private _dialog: MatDialog,
-    private _store: Store,
-    private _router: Router
-  ) { }
-
-  ngOnDestroy() {
-    this._subscription.unsubscribe();
-  }
-
-  public get showedReactionUsername(): string {
-    if (this.post.reactions.length > 0) {
-      return this.post.reactions[0].reactedBy.username;
-    } else {
-      return null;
-    }
-  }
-
-  public get reactionsCount(): number {
+  get reactionsCount(): number {
     return this.post.reactionsCount;
   }
 

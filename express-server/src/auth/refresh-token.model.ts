@@ -48,4 +48,5 @@ schema.virtual('isExpired').get(function () {
 schema.virtual('isActive').get(function () {
   return !this.updatedAt && !this.isExpired;
 });
+schema.index({ ownedBy: 1 });
 export const RefreshToken = model<RefreshToken>('RefreshToken', schema);

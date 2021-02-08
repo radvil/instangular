@@ -63,19 +63,17 @@
   </section>
 
   <!-- user-profile posts container -->
-  <section class="posts">
-    <div *ngIf="posts$ | async as posts" class="user-posts__list">
-      <div *ngFor="let post of posts" class="user-posts__list--item">
-        <div class="backdrop"></div>
-        <img
-          [lazyLoad]="post.image"
-          [defaultImage]="post.thumbnail"
-          [errorImage]="'assets/images/post.jpeg'"
-          [alt]="post.postedBy?.username"
-          height="720"
-          width="720"
-        />
-      </div>
+  <section *ngIf="posts$ | async as posts" class="posts">
+    <div *ngFor="let post of posts" class="user-posts__list--item">
+      <div class="backdrop"></div>
+      <img
+        [lazyLoad]="post.image"
+        [defaultImage]="post.thumbnail"
+        [errorImage]="'assets/images/post.jpeg'"
+        [alt]="post.postedBy?.username"
+        height="720"
+        width="720"
+      />
     </div>
   </section>
 </div>

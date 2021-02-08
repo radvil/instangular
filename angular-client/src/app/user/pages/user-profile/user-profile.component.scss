@@ -38,9 +38,6 @@
   flex-direction: column;
   margin: 1rem;
 }
-.posts {
-  margin: 0 !important;
-}
 .postsCount,
 .followersCount,
 .followingsCount {
@@ -101,8 +98,8 @@
   }
 }
 
-// posts section
-.user-posts__list {
+section.posts {
+  margin: 0 !important;
   display: flex;
   flex-wrap: wrap;
 }

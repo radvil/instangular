@@ -22,7 +22,7 @@ export class AuthEffects {
           this._router.navigateByUrl('/auth/post-registered');
         }
       }),
-      map(accessToken => AuthActions.RegisterUserSuccess({ accessToken })),
+      map(() => AuthActions.RegisterUserSuccess()),
       catchError(error => of(AuthActions.RegisterUserFailure({ error })))
     ))
   ))
@@ -36,7 +36,7 @@ export class AuthEffects {
           this._router.navigateByUrl('/home');
         }
       }),
-      map(accessToken => AuthActions.LoginSuccess({ accessToken })),
+      map(() => AuthActions.LoginSuccess()),
       catchError(error => of(AuthActions.LoginFailure({ error })))
     ))
   ))
@@ -44,12 +44,11 @@ export class AuthEffects {
   getAuthUser$ = createEffect(() => this._actions$.pipe(
     ofType(AuthActions.GetAuthUser),
     switchMap(() => {
-      const accessToken = this._authService.accessToken;
-      if (!accessToken) {
+      if (!this._authService.accessToken) {
         return of(AuthActions.GetAuthUserFailure({ error: new Error('No Token!') }))
       }
       return this._authService.requestAuthUser().pipe(
-        map((user) => AuthActions.GetAuthUserSuccess({ user, accessToken })),
+        map((user) => AuthActions.GetAuthUserSuccess({ user })),
         catchError(error => of(AuthActions.GetAuthUserFailure({ error })))
       )
     })
@@ -60,6 +59,7 @@ export class AuthEffects {
     tap(() => {
       if (this._authService.accessToken) {
         this._localStorageService.removeItem('accessToken');
+        this._authService.accessTokenSubject.next(null);
         this._router.navigateByUrl('/auth/login');
         this._notificationService.warn('You are logged out');
       }

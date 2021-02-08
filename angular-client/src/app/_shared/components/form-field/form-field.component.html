@@ -2,6 +2,7 @@
   <app-user-avatar [user]="user"></app-user-avatar>
   <form (ngSubmit)="onSubmitInput()">
     <input
+      #inputField
       [(ngModel)]="commentInputText"
       [placeholder]="placeholder"
       autocomplete="off"

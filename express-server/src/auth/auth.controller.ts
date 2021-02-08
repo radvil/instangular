@@ -1,6 +1,6 @@
 import { CookieOptions, Router } from 'express';
 
-import { AUTH_TOKEN_MISSING_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
+import { AUTH_TOKEN_MISSING_EXCEPTION, BAD_REQUEST_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exception';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
 import { authorizeAccess, validationMiddleware } from '../middleware';
 import { CreateUserDto, User } from '../user';
@@ -13,6 +13,7 @@ export class AuthController implements Controller {
   public path = '/auth';
   public router = Router();
   private _authSrv = new AuthService();
+  private _userModel = User;
 
   constructor() {
     this.initRoutes();
@@ -85,15 +86,27 @@ export class AuthController implements Controller {
   revokeToken = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
+
     if (!token) {
       next(new AUTH_TOKEN_MISSING_EXCEPTION());
     }
     if (!req.user.ownsToken(token)) {
-      next(new UNAUTHORIZED_EXCEPTION());
+      next(new BAD_REQUEST_EXCEPTION('Invalid token owner'));
     }
     try {
-      await this._authSrv.expireRefreshToken({ token, ipAddress });
-      this.setRefreshTokenCookie(res, null);
+      const promises = [];
+      promises.push(
+        this._userModel.findByIdAndUpdate(
+          req.user._id,
+          { lastLoggedInAt: new Date().toISOString() },
+          { new: false }
+        )
+      );
+      promises.push(
+        this._authSrv.expireRefreshToken({ token, ipAddress })
+      );
+      await Promise.all(promises);
+      this.setRefreshTokenCookie(res, "");
       res.json(<JsonHttpResponse<any>>{
         status: 200,
         message: 'Token has been revoked'
@@ -110,7 +123,7 @@ export class AuthController implements Controller {
     }
     try {
       await this._authSrv.expireAllRefreshTokens(req.user._id);
-      this.setRefreshTokenCookie(res, null);
+      this.setRefreshTokenCookie(res, "");
       res.json(<JsonHttpResponse<string>>{
         status: 200,
         message: 'All tokens revoked'
@@ -149,11 +162,11 @@ export class AuthController implements Controller {
     }
   }
 
-  protected setRefreshTokenCookie(res: Res, refreshToken: Buffer) {
-    const options: CookieOptions = {
+  protected setRefreshTokenCookie(res: Res, refreshToken: Buffer | string) {
+    const options: CookieOptions = refreshToken ? {
       httpOnly: true,
       expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-    };
+    } : null;
     return res.cookie('refreshToken', refreshToken, options);
   }
 }

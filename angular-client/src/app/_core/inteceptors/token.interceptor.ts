@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { LocalStorageService } from 'src/app/_shared';
 import { AuthService } from 'src/app/auth/services';
 import { AuthState } from 'src/app/auth/interfaces';
 import { Logout } from 'src/app/auth/store/auth.actions';
@@ -12,31 +11,32 @@ import { Logout } from 'src/app/auth/store/auth.actions';
 
 @Injectable() export class TokenInterceptor implements HttpInterceptor {
   private isRefreshing: boolean;
-  private tokenSubject = new BehaviorSubject<string>(null);
+  private tokenSubject: BehaviorSubject<string>;
 
   constructor(
-    private localStorageSrv: LocalStorageService,
-    private authSrv: AuthService,
-    private store: Store<AuthState>,
-  ) { }
+    private _authSrv: AuthService,
+    private _store: Store<AuthState>,
+  ) {
+    this.tokenSubject = this._authSrv.accessTokenSubject;
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Clone the Authorization header to outgoing request as option (status 204)
-    request = this.setAuthHeader(request, this.token);
+    request = this.setAuthHeader(request, this.tokenSubject.value);
     // Token expired with status 401
     // http.refreshToken() pipe return user response then set token to LS
     // Retry failed request and pipe store.getCurrentUser()
     return next.handle(request).pipe(
       catchError((err) => {
         // if expired
-        if (err instanceof HttpErrorResponse && err.status === 401) {
-          if (this.token || this.token !== undefined) {
+        if (err instanceof HttpErrorResponse && err.status == 401) {
+          if (this.tokenSubject.value) {
             return this.refreshToken(request, next);
           }
         }
         // if 403 (refresh token req unauthorized)
-        else if (err instanceof HttpErrorResponse && err.status === 403) {
-          this.store.dispatch(Logout());
+        else if (err instanceof HttpErrorResponse && err.status == 403) {
+          this._store.dispatch(Logout());
         }
         else {
           // if other error status code
@@ -57,29 +57,22 @@ import { Logout } from 'src/app/auth/store/auth.actions';
     if (!this.isRefreshing) {
       // Start refreshing token...
       this.isRefreshing = true;
-      this.tokenSubject.next(null);
 
-      return this.authSrv.refreshToken().pipe(
+      return this._authSrv.refreshToken().pipe(
         switchMap((newAccessToken) => {
           this.isRefreshing = false;
-          this.tokenSubject.next(newAccessToken);
           // repeat failed request with new token
           return next.handle(this.setAuthHeader(req, newAccessToken))
         })
       );
     } else {
       // wait whilst getting new token
-      return this.tokenSubject.pipe(
-        filter((token) => token !== null),
+      this.tokenSubject.pipe(
+        filter(token => token !== null),
         take(1),
-        switchMap((token) => next.handle(this.setAuthHeader(req, token)))
+        switchMap(token => next.handle(this.setAuthHeader(req, token)))
       );
     }
   } // EOL refreshToken()
-
-  // localStorage token getter
-  get token() {
-    return this.localStorageSrv.getItem('accessToken');
-  }
 
 }

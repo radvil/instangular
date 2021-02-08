@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, of } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 
 import { environment as env } from 'src/environments/environment';
 import { ApiRes } from "src/app/_core/interfaces";
@@ -14,6 +14,10 @@ type AuthUserRes = ApiRes<User>;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private _authUrl = env.be.url + '/auth';
+  public accessTokenSubject: BehaviorSubject<string>;
+  public accessToken$: Observable<string>;
+
   constructor(
     private _http: HttpClient,
     private _localStorageService: LocalStorageService,
@@ -21,16 +25,14 @@ export class AuthService {
     this.initAccessToken();
   }
 
-  private _authUrl = env.be.url + '/auth';
-  public accessTokenSubject: BehaviorSubject<string>;
+  get accessToken(): string {
+    return this.accessTokenSubject.value;
+  }
 
   private initAccessToken(): void {
     const accessToken = this._localStorageService.getItem('accessToken');
     this.accessTokenSubject = new BehaviorSubject(accessToken);
-  }
-
-  get accessToken(): string {
-    return this.accessTokenSubject.value;
+    this.accessToken$ = this.accessTokenSubject.asObservable();
   }
 
   public login(loginDto: LoginDto): Observable<string> {
@@ -46,6 +48,12 @@ export class AuthService {
       }),
       map(res => res.data.accessToken)
     )
+  }
+
+  public logout(): Observable<ApiRes<any>> {
+    return this._http.post<ApiRes<any>>(`${this._authUrl}/revoke-token`, {}, { withCredentials: true }).pipe(
+      catchError(error => of(error))
+    );
   }
 
   public register(dto: UserRegistrationDto): Observable<string> {
@@ -75,9 +83,8 @@ export class AuthService {
     return request$.pipe(
       tap(res => {
         if (res.data.accessToken) {
-          const accessToken = res.data.accessToken;
-          this._localStorageService.setItem('accessToken', accessToken);
-          this.accessTokenSubject.next(accessToken);
+          this._localStorageService.setItem('accessToken', res.data.accessToken);
+          this.accessTokenSubject.next(res.data.accessToken);
         }
       }),
       map(res => res.data.accessToken),

@@ -12,11 +12,10 @@ const reducer = createReducer(
     isLoading: true,
     isLoaded: false,
   })),
-  on(AuthActions.LoginSuccess, (state, { accessToken }) => ({
+  on(AuthActions.LoginSuccess, (state) => ({
     ...state,
     isLoading: false,
     isLoaded: true,
-    accessToken,
   })),
   on(AuthActions.LoginFailure, (state, action) => ({
     ...state,
@@ -30,31 +29,33 @@ const reducer = createReducer(
     isLoading: true,
     isLoaded: false,
   })),
-  on(AuthActions.RegisterUserSuccess, (state, { accessToken }) => ({
+  on(AuthActions.RegisterUserSuccess, (state) => ({
     ...state,
     isLoading: false,
     isLoaded: true,
-    accessToken,
   })),
   on(AuthActions.RegisterUserFailure, (state, action) => ({
     ...state,
     isLoading: false,
+    isLoaded: false,
     error: action.error
   })),
 
   on(AuthActions.GetAuthUser, state => ({
     ...state,
-    isLoading: true
+    isLoading: true,
+    isLoaded: false,
   })),
-  on(AuthActions.GetAuthUserSuccess, (state, { user, accessToken }) => ({
+  on(AuthActions.GetAuthUserSuccess, (state, { user }) => ({
     ...state,
     isLoading: false,
-    user, accessToken,
-    isAuth: true
+    isLoaded: true,
+    user,
   })),
   on(AuthActions.GetAuthUserFailure, (state, action) => ({
     ...state,
     isLoading: false,
+    isLoaded: false,
     error: action.error,
   })),
 
@@ -77,6 +78,7 @@ const reducer = createReducer(
   on(AuthActions.Logout, state => ({
     ...state,
     isLoading: false,
+    isLoaded: false,
     user: null,
   })),
 )
