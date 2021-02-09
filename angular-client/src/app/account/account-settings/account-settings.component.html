@@ -1,0 +1,33 @@
+<app-page-header [style]="'sticky'" [title]="'Manage account'">
+</app-page-header>
+
+<!-- Account's Info -->
+<section *ngIf="authUser" class="rad-card">
+  <div class="rad-card-subtitle">
+    Account Info
+    <mat-icon (click)="openUpdateInfoDialog()">edit</mat-icon>
+  </div>
+  <ul class="rad-list">
+    <li class="rad-list-item">
+      <label>Username</label>
+      <span>{{ authUser.username }}</span>
+    </li>
+    <li class="rad-list-item">
+      <label>Email address</label>
+      <span>{{ authUser.email }}</span>
+    </li>
+  </ul>
+</section>
+
+<!-- Account's Security -->
+<section class="security rad-card">
+  <div class="rad-card-subtitle">Security</div>
+  <button mat-stroked-button (click)="openUpdatePasswordDialog()">
+    <mat-icon>fingerprint</mat-icon>
+    <span>Update password</span>
+  </button>
+  <button mat-flat-button color="warn" (click)="openDeleteDialog()">
+    <mat-icon>delete</mat-icon>
+    <span>Delete account</span>
+  </button>
+</section>

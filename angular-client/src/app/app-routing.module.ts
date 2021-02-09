@@ -14,12 +14,12 @@ const routes: Routes = [
   },
   {
     path: 'user',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./user/pages/user.module').then(m => m.UserModule)
   },
   {
     path: 'post',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./post/pages/post.module').then(m => m.PostModule)
   },
   {
@@ -32,6 +32,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./home/pages/home.module').then(m => m.HomeModule),
   },
+  {
+    path: 'account',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
+  }
 ];
 
 @NgModule({

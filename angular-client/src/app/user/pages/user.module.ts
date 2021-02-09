@@ -7,6 +7,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 // local modules
 import { InstAngularPipesModule } from 'src/app/_shared/pipes';
 import { EditBasicsProfileModule, PageHeaderModule, UploadProfilePictureModule, UserAvatarModule } from 'src/app/_shared/components';
@@ -14,7 +16,6 @@ import { UserStoreModule } from '../store/user-store.module';
 import { PostStoreModule } from 'src/app/post/store/post-store.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
-import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [
   {
@@ -46,6 +47,7 @@ export class UserRoutingModule { }
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatMenuModule,
     // local modules
     UserRoutingModule,
     InstAngularPipesModule,

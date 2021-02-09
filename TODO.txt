@@ -13,5 +13,9 @@
 ✔️ Edit User Profile
 ✔️ rework commenListComponent please
 ✔️ A bit of reactionsText rework.
+✔️ Account Module & routing
+✔️ Account Settings Component
+[] Account Settings / Manage Account\'s information
+[] Account Settings / Manage Account\'s password
 
 [] Make ChatRoom And Message Schema

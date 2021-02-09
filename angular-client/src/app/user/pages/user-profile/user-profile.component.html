@@ -1,10 +1,30 @@
 <div *ngIf="user$ | async as user" class="user-profile">
   <!-- page header -->
-  <app-page-header
-    [title]="user.username"
-    [icon]="'settings'"
-    (onIconClicked)="logout()"
-  ></app-page-header>
+  <app-page-header [title]="user.username">
+    <!-- settings menu -->
+    <div class="settings__menu">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="settings menu"
+      >
+        <mat-icon>settings</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <ng-template matMenuContent>
+          <button mat-menu-item (click)="goToAccountSettings()">
+            <mat-icon>account_circle</mat-icon>
+            <span>Account</span>
+          </button>
+          <button mat-menu-item (click)="logoutUser()">
+            <mat-icon color="warn">whatshot</mat-icon>
+            <span>Logout</span>
+          </button>
+        </ng-template>
+      </mat-menu>
+    </div>
+  </app-page-header>
 
   <!-- user-profile intro -->
   <section class="intro">

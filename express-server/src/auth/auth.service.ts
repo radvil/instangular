@@ -102,6 +102,6 @@ export class AuthService {
   }
 
   public async getUserById(userId: string) {
-    return await this._userModel.findById(userId).select('-password');
+    return await this._userModel.findById(userId).select('-password').lean();
   }
 }

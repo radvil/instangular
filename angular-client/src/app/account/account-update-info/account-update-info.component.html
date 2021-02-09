@@ -1,0 +1,40 @@
+<div *ngIf="data.user" class="dialogPanel">
+  <div class="dialogHeading">Update account info</div>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input
+        formControlName="username"
+        matInput
+        type="text"
+        placeholder="Edit username"
+      />
+      <mat-error *ngIf="username.invalid">{{ usernameError }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        formControlName="email"
+        matInput
+        type="email"
+        placeholder="Edit email address"
+      />
+      <mat-error *ngIf="email.invalid">{{ emailError }}</mat-error>
+    </mat-form-field>
+
+    <div class="form__action-buttons">
+      <button
+        (click)="submitForm()"
+        mat-raised-button
+        [disabled]="formGroup.invalid"
+        type="submit"
+        color="accent"
+      >
+        Submit
+      </button>
+      <button (click)="closeDialog()" type="button" mat-stroked-button>
+        Close
+      </button>
+    </div>
+  </form>
+</div>

@@ -83,7 +83,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.posts$ = this._store.select($_postsOfUser);
   }
 
-  public logout(): void {
+  public goToAccountSettings(): void {
+    this._router.navigate(['account', 'settings']);
+  }
+
+  public logoutUser(): void {
     this._subscription.add(
       this._authService
         .logout()
