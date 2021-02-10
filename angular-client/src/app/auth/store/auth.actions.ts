@@ -1,7 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 
 import { User } from "src/app/user";
-import { UserBasicsInfoDto } from "src/app/user/interfaces/user-basic-info.dto";
+import { UserBasicsInfoDto, UserSensitivesInfoDto } from "src/app/user/interfaces/user.dto";
 import { LoginDto, UserRegistrationDto } from "../interfaces";
 
 export enum AuthActionsType {
@@ -19,6 +19,7 @@ export enum AuthActionsType {
 
   CHANGE_PROFILE_PHOTO = '[Auth] Change Profile Photo',
   UPDATE_PROFILE_BASICS_INFO = '[Auth] Update Profile Basics Info',
+  UPDATE_PROFILE_SENSITIVES_INFO = '[Auth] Update Profile Senitives Info',
 
   LOGOUT = '[Auth] Logout',
 }
@@ -67,6 +68,11 @@ export const ChangeProfilePhoto = createAction(
 export const UpdateProfileBasicsInfo = createAction(
   AuthActionsType.UPDATE_PROFILE_BASICS_INFO,
   props<{ dto: UserBasicsInfoDto }>()
+)
+
+export const UpdateProfileSensitivesInfo = createAction(
+  AuthActionsType.UPDATE_PROFILE_SENSITIVES_INFO,
+  props<{ dto: UserSensitivesInfoDto }>()
 )
 
 export const Logout = createAction(

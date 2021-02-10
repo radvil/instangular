@@ -75,6 +75,14 @@ const reducer = createReducer(
     }
   }),
 
+  on(AuthActions.UpdateProfileSensitivesInfo, (state, { dto }) => {
+    const { userId, ...changes } = dto;
+    return {
+      ...state,
+      user: { ...state.user, changes },
+    }
+  }),
+
   on(AuthActions.Logout, state => ({
     ...state,
     isLoading: false,

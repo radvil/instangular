@@ -42,8 +42,8 @@ export class UserController implements Controller {
   private initRoutes(): void {
     this.router.post(this.path + '/upload-profile-photo', authorizeAccess(), this.upload.single('photo'), this.uploadPhoto);
     this.router.patch(this.path + '/basics-info', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
+    this.router.patch(this.path + '/sensitives-info', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
     this.router.get(this.path + '/:username', this.getUserByUsername);
-    this.router.patch(this.path + '/:userId/sensitives-info', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
     this.router.patch(this.path + '/:userId/password', authorizeAccess([Role.USER, Role.ADMIN]), this.patchPassword);
   }
 
@@ -56,7 +56,7 @@ export class UserController implements Controller {
   private getUserByUsername = async (req: Req, res: Res, next: Next) => {
     const username = req.params.username;
     try {
-      const findQuery = this._userModel.findOne({ username });
+      const findQuery = this._userModel.findOne({ username }).select('-email');
       const includePostsOptionExists = req.query.includePosts === 'true';
       if (includePostsOptionExists) {
         findQuery.populate([
@@ -162,26 +162,22 @@ export class UserController implements Controller {
   /**
    * 
    * @param req.params.userId requested userId
-   * @field <UserSensitivesInfoDto>{ username: string, email: string, name?: string }
+   * @field <UserSensitivesInfoDto>{ username: string, email: string, }
    * @method PATCH
    * @desc private route to patch sensitive info
    */
   private patchSensitivesInfo = async (req: RequestUser, res: Res, next: Next) => {
-    if (req.user._id.toString() !== req.params.userId.toString()) {
-      next(new UNAUTHORIZED_EXCEPTION('Not allowed!'));
-    }
-    const { name, username, email } = <UserSensitivesInfoDto>req.body;
-    const foundUser = await this._userModel.findById(req.params.userId);
+    const { username, email } = <UserSensitivesInfoDto>req.body;
+    const foundUser = await this._userModel.findById(req.user._id);
     if (!foundUser) {
       next(new NOT_FOUND_EXCEPTION('user not found!'));
     }
     try {
-      foundUser.set({ name, username, email });
-      const savedUser = await foundUser.save();
-      res.json(<JsonHttpResponse<User>>{
+      foundUser.set({ username, email });
+      await foundUser.save();
+      res.json(<JsonHttpResponse<any>>{
         status: 200,
         message: 'PATCH basic info succeed!',
-        data: savedUser,
       })
     } catch (error) {
       if (parseInt(error.code) === 11000) {

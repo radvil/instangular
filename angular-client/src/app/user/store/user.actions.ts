@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
-import { UploadUserPhotoDto, User } from "../interfaces";
-import { UserBasicsInfoDto } from "../interfaces/user-basic-info.dto";
+import { User } from "../interfaces";
+import { UserBasicsInfoDto, UserSensitivesInfoDto } from "../interfaces/user.dto";
 
 export enum UserActionTypes {
 
@@ -15,6 +15,10 @@ export enum UserActionTypes {
   UPDATE_USER_BASICS_INFO = '[User/API] Update User Basics Info',
   UPDATE_USER_BASICS_INFO_SUCCESS = '[User/API] Update User Basics Info Success',
   UPDATE_USER_BASICS_INFO_FAILURE = '[User/API] Update User Basics Info Failure',
+
+  UPDATE_USER_SENSITIVES_INFO = '[User/API] Update User Sensitives Info',
+  UPDATE_USER_SENSITIVES_INFO_SUCCESS = '[User/API] Update User Sensitives Info Success',
+  UPDATE_USER_SENSITIVES_INFO_FAILURE = '[User/API] Update User Sensitives Info Failure',
 
 }
 
@@ -56,3 +60,17 @@ export const UpdateUserBasicsInfoFailure = createAction(
   UserActionTypes.UPDATE_USER_BASICS_INFO_FAILURE,
   props<{ error: Error }>()
 );
+
+export const UpdateUserSensitivesInfo = createAction(
+  UserActionTypes.UPDATE_USER_SENSITIVES_INFO,
+  props<{ dto: UserSensitivesInfoDto }>()
+);
+export const UpdateUserSensitivesInfoSuccess = createAction(
+  UserActionTypes.UPDATE_USER_SENSITIVES_INFO_SUCCESS,
+  props<{ dto: UserSensitivesInfoDto }>()
+);
+export const UpdateUserSensitivesInfoFailure = createAction(
+  UserActionTypes.UPDATE_USER_SENSITIVES_INFO_FAILURE,
+  props<{ error: Error }>()
+);
+

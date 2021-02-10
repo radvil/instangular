@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment as env } from 'src/environments/environment'
-import { UploadUserPhotoDto, User } from '../interfaces';
+import { UserPhotoDto, User } from '../interfaces';
 import { ApiRes } from 'src/app/_core';
-import { UserBasicsInfoDto } from '../interfaces/user-basic-info.dto';
+import { UserBasicsInfoDto, UserSensitivesInfoDto } from '../interfaces/user.dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -19,7 +19,7 @@ export class UserService {
     return request$.pipe(map(res => res.data))
   }
 
-  public uploadProfilePicture(dto: UploadUserPhotoDto): Observable<User> {
+  public uploadProfilePicture(dto: UserPhotoDto): Observable<User> {
     const url = env.be.url + `/users/upload-profile-photo`;
     const formData: FormData = new FormData();
     formData.append('userId', dto.userId);
@@ -30,5 +30,10 @@ export class UserService {
   public updateBasicsInfo(dto: UserBasicsInfoDto): Observable<User> {
     const url = env.be.url + `/users/basics-info`;
     return this._http.patch<ApiRes<User>>(url, dto).pipe(map(res => res.data));
+  }
+
+  public updateSensitivesInfo(dto: UserSensitivesInfoDto): Observable<any> {
+    const url = env.be.url + `/users/sensitives-info`;
+    return this._http.patch<ApiRes<any>>(url, dto);
   }
 }

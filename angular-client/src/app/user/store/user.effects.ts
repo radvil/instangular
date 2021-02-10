@@ -5,12 +5,11 @@ import { of } from "rxjs";
 import { catchError, exhaustMap, map, switchMap, tap, withLatestFrom } from "rxjs/operators";
 
 import { AuthState } from "src/app/auth";
-import { ChangeProfilePhoto, UpdateProfileBasicsInfo } from "src/app/auth/store/auth.actions";
+import { ChangeProfilePhoto, UpdateProfileBasicsInfo, UpdateProfileSensitivesInfo } from "src/app/auth/store/auth.actions";
 import { $_authUser } from "src/app/auth/store/auth.selectors";
 import { PushManyPosts } from "src/app/post/store/post.actions";
 import { PostState } from "src/app/post/store/post.state";
-import { UploadUserPhotoDto } from "..";
-import { UserBasicsInfoDto } from "../interfaces/user-basic-info.dto";
+import { UserBasicsInfoDto, UserPhotoDto, UserSensitivesInfoDto } from "../interfaces/user.dto";
 import { UserService } from "../services/user.service";
 import * as userActions from './user.actions';
 
@@ -33,7 +32,7 @@ export class UserEffects {
     ofType(userActions.UploadUserProfilePicture),
     withLatestFrom(this._store.select($_authUser)),
     switchMap(([action, user]) => {
-      const dto = <UploadUserPhotoDto>{
+      const dto = <UserPhotoDto>{
         userId: user._id,
         photo: action.photo,
       }
@@ -62,6 +61,22 @@ export class UserEffects {
         map(() => userActions.UpdateUserBasicsInfoSuccess({ dto })),
         tap(({ dto }) => this._store.dispatch(UpdateProfileBasicsInfo({ dto }))),
         catchError(error => of(userActions.UpdateUserBasicsInfoFailure({ error })))
+      )
+    })
+  ))
+
+  updateUserSensitivesInfo$ = createEffect(() => this._actions$.pipe(
+    ofType(userActions.UpdateUserSensitivesInfo),
+    withLatestFrom(this._store.select($_authUser)),
+    exhaustMap(([action, user]) => {
+      const dto = <UserSensitivesInfoDto>{
+        userId: user._id,
+        ...action.dto
+      }
+      return this._userService.updateSensitivesInfo(dto).pipe(
+        map(() => userActions.UpdateUserSensitivesInfoSuccess({ dto })),
+        tap(({ dto }) => this._store.dispatch(UpdateProfileSensitivesInfo({ dto }))),
+        catchError(error => of(userActions.UpdateUserSensitivesInfoFailure({ error })))
       )
     })
   ))

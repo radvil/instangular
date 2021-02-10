@@ -135,7 +135,7 @@ export class AuthController implements Controller {
 
   requestAuthUser = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
     try {
-      const requestedUser = await this._authSrv.getUserById(req.user._id);
+      const requestedUser = await this._authSrv.getUserById(req.user._id, { lean: false });
       res.json(<JsonHttpResponse<User>>{
         status: 200,
         message: 'Request AuthUser succeed',

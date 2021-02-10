@@ -1,19 +1,28 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from 'src/app/user';
+import { Store } from '@ngrx/store';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+import { User, UserSensitivesInfoDto } from 'src/app/user';
+import { UpdateUserSensitivesInfo } from 'src/app/user/store/user.actions';
+import { $_userLoaded, $_userLoading } from 'src/app/user/store/user.selectors';
+import { UserState } from 'src/app/user/store/user.state';
 
 @Component({
   selector: 'app-account-update-info',
   templateUrl: './account-update-info.component.html',
   styleUrls: ['./account-update-info.component.scss']
 })
-export class AccountUpdateInfoComponent {
+export class AccountUpdateInfoComponent implements OnDestroy {
   public formGroup: FormGroup;
+  public isLoadingSub = new BehaviorSubject(false);
+  private _subscription = new Subscription();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { user: User },
     public _dialogRef: MatDialogRef<AccountUpdateInfoComponent>,
+    private _store: Store<UserState>,
   ) {
     if (this.data.user) {
       this.formGroup = new FormGroup({
@@ -21,6 +30,18 @@ export class AccountUpdateInfoComponent {
         email: new FormControl(this.data.user.email, [Validators.required, Validators.email]),
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
+
+  // #region getters
+  get submitButtonText(): string {
+    if (this.isLoadingSub.value) {
+      return "Submittting...";
+    }
+    return "Submit";
   }
 
   get username(): AbstractControl {
@@ -42,18 +63,41 @@ export class AccountUpdateInfoComponent {
       return "email address is required";
     }
     if (this.email.hasError('email')) {
-      return "Please use a valid email format!";
+      return "please use a valid email format!";
     }
   }
+  // #endregion
 
   submitForm() {
     if (this.formGroup.valid) {
-      this._dialogRef.close(this.formGroup.value);
+      this._store.dispatch(UpdateUserSensitivesInfo({
+        dto: <UserSensitivesInfoDto>this.formGroup.value
+      }));
+      this.setLoading();
     }
   }
 
   closeDialog() {
     this._dialogRef.close(null);
+  }
+
+  setLoading(): void {
+    this._subscription.add(
+      this._store.select($_userLoading).subscribe(isLoading => {
+        if (isLoading) {
+          this.isLoadingSub.next(true);
+          this.formGroup.disable();
+        }
+      })
+    )
+    this._subscription.add(
+      this._store.select($_userLoaded).subscribe(isLoaded => {
+        if (isLoaded) {
+          this.isLoadingSub.next(false);
+          this.formGroup.enable();
+        }
+      })
+    )
   }
 
 }

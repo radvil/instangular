@@ -1,5 +1,11 @@
 <div *ngIf="data.user" class="dialogPanel">
   <div class="dialogHeading">Update account info</div>
+  <div *ngIf="asDialog" class="closeDialog">
+    <button mat-icon-button color="warn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
   <form [formGroup]="formGroup">
     <mat-form-field appearance="outline">
       <mat-label>Username</mat-label>
@@ -26,11 +32,11 @@
       <button
         (click)="submitForm()"
         mat-raised-button
-        [disabled]="formGroup.invalid"
+        [disabled]="formGroup.invalid || isLoadingSub.value"
         type="submit"
         color="accent"
       >
-        Submit
+        {{ submitButtonText }}
       </button>
       <button (click)="closeDialog()" type="button" mat-stroked-button>
         Close

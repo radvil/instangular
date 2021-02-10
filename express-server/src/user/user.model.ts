@@ -46,9 +46,9 @@ const schemaOptions: SchemaOptions = {
       delete ret.__v;
       delete ret.id;
       delete ret.password;
-      delete ret.lastPasswordUpdatedAt;
-      delete ret.email;
-      delete ret.role;
+      // delete ret.lastPasswordUpdatedAt;
+      // delete ret.email;
+      // delete ret.role;
     }
   }
 }

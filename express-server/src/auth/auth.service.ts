@@ -101,7 +101,11 @@ export class AuthService {
     }
   }
 
-  public async getUserById(userId: string) {
-    return await this._userModel.findById(userId).select('-password').lean();
+  public async getUserById(userId: string, { lean } = { lean: true }) {
+    let userQuery = this._userModel.findById(userId).select('-password');
+    if (lean) {
+      userQuery = this._userModel.findById(userId).select('-password').lean();
+    }
+    return await userQuery;
   }
 }

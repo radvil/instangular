@@ -65,4 +65,25 @@ export const userReducer = createReducer(
       isLoaded: true,
     })
   }),
+
+  on(UserActions.UpdateUserSensitivesInfo, (state) => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+  })),
+  on(UserActions.UpdateUserSensitivesInfoFailure, (state, { error }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error,
+  })),
+  on(UserActions.UpdateUserSensitivesInfoSuccess, (state, { dto }) => {
+    const { userId: id, ...changes } = dto;
+
+    return userAdapter.updateOne({ id, changes }, {
+      ...state,
+      loading: false,
+      isLoaded: true,
+    })
+  }),
 )

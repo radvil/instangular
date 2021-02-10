@@ -7,3 +7,14 @@ export class UserBasicsInfoDto {
   twitterLink?: string;
   githubLink?: string;
 }
+
+export class UserPhotoDto {
+  userId: string;
+  photo: File;
+}
+
+export class UserSensitivesInfoDto {
+  userId: string;
+  username: string;
+  email: string;
+}

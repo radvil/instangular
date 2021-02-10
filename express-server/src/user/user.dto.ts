@@ -54,11 +54,6 @@ export class UserSensitivesInfoDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
-  public name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(3)
   public username: string;
 
   @IsNotEmpty()

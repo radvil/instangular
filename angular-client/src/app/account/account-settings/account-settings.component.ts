@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthState } from 'src/app/auth';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
@@ -44,13 +44,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: { user: this.authUser }
     });
-
-    this._subscription.add(
-      this.updateInfoDialogRef.beforeClosed().subscribe(formValue => {
-        if (formValue) console.log(formValue);
-        else console.log('dialog closed!');
-      })
-    );
   }
 
   openUpdatePasswordDialog(): void {
