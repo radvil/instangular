@@ -1,0 +1,27 @@
+<app-user-avatar
+  [user]="req.requester"
+  [clickable]="true"
+  [imageHeight]="60"
+  [imageWidth]="60"
+  (clickUser)="clickUser.emit(req.requester)"
+>
+</app-user-avatar>
+<div class="right">
+  <div class="text">
+    <span>
+      <b (click)="clickUser.emit(req.requester)">
+        {{ req.requester.username }}
+      </b>
+      &nbsp;want's to follow you
+    </span>
+    <small>{{ req.createdAt | relativeTime: "short" }}</small>
+  </div>
+  <div class="buttons">
+    <button (click)="clickApprove.emit(true)" mat-flat-button color="accent">
+      Approve
+    </button>
+    <button (click)="clickDecline.emit(true)" mat-stroked-button>
+      Decline
+    </button>
+  </div>
+</div>

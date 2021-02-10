@@ -37,8 +37,8 @@ export class AppComponent implements OnInit {
       icon: "message",
     },
     {
-      routerLink: "/notification",
-      label: "Notification",
+      routerLink: "/notifications",
+      label: "Notifications",
       icon: "alarm",
     },
   ]

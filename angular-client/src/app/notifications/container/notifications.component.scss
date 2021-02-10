@@ -1,0 +1,9 @@
+.button_tabs {
+  display: flex;
+  margin-bottom: 1rem;
+  button {
+    flex: 1;
+    font-weight: bold;
+    border-radius: 0;
+  }
+}

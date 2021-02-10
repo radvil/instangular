@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="button_tabs">
+    <button
+      mat-flat-button
+      [color]="getTabColor('Follow Requests')"
+      (click)="switchTab('Follow Requests')"
+    >
+      Follow Requests
+    </button>
+    <button
+      mat-flat-button
+      [color]="getTabColor('Notifications')"
+      (click)="switchTab('Notifications')"
+    >
+      Notifications
+    </button>
+  </div>
+
+  <!-- Follow Requests Tab -->
+  <ng-container *ngIf="selectedTab === 'Follow Requests'; else notifications">
+    <app-follow-request
+      *ngFor="let req of followRequests"
+      [req]="req"
+      (clickUser)="showUser($event)"
+      (clickApprove)="approveRequest($event)"
+      (clickDecline)="declineRequest($event)"
+    >
+    </app-follow-request>
+  </ng-container>
+
+  <!-- Notifications Tab -->
+  <ng-template #notifications>Other Notifications here...</ng-template>
+</div>

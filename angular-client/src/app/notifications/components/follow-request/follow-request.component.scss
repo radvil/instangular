@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+}
+.right {
+  flex: 2;
+  margin-left: .5rem;
+  width: max-content;
+}
+.text {
+  display: flex;
+  margin-bottom: .5rem;
+  justify-content: space-between;
+  b {
+    cursor: pointer;
+  }
+  small {
+    color: #666;
+    font-weight: normal;
+  }
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  button {
+    flex: 0.46;
+    font-weight: bold;
+  }
+}
