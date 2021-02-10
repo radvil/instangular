@@ -9,7 +9,7 @@ import { ChangeProfilePhoto, UpdateProfileBasicsInfo, UpdateProfileSensitivesInf
 import { $_authUser } from "src/app/auth/store/auth.selectors";
 import { PushManyPosts } from "src/app/post/store/post.actions";
 import { PostState } from "src/app/post/store/post.state";
-import { UserBasicsInfoDto, UserPhotoDto, UserSensitivesInfoDto } from "../interfaces/user.dto";
+import { UserBasicsInfoDto, UserPhotoDto, UserSensitivesInfoDto, UserUpdatePasswordDto } from "../interfaces/user.dto";
 import { UserService } from "../services/user.service";
 import * as userActions from './user.actions';
 
@@ -76,6 +76,17 @@ export class UserEffects {
       return this._userService.updateSensitivesInfo(dto).pipe(
         map(() => userActions.UpdateUserSensitivesInfoSuccess({ dto })),
         tap(({ dto }) => this._store.dispatch(UpdateProfileSensitivesInfo({ dto }))),
+        catchError(error => of(userActions.UpdateUserSensitivesInfoFailure({ error })))
+      )
+    })
+  ))
+
+  updateUserPassword$ = createEffect(() => this._actions$.pipe(
+    ofType(userActions.UpdateUserPassword),
+    exhaustMap(action => {
+      const dto = <UserUpdatePasswordDto>{ ...action.dto };
+      return this._userService.updatePassword(dto).pipe(
+        map(() => userActions.UpdateUserPasswordSuccess()),
         catchError(error => of(userActions.UpdateUserSensitivesInfoFailure({ error })))
       )
     })

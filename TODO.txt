@@ -16,6 +16,8 @@
 ✔️ Account Module & routing
 ✔️ Account Settings Component
 ✔️ Account Settings / Manage Account\'s information
-[] Account Settings / Manage Account\'s password
+✔️ Account Settings / Manage Account\'s password
+✔️ ConfirmPassword Form Validator
 
+[] SERVER ~ Make Follower/following schema
 [] Make ChatRoom And Message Schema

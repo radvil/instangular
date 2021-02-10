@@ -18,3 +18,10 @@ export class UserSensitivesInfoDto {
   username: string;
   email: string;
 }
+
+export class UserUpdatePasswordDto {
+  userId: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}

@@ -17,18 +17,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class CommentRoutingModule { }
-
-@NgModule({
   declarations: [CommentDetailComponent],
   imports: [
     CommonModule,
     MatSnackBarModule,
 
-    CommentRoutingModule,
+    RouterModule.forChild(routes),
     CommentStoreModule,
     CommentsListModule,
     CommentRowModule,

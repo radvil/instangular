@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 
-import { DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
+import { BAD_REQUEST_EXCEPTION, DUPLICATE_EXCEPTION, INTERNAL_SERVER_EXCEPTION, NOT_FOUND_EXCEPTION, UNAUTHORIZED_EXCEPTION, WRONG_CREDENTIALS_EXCEPTION } from '../exception';
 import { ImageUploader, SizeConfig, SizeLabel, TransformOptions, UploadImageDto } from '../image';
 import { UpdatePasswordDto, UserBasicsInfoDto, UserSensitivesInfoDto } from './user.dto';
 import { Controller, JsonHttpResponse, RequestUser } from '../interface';
@@ -44,7 +44,7 @@ export class UserController implements Controller {
     this.router.patch(this.path + '/basics-info', authorizeAccess(), validationMiddleware(UserBasicsInfoDto), this.patchBasicsInfo);
     this.router.patch(this.path + '/sensitives-info', authorizeAccess(), validationMiddleware(UserSensitivesInfoDto), this.patchSensitivesInfo);
     this.router.get(this.path + '/:username', this.getUserByUsername);
-    this.router.patch(this.path + '/:userId/password', authorizeAccess([Role.USER, Role.ADMIN]), this.patchPassword);
+    this.router.patch(this.path + '/password', authorizeAccess([Role.USER, Role.ADMIN]), this.patchPassword);
   }
 
   /**
@@ -196,18 +196,18 @@ export class UserController implements Controller {
    * @roles ADMIN || User
    */
   private patchPassword = async (req: RequestUser, res: Res, next: Next): Promise<void> => {
-    const norAuthorOrAdmin = (req.user._id.toString() !== req.params.userId.toString()) && (req.user.role !== Role.ADMIN)
-    if (norAuthorOrAdmin) {
-      next(new UNAUTHORIZED_EXCEPTION('invalid permission!'));
-    }
     const foundUser = await this._userModel.findById(req.user._id);
     if (!foundUser) {
-      next(new NOT_FOUND_EXCEPTION('user not found!'));
+      return next(new NOT_FOUND_EXCEPTION('user not found!'));
     }
-    const { oldPassword, newPassword } = <UpdatePasswordDto>req.body;
-    const passwordsMatched = await foundUser.validatePassword(oldPassword);
-    if (!passwordsMatched) {
-      next(new WRONG_CREDENTIALS_EXCEPTION('Invalid credentials'));
+    const { oldPassword, newPassword, confirmNewPassword } = <UpdatePasswordDto>req.body;
+    if (newPassword?.toString() !== confirmNewPassword?.toString()) {
+      return next(
+        new BAD_REQUEST_EXCEPTION('new password and confirmation input should\'ve match')
+      );
+    }
+    if (!await foundUser.validatePassword(oldPassword)) {
+      return next(new WRONG_CREDENTIALS_EXCEPTION('Invalid credentials'));
     }
     try {
       foundUser.set(<User>{
@@ -220,7 +220,7 @@ export class UserController implements Controller {
         message: "Update Password Succeed!"
       })
     } catch (error) {
-      throw new INTERNAL_SERVER_EXCEPTION(error);
+      return next(new INTERNAL_SERVER_EXCEPTION(error));
     }
   }
 

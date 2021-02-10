@@ -21,7 +21,7 @@ export const userReducer = createReducer(
     userAdapter.addOne(user, {
       ...state,
       isLoaded: true,
-      loading: false,
+      isLoading: false,
     })
   )),
 
@@ -39,7 +39,7 @@ export const userReducer = createReducer(
   on(UserActions.UploadUserProfilePictureSuccess, (state, { user }) => (
     userAdapter.upsertOne(user, {
       ...state,
-      loading: false,
+      isLoading: false,
       isLoaded: true,
       selectedUsername: user.username,
     })
@@ -61,7 +61,7 @@ export const userReducer = createReducer(
 
     return userAdapter.updateOne({ id, changes }, {
       ...state,
-      loading: false,
+      isLoading: false,
       isLoaded: true,
     })
   }),
@@ -82,8 +82,27 @@ export const userReducer = createReducer(
 
     return userAdapter.updateOne({ id, changes }, {
       ...state,
-      loading: false,
+      isLoading: false,
       isLoaded: true,
     })
+  }),
+
+  on(UserActions.UpdateUserPassword, (state) => ({
+    ...state,
+    isLoading: true,
+    isLoaded: false,
+  })),
+  on(UserActions.UpdateUserPasswordFailure, (state, { error }) => ({
+    ...state,
+    isLoading: false,
+    isLoaded: false,
+    error,
+  })),
+  on(UserActions.UpdateUserPasswordSuccess, (state) => {
+    return {
+      ...state,
+      isLoading: false,
+      isLoaded: true,
+    }
   }),
 )

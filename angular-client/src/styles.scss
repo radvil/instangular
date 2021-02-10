@@ -172,10 +172,21 @@ section {
 }
 .dialogPanel {
   .mat-dialog-container {
+    position: relative;
     padding: 1rem;
   }
-  button.closeDialog {
-    float: right;
+  .dialog__header {
+    height: 3rem;
+  }
+  .title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
   }
 }
 // notifications overlay

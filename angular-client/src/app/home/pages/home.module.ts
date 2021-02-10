@@ -22,23 +22,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class HomeRoutingModule { }
-
-@NgModule({
   declarations: [HomeComponent, StoryComponent],
   imports: [
     CommonModule,
     HttpClientModule,
-    HomeRoutingModule,
+    RouterModule.forChild(routes),
+    MatButtonModule,
+    MatIconModule,
+
     PostCardModule,
     PostStoreModule,
     PageHeaderModule,
-
-    MatButtonModule,
-    MatIconModule,
   ]
 })
 export class HomeModule { }

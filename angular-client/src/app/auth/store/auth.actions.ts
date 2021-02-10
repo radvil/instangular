@@ -19,7 +19,7 @@ export enum AuthActionsType {
 
   CHANGE_PROFILE_PHOTO = '[Auth] Change Profile Photo',
   UPDATE_PROFILE_BASICS_INFO = '[Auth] Update Profile Basics Info',
-  UPDATE_PROFILE_SENSITIVES_INFO = '[Auth] Update Profile Senitives Info',
+  UPDATE_PROFILE_SENSITIVES_INFO = '[Auth] Update Profile Sensitives Info',
 
   LOGOUT = '[Auth] Logout',
 }

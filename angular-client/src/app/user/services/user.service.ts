@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { environment as env } from 'src/environments/environment'
 import { UserPhotoDto, User } from '../interfaces';
 import { ApiRes } from 'src/app/_core';
-import { UserBasicsInfoDto, UserSensitivesInfoDto } from '../interfaces/user.dto';
+import { UserBasicsInfoDto, UserSensitivesInfoDto, UserUpdatePasswordDto } from '../interfaces/user.dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -34,6 +34,11 @@ export class UserService {
 
   public updateSensitivesInfo(dto: UserSensitivesInfoDto): Observable<any> {
     const url = env.be.url + `/users/sensitives-info`;
+    return this._http.patch<ApiRes<any>>(url, dto);
+  }
+
+  public updatePassword(dto: UserUpdatePasswordDto): Observable<any> {
+    const url = env.be.url + `/users/password`;
     return this._http.patch<ApiRes<any>>(url, dto);
   }
 }

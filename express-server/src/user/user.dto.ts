@@ -72,4 +72,9 @@ export class UpdatePasswordDto {
   @IsString()
   @MinLength(8)
   public newPassword: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
+  public confirmNewPassword: string;
 }

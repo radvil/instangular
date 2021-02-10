@@ -6,7 +6,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { User, UserSensitivesInfoDto } from 'src/app/user';
 import { UpdateUserSensitivesInfo } from 'src/app/user/store/user.actions';
-import { $_userLoaded, $_userLoading } from 'src/app/user/store/user.selectors';
+import { $_userError, $_userLoaded, $_userLoading } from 'src/app/user/store/user.selectors';
 import { UserState } from 'src/app/user/store/user.state';
 
 @Component({
@@ -40,8 +40,9 @@ export class AccountUpdateInfoComponent implements OnDestroy {
   get submitButtonText(): string {
     if (this.isLoadingSub.value) {
       return "Submittting...";
+    } else {
+      return "Submit";
     }
-    return "Submit";
   }
 
   get username(): AbstractControl {
@@ -81,7 +82,7 @@ export class AccountUpdateInfoComponent implements OnDestroy {
     this._dialogRef.close(null);
   }
 
-  setLoading(): void {
+  private setLoading(): void {
     this._subscription.add(
       this._store.select($_userLoading).subscribe(isLoading => {
         if (isLoading) {
@@ -93,6 +94,18 @@ export class AccountUpdateInfoComponent implements OnDestroy {
     this._subscription.add(
       this._store.select($_userLoaded).subscribe(isLoaded => {
         if (isLoaded) {
+          setTimeout(() => {
+            this.isLoadingSub.next(false);
+            this.formGroup.enable();
+            this._dialogRef.close({ success: true });
+          }, 500);
+        }
+      })
+    )
+    this._subscription.add(
+      this._store.select($_userError).subscribe(error => {
+        if (error) {
+          console.log(error);
           this.isLoadingSub.next(false);
           this.formGroup.enable();
         }

@@ -39,12 +39,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class AuthRoutingModule { }
-
-@NgModule({
   declarations: [LoginComponent, RegisterComponent],
   imports: [
     CommonModule,
@@ -55,7 +49,7 @@ export class AuthRoutingModule { }
     MatSnackBarModule,
     MatIconModule,
 
-    AuthRoutingModule,
+    RouterModule.forChild(routes),
     PageHeaderModule,
   ]
 })

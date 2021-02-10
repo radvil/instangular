@@ -6,7 +6,7 @@ import { AuthState } from 'src/app/auth';
 import { $_authUser } from 'src/app/auth/store/auth.selectors';
 import { User } from 'src/app/user';
 import { UserState } from 'src/app/user/store/user.state';
-import { ConfirmDialogComponent } from 'src/app/_shared';
+import { ConfirmDialogComponent, NotificationService } from 'src/app/_shared';
 import { AccountUpdateInfoComponent } from '../account-update-info/account-update-info.component';
 import { AccountUpdatePasswordComponent } from '../account-update-password/account-update-password.component';
 
@@ -25,6 +25,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
   constructor(
     private _store: Store<AuthState | UserState>,
     private _dialog: MatDialog,
+    private _notification: NotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +45,14 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: { user: this.authUser }
     });
+
+    this._subscription.add(
+      this.updateInfoDialogRef.afterClosed().subscribe(result => {
+        if (result?.success) {
+          this._notification.info('Account info updated');
+        }
+      })
+    )
   }
 
   openUpdatePasswordDialog(): void {
@@ -54,11 +63,12 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     });
 
     this._subscription.add(
-      this.updatePasswordDialogRef.beforeClosed().subscribe(formValue => {
-        if (formValue) console.log(formValue);
-        else console.log('dialog closed!');
+      this.updatePasswordDialogRef.afterClosed().subscribe(result => {
+        if (result?.success) {
+          this._notification.info('Password updated');
+        }
       })
-    );
+    )
   }
 
   openDeleteDialog(): void {
