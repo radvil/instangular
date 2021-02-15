@@ -7,7 +7,7 @@ import { FollowRequest } from "../interfaces";
 const followRequests = <FollowRequest[]>[
   {
     isApproved: false,
-    requester: {
+    sender: {
       _id: "123",
       photo: "assets/images/portrait.jpg",
       photoThumb: "assets/images/portrait.jpg",
@@ -20,7 +20,7 @@ const followRequests = <FollowRequest[]>[
   },
   {
     isApproved: false,
-    requester: {
+    sender: {
       _id: "234",
       photo: "assets/images/portrait.jpg",
       photoThumb: "assets/images/portrait.jpg",
@@ -33,7 +33,7 @@ const followRequests = <FollowRequest[]>[
   },
   {
     isApproved: false,
-    requester: {
+    sender: {
       _id: "345",
       photo: "assets/images/portrait.jpg",
       photoThumb: "assets/images/portrait.jpg",

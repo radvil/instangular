@@ -20,4 +20,6 @@
 ✔️ ConfirmPassword Form Validator
 
 [] SERVER ~ Make Follower/following schema
+[] Crop post\'s image before upload
+[] Request posts on scroll
 [] Make ChatRoom And Message Schema

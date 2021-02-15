@@ -2,13 +2,14 @@ import { UserBasic } from "../../user";
 
 export interface FollowRequest {
   isApproved: boolean;
-  requester: UserBasic;
+  sender: UserBasic;
   receiver: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export class FollowRequestDto {
-  requesterId: string;
+  isApproved: boolean;
+  senderId: string;
   receiverId: string;
 }

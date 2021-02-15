@@ -7,6 +7,7 @@ import { PostController } from './post';
 import { UserController } from './user';
 import { CommentController } from './comment';
 import { CommentReactionController, PostReactionController } from './reaction';
+import { FollowRequestController } from './follow-request';
 
 validateEnv();
 
@@ -19,6 +20,7 @@ const app = new App(
     new PostReactionController(),
     new CommentController(),
     new CommentReactionController(),
+    new FollowRequestController()
   ]
 );
 

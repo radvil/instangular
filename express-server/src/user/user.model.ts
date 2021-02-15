@@ -12,14 +12,17 @@ export interface User extends Document {
   username: string;
   email: string;
   name: string;
-  photo?: string;
-  photoThumb?: string;
+  photo: string;
+  photoThumb: string;
   role?: Role;
   password?: string;
   createdAt?: string;
   updatedAt?: string;
   lastLoggedInAt?: string;
   lastPasswordUpdatedAt?: string;
+  isPublic: boolean;
+  followers: User[] | string[];
+  followings: User[] | string[];
   // basic info
   bio?: string;
   websiteLink?: string;
@@ -68,6 +71,9 @@ const schema = new Schema<User>({
   facebookLink: { type: String, maxlength: 1000 },
   twitterLink: { type: String, maxlength: 1000 },
   githubLink: { type: String, maxlength: 1000 },
+  isPublic: { type: Boolean, default: true },
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }, schemaOptions);
 
 schema.pre('save', async function (next) {

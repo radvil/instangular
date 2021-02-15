@@ -1,16 +1,16 @@
 <app-user-avatar
-  [user]="req.requester"
+  [user]="req.sender"
   [clickable]="true"
   [imageHeight]="60"
   [imageWidth]="60"
-  (clickUser)="clickUser.emit(req.requester)"
+  (clickUser)="clickUser.emit(req.sender)"
 >
 </app-user-avatar>
 <div class="right">
   <div class="text">
     <span>
-      <b (click)="clickUser.emit(req.requester)">
-        {{ req.requester.username }}
+      <b (click)="clickUser.emit(req.sender)">
+        {{ req.sender.username }}
       </b>
       &nbsp;want's to follow you
     </span>
