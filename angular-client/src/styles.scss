@@ -1,24 +1,11 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @import "~@angular/material/theming";
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
 @include mat-core();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
 $instangular-primary: mat-palette($mat-indigo);
 $instangular-accent: mat-palette($mat-pink, A200, A100, A400);
 
-// The warn palette is optional (defaults to red).
 $instangular-warn: mat-palette($mat-red);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
 $instangular-theme: mat-light-theme(
   (
     color: (
@@ -29,55 +16,61 @@ $instangular-theme: mat-light-theme(
   )
 );
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 @include angular-material-theme($instangular-theme);
 
-/* You can add global styles to this file, and also import other style files */
 @import "~material-design-icons/iconfont/material-icons.css";
 
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 .ng-lazyloading.blur {
   filter: blur(3px);
   transition: all 2s ease-in-out;
 }
+
 .ng-lazyloaded.blur {
   transition: all 2s;
 }
+
 img {
   background-color: #f5f5f5;
 }
+
 mat-icon {
   font-size: 1.8rem !important;
   height: unset !important;
   width: unset !important;
 }
+
 a {
   text-decoration: none;
   font-weight: bold;
   color: #464646;
 }
+
 .pointer {
   cursor: pointer;
 }
+
 p {
   line-height: 2rem;
   margin: 0;
 }
+
 .load--more {
   display: flex;
   margin: 1rem;
   align-items: center;
   justify-content: center;
 }
+
 .txt-1 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -85,6 +78,7 @@ p {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+
 input {
   color: #666;
   background-color: whitesmoke;
@@ -95,38 +89,46 @@ input {
   .App {
     font-size: 1rem !important;
   }
+
   .app__body {
     height: 100vh !important;
     width: 100vw !important;
     flex-direction: column-reverse !important;
   }
+
   .sidebar {
     flex-direction: unset !important;
     height: unset !important;
     flex: unset !important;
     width: 100% !important;
   }
+
   .sidebar > * {
     padding: 0.7rem !important;
     flex: 1 !important;
   }
+
   .sidebar__header {
     display: none !important;
   }
+
   .sidebar__menu--list {
     font-size: unset !important;
   }
+
   p {
     line-height: 1.6rem !important;
   }
+
   .post--item-header .photo--container {
     border: 2px !important;
   }
+
   input {
     font-size: 1rem !important;
   }
 }
-// limit text
+
 .truncate1 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -134,6 +136,7 @@ input {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+
 .truncate3 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,25 +144,25 @@ input {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
-section {
-  // margin: 2rem;
 
-  // @media(max-width: 777px) {
-    margin: 1rem;
-  // }
+section {
+  margin: 1rem;
 }
+
 .container {
   margin: 1rem;
 }
+
 .rad-card {
   padding: 1rem 2rem;
   border-radius: 1rem;
   box-shadow: -1px 4px 20px -6px #00000033;
 
-  @media(max-width: 777px) {
+  @media (max-width: 777px) {
     padding: 1rem;
   }
 }
+
 .updatePostPanel .mat-dialog-container {
   padding: 0;
 
@@ -170,6 +173,7 @@ section {
     display: none;
   }
 }
+
 .dialogPanel {
   .mat-dialog-container {
     position: relative;
@@ -189,7 +193,7 @@ section {
     cursor: pointer;
   }
 }
-// notifications overlay
+
 .error-notification-overlay {
   color: #eeeeee;
   background-color: #8b1c1c;

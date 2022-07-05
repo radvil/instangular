@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import { connect } from 'mongoose';
+import { connect, ConnectOptions } from 'mongoose';
 
 import { Controller } from './interface';
 import { Logger } from './util/logger';
@@ -57,11 +57,10 @@ class App {
   private connectToDatabase(): void {
     const { MONGO_URI, MONGO_DBNAME } = process.env;
     const connectionPath = `${MONGO_URI}/${MONGO_DBNAME}`;
-    const connectionOpts = {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false
+    const connectionOpts: ConnectOptions = {
+      // autoIndex: false, // for production only
+      appName: 'Instangular',
+      dbName: 'instangular-db',
     };
 
     connect(connectionPath, connectionOpts, (err: Error) => {

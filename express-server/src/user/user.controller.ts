@@ -62,7 +62,8 @@ export class UserController implements Controller {
         findQuery.populate([
           {
             path: 'posts',
-            limit: 10,
+            // limit: 10,
+            perDocumentLimit: 10,
             populate: [
               {
                 path: 'reactions',
